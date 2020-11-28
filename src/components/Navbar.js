@@ -4,6 +4,7 @@ class Navbar extends Component {
     render() {
         return (
             <div className="navbar">
+                <h1>League of Legends: Champion Shop</h1>
                 <div className="container">
                     <ul>
                         {this.props.navs.map(nav => 
