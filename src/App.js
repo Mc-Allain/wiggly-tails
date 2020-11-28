@@ -375,6 +375,13 @@ class App extends Component {
                 champions={this.state.champions} handleBuy={this.handleBuy}/>
             </React.Fragment>
           )}/>
+          <Route
+            path="/About"
+            render={props => (
+              <React.Fragment>
+                <h1>About</h1>
+              </React.Fragment>
+            )}/>
       </Router>
     );
   }

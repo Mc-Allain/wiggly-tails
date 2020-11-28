@@ -30,7 +30,7 @@ class Champion extends Component {
                     </div>
                 </div>
                 
-                {this.state.view.show === false ?
+                {this.state.view.show === true ?
                     <div className="ch-details">
                         <ul>
                             <p>Skills:</p>
