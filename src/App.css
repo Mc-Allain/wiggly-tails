@@ -1,0 +1,297 @@
+* {
+  margin: 0;
+  padding: 0;
+
+  font-family: Montserrat;
+}
+
+*::selection {
+  background-color: #aaa;
+  color: #ddd;
+}
+
+.container {
+  margin: 0 3%;
+}
+
+.navbar {
+  background-color: #333;
+
+  display: flex;
+  justify-content: flex-end;
+}
+
+.navbar ul {
+  list-style: none;
+}
+
+.navbar li {
+  display: inline;
+}
+
+.navbar .btn {
+  border: none;
+  border-radius: 15px;
+
+  padding: 8px 13px;
+
+  font-size: 14px;
+
+  margin: 10px 0px;
+  margin-left: 10px;
+
+  transition: ease 0.3s;
+}
+
+.navbar .btn-default {
+  background-color: #ddd;
+  color: #333;
+}
+
+.navbar .btn-default:hover {
+  background-color: rgb(16, 129, 173);
+  color: #ddd;
+}
+
+.navbar .btn-selected {
+  background-color: rgb(14, 90, 121);
+  color: #ddd;
+}
+
+.badge {
+  font-size: 12px;
+
+  text-align: center;
+
+  padding: 3px 5px;
+  border: #333 1px solid;
+  border-radius: 50%;
+}
+
+.badge-yellow {
+  background-color: #ffcc66;
+
+  position: relative;
+  left: -10px;
+  top: -5px;
+}
+
+.ch-navbar {
+  background-color: #333;
+}
+
+.ch-ch-navbar ul {
+  list-style: none;
+}
+
+.ch-navbar li {
+  display: inline;
+}
+
+.ch-navbar .btn {
+  border: none;
+  border-radius: 10px;
+
+  padding: 5px 10px;
+
+  font-size: 12px;
+
+  margin: 5px 0px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+
+  transition: ease 0.3s;
+}
+
+.ch-navbar .btn-default {
+  background-color: #ddd;
+  color: #333;
+}
+
+.ch-navbar .btn-default:hover {
+  background-color: #ffcc66;
+}
+
+.ch-navbar .btn-selected {
+  background-color: #ffab02;
+}
+
+.ch-container {
+  margin-top: 15px;
+  list-style: none;
+}
+
+.ch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  padding: 5px 15px;
+  border-bottom: gray 1px dashed;
+}
+
+.ch-item:hover {
+  background-color: gainsboro;
+}
+
+.ch-btn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  width: 55%;
+}
+
+.ch-btn button {
+  max-width: 50px;
+  width: 15%;
+
+  background-color: #06af1d;
+  color: #ddd;
+
+  padding: 5px;
+  border: none;
+
+  transition: ease 0.3s;
+}
+
+.ch-btn button:hover {
+  background-color: #088d56;
+}
+
+.ch-buy {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  max-width: 150px;
+  width: 70%;
+}
+
+.ch-buy p {
+  max-width: 80px;
+  width: 60%;
+
+  font-size: 14px;
+  font-weight: 400;
+
+  margin-right: 5px;
+}
+
+.ch-buy button {
+  max-width: 50px;
+  width: 30%;
+
+  background-color: #0680c7;
+  color: #ddd;
+
+  margin-right: 5px;
+}
+
+.ch-buy button:hover {
+  background-color: #0768a0;
+}
+
+.ch-details {
+  background-color: #333;
+  color: #ddd;
+
+  margin: 1% 0%;
+  padding: 1% 5%;
+}
+
+.ch-details p {
+  display: flex;
+  align-items: center;
+
+  font-weight: 500;
+  font-size: 18px;
+
+  color: #4cb4f0;
+}
+
+.ch-skills {
+  font-size: 14px;
+}
+
+.ch-ultimate {
+  color: red;
+}
+
+@media (max-width: 573px) {
+  .navbar {
+    justify-content: center;
+  }
+
+  .navbar .btn {
+    font-size: 12px;
+
+    margin: 5px 0px;
+    margin-left: 6px;
+  }
+
+  .badge {
+    font-size: 10px;
+  }
+
+  .ch-navbar {
+    display: flex;
+    justify-content: center;
+  }
+
+  .ch-navbar .btn {
+    font-size: 10px;
+
+    margin: 1px 0px;
+    margin-right: 3px;
+    margin-bottom: 5px;
+  }
+
+  .ch-container {
+    margin-top: 7px;
+  }
+
+  .ch-item {
+    font-size: 12px;
+    font-weight: 500;
+
+    padding: 3px 7px;
+  }
+
+  .ch-btn p {
+    width: 40%;
+
+    margin-right: 2px;
+  }
+
+  .ch-btn p,
+  button {
+    font-size: 10px;
+  }
+
+  .ch-btn button {
+    height: 20px;
+  }
+
+  .ch-buy button {
+    width: 25%;
+
+    margin-right: 2px;
+  }
+
+  .ch-details {
+    font-size: 12px;
+  }
+
+  .ch-details p {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .ch-skills {
+    font-size: 10px;
+  }
+}
