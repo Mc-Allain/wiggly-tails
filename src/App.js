@@ -2,6 +2,7 @@ import "./App.css";
 import Navbar from "./components/Navbar.js";
 import Champions from "./components/Champions.js"
 
+import { BrowserRouter as Router, Route} from 'react-router-dom';
 import React, { Component } from 'react';
 
 class App extends Component {
@@ -364,11 +365,17 @@ class App extends Component {
 
   render() {
     return (
-      <React.Fragment>
-        <Navbar navs={this.state.navs} handleNavs={this.handleNavs} champions={this.state.champions}/>
-        <Champions sold={this.state.sold}
-          champions={this.state.champions} handleBuy={this.handleBuy}/>
-      </React.Fragment>
+      <Router>
+        <Route
+          path="/LoL-Champion-Shop"
+          render={props => (
+            <React.Fragment>
+              <Navbar navs={this.state.navs} handleNavs={this.handleNavs} champions={this.state.champions}/>
+              <Champions sold={this.state.sold}
+                champions={this.state.champions} handleBuy={this.handleBuy}/>
+            </React.Fragment>
+          )}/>
+      </Router>
     );
   }
 
