@@ -2,8 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+
 import 'bootstrap/dist/css/bootstrap.css';
-import 'jquery/dist/jquery.js'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'jquery/dist/jquery.js';
+import 'jquery/dist/jquery.slim.js';
 
 ReactDOM.render(
   <React.StrictMode>
