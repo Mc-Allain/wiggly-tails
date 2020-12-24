@@ -75,7 +75,7 @@ class TransactionsTable extends Component {
                             <th className="d-none d-lg-table-cell">Customer Name</th>
                             <th>Pet Name</th>
                             <th className="w-110px d-none d-lg-table-cell">Pet Weight</th>
-                            <th className="w-155px d-none d-md-table-cell">Served by</th>
+                            <th className="w-285px d-none d-md-table-cell">Served by</th>
                             <th className="w-100px">Action</th>
                         </tr>
                     </thead>
