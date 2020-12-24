@@ -2,7 +2,7 @@
   "name": "react-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "",
+  "homepage": "https://mc-allain.github.io/wiggly-tails-vet/",
   "dependencies": {
     "@popperjs/core": "^2.5.4",
     "@testing-library/jest-dom": "^5.11.6",
