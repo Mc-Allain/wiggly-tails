@@ -101,7 +101,7 @@ class ViewPetModal extends Component {
                 break;
 
             case 'pcciRegNo':
-                errors.pcciRegNo=    value.length > 12 ? "Must be at maximum of 12 characters" : ""
+                errors.pcciRegNo=    value.length > 6 ? "Must be at exact 6 characters" : ""
                 break;
 
             default:
@@ -322,7 +322,7 @@ class ViewPetModal extends Component {
                                         <label className="m-0 ml-2">PCCI Reg. No.</label>
                                         <input className={this.inputFieldClasses(errors.pcciRegNo)}
                                         type="text" name="pcciRegNo" value={record.pcciRegNo}
-                                        onChange={this.onChangeRecord}
+                                        onChange={this.onChangeRecord} maxLength="6"
                                         placeholder="(Optional)" noValidate />
                                         { this.renderRecordErrors(errors.pcciRegNo) }
                                     </div>

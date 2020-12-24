@@ -268,7 +268,7 @@ class AddCustomerModal extends Component {
             record.homeAddress.province = this.removeLastSpace(record.homeAddress.province);
 
             record.homeAddress.street += " St.";
-            record.homeAddress.barangay = "Brgy. " + record.barangay;
+            record.homeAddress.barangay = "Brgy. " + record.homeAddress.barangay;
             record.homeAddress.municipality += " City";
 
             let mbNo = [];

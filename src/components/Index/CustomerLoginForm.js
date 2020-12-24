@@ -6,7 +6,7 @@ class CustomerLoginForm extends Component {
         record:
         {
             emailAddress: '',
-            email: '',
+            email: '@yahoo.com',
             userPassword: ''
         },
         records: [],
@@ -67,10 +67,15 @@ class CustomerLoginForm extends Component {
 
             this.setState({ submitError, loginError });
 
+            console.log(record);
+            console.log(records);
+
             const result = records.filter(row => 
                 (row.emailAddress + row.email).toLowerCase() === (record.emailAddress + record.email).toLowerCase() &&
                 row.userPassword === record.userPassword
             )
+
+            console.log(result);
 
             if(result.length > 0) {
                 const { history } = this.props;

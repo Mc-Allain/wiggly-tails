@@ -58,7 +58,7 @@ class AdminNavbar extends Component {
 
     onClickBrand = () => {
         const { history } = this.props;
-        const link = "/admin";
+        const link = "/wiggly-tails-vet/admin";
         history.replace(link, {verified: true});
     }
 

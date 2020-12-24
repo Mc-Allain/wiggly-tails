@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import TablePagination from '../TablePagination.js';
 import AddCustomerModal from './AddCustomerModal.js';
 import ViewCustomerModal from './ViewCustomerModal.js';
+import InitiateTransactionModal from './InitiateTransactionModal.js'
 
 class CustomersTable extends Component {
     state = {
@@ -30,7 +31,8 @@ class CustomersTable extends Component {
                             <i className="fa fa-eye"></i>
                             <span className="d-none d-sm-inline ml-1">View</span>
                         </button>
-                        <button className="btn btn-outline-primary btn-sm">
+                        <button className="btn btn-outline-primary btn-sm"
+                        data-toggle="modal" data-target={"#addTransactionModal-" + customers[i].id}>
                             <i className="fa fa-pencil-alt"></i>
                             <span className="d-none d-sm-inline ml-1">Transact</span>
                         </button>
@@ -91,7 +93,12 @@ class CustomersTable extends Component {
                     totalRecords={customers.length} /> : null
                 }
                 <AddCustomerModal onRefresh={onRefresh} />
-                { customers.map(customer => <ViewCustomerModal key={customer.id} customer={customer} onRefresh={onRefresh} /> ) }
+                { customers.map(customer => 
+                    <React.Fragment key={customer.id}>
+                        <ViewCustomerModal customer={customer} onRefresh={onRefresh} />
+                        <InitiateTransactionModal customer={customer} />
+                    </React.Fragment>
+                ) }
             </React.Fragment>
         );
     }

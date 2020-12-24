@@ -90,7 +90,7 @@ class TransactionsTable extends Component {
                     activePage={activePage}
                     totalRecords={transactions.length} /> : null
                 }
-                <AddTransactionModal onRefresh={onRefresh} />
+                <AddTransactionModal onRefresh={onRefresh} customerId='' />
                 {
                     transactions.map(transaction => <ViewTransactionModal key={transaction.id}
                     transaction={transaction} onRefresh={onRefresh} history={history} /> )
