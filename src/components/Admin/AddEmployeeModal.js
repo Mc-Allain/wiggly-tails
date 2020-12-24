@@ -22,7 +22,7 @@ class AddEmployeeModal extends Component {
             empPassword: ' ',
             confirmEmpPassword: ' ',
         },
-        empTypes: ['Admin', 'Doctor', 'Groomer', 'Nurse'],
+        empTypes: ['Admin', 'Groomer', 'Veterinarian' ],
         submitError: false,
         added: false
     }
