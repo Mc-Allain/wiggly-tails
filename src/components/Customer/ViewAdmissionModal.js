@@ -5,7 +5,7 @@ class ViewAdmissionModal extends Component {
         record:
         {
             id: '',
-            admissionId: '',
+            transId: '',
             title: '',
             content: ''
         }
@@ -16,7 +16,7 @@ class ViewAdmissionModal extends Component {
         const record = {...this.state.record};
 
         record.id = admission.id;
-        record.admissionId = admission.admissionId;
+        record.transId = admission.transId;
         record.title = admission.title;
         record.content = admission.content;
 
