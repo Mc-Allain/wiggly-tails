@@ -32,7 +32,7 @@ class CustomerNavbar extends Component {
             {
                 id: 10,
                 text: "Sign out",
-                link: null,
+                link: "/wiggly-tails-vet",
                 items: []
             }
         ]
@@ -50,9 +50,9 @@ class CustomerNavbar extends Component {
         history.replace(link, {verified: true, id: history.location.state.id});
     }
 
-    onClickSignOut = () => {
+    onClickSignOut = nav => {
         const { history } = this.props;
-        const link = "/";
+        const link = nav.link;
         history.replace(link);
     }
 
@@ -95,7 +95,7 @@ class CustomerNavbar extends Component {
                                     <li key={nav.id} className="nav-item mr-1">
                                         {
                                             nav.id === 10 ?
-                                            <a onClick={() => this.onClickSignOut()} className={this.linkItemClasses(nav.id)}>
+                                            <a onClick={() => this.onClickSignOut(nav)} className={this.linkItemClasses(nav.id)}>
                                                 {nav.text}
                                             </a> :
                                             <a onClick={() => this.onClickLink(nav)} className={this.linkItemClasses(nav.id)}>

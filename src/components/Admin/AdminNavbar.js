@@ -44,7 +44,7 @@ class AdminNavbar extends Component {
             {
                 id: 10,
                 text: "Sign out",
-                link: "/",
+                link: "/wiggly-tails-vet",
                 items: []
             }
         ]
@@ -62,9 +62,9 @@ class AdminNavbar extends Component {
         history.replace(link, {verified: true});
     }
 
-    onClickSignOut = () => {
+    onClickSignOut = nav => {
         const { history } = this.props;
-        const link = "/";
+        const link = nav.link;
         history.replace(link);
     }
 
@@ -107,7 +107,7 @@ class AdminNavbar extends Component {
                                     <li key={nav.id} className="nav-item mr-1">
                                         {
                                             nav.id === 10 ?
-                                            <a onClick={() => this.onClickSignOut()} className={this.linkItemClasses(nav.id)}>
+                                            <a onClick={() => this.onClickSignOut(nav)} className={this.linkItemClasses(nav.id)}>
                                                 {nav.text}
                                             </a> :
                                             <a onClick={() => this.onClickLink(nav)} className={this.linkItemClasses(nav.id)}>

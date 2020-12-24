@@ -22,7 +22,7 @@ function App() {
   return (
   <Router>
     <Switch>
-      <Route exact path = "/" component = { Index } />
+      <Route exact path = "/wiggly-tails-vet" component = { Index } />
 
       <Route exact path = "/customer" component = { Customer } />
       <Route path = "/customer/view-transactions" component = { ViewTransactions } />

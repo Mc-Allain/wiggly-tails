@@ -38,7 +38,7 @@ class Navbar extends Component {
         return (
             <React.Fragment>
                 <nav className="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
-                    <a href="/" className="navbar-brand py-0">
+                    <a href="/wiggly-tails-vet" className="navbar-brand py-0">
                         <img src={wiggy_tails_icon} alt="" className="mr-2" />Veterinary Clinic
                     </a>
 
