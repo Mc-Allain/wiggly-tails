@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/wiggly-tails-vet/static/css/main.40b728eb.chunk.css",
-    "main.js": "/wiggly-tails-vet/static/js/main.978dbb64.chunk.js",
-    "main.js.map": "/wiggly-tails-vet/static/js/main.978dbb64.chunk.js.map",
+    "main.js": "/wiggly-tails-vet/static/js/main.1b25a083.chunk.js",
+    "main.js.map": "/wiggly-tails-vet/static/js/main.1b25a083.chunk.js.map",
     "runtime-main.js": "/wiggly-tails-vet/static/js/runtime-main.d61ae1f2.js",
     "runtime-main.js.map": "/wiggly-tails-vet/static/js/runtime-main.d61ae1f2.js.map",
     "static/css/2.55b1393a.chunk.css": "/wiggly-tails-vet/static/css/2.55b1393a.chunk.css",
-    "static/js/2.c34082e2.chunk.js": "/wiggly-tails-vet/static/js/2.c34082e2.chunk.js",
-    "static/js/2.c34082e2.chunk.js.map": "/wiggly-tails-vet/static/js/2.c34082e2.chunk.js.map",
+    "static/js/2.e4df2188.chunk.js": "/wiggly-tails-vet/static/js/2.e4df2188.chunk.js",
+    "static/js/2.e4df2188.chunk.js.map": "/wiggly-tails-vet/static/js/2.e4df2188.chunk.js.map",
     "index.html": "/wiggly-tails-vet/index.html",
     "static/css/2.55b1393a.chunk.css.map": "/wiggly-tails-vet/static/css/2.55b1393a.chunk.css.map",
     "static/css/main.40b728eb.chunk.css.map": "/wiggly-tails-vet/static/css/main.40b728eb.chunk.css.map",
-    "static/js/2.c34082e2.chunk.js.LICENSE.txt": "/wiggly-tails-vet/static/js/2.c34082e2.chunk.js.LICENSE.txt",
+    "static/js/2.e4df2188.chunk.js.LICENSE.txt": "/wiggly-tails-vet/static/js/2.e4df2188.chunk.js.LICENSE.txt",
     "static/media/all.css": "/wiggly-tails-vet/static/media/fa-solid-900.46fdbd2d.woff",
     "static/media/wiggly-tails-icon.1d629afe.png": "/wiggly-tails-vet/static/media/wiggly-tails-icon.1d629afe.png"
   },
   "entrypoints": [
     "static/js/runtime-main.d61ae1f2.js",
     "static/css/2.55b1393a.chunk.css",
-    "static/js/2.c34082e2.chunk.js",
+    "static/js/2.e4df2188.chunk.js",
     "static/css/main.40b728eb.chunk.css",
-    "static/js/main.978dbb64.chunk.js"
+    "static/js/main.1b25a083.chunk.js"
   ]
 }
