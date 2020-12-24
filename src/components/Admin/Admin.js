@@ -41,7 +41,7 @@ class Admin extends Component {
                                         </div>
 
                                         <button className="btn btn-warning border w-75 mt-3"
-                                        onClick={() => this.onClickLink("/admin/manage-transactions")}>
+                                        onClick={() => this.onClickLink("/wiggly-tails-vet/admin/manage-transactions")}>
                                             <i className="fa fa-exchange-alt"></i>
                                             <span className="ml-1">Manage</span>
                                         </button>
@@ -61,7 +61,7 @@ class Admin extends Component {
                                         </div>
 
                                         <button className="btn btn-primary border w-75 mt-3"
-                                        onClick={() => this.onClickLink("/admin/manage-customers")}>
+                                        onClick={() => this.onClickLink("/wiggly-tails-vet/admin/manage-customers")}>
                                             <i className="fa fa-users"></i>
                                             <span className="ml-1">Manage</span>
                                         </button>
@@ -81,7 +81,7 @@ class Admin extends Component {
                                         </div>
 
                                         <button className="btn btn-secondary border w-75 mt-3"
-                                        onClick={() => this.onClickLink("/admin/manage-pets")}>
+                                        onClick={() => this.onClickLink("/wiggly-tails-vet/admin/manage-pets")}>
                                             <i className="fa fa-cat"></i>
                                             <span className="ml-1">Manage</span>
                                         </button>

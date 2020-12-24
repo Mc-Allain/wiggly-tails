@@ -8,25 +8,25 @@ class CustomerNavbar extends Component {
             {
                 id: 0,
                 text: "Account",
-                link: "/customer",
+                link: "/wiggly-tails-vet/customer",
                 items: []
             },
             {
                 id: 1,
                 text: "Transactions",
-                link: "/customer/view-transactions",
+                link: "/wiggly-tails-vet/customer/view-transactions",
                 items: [],
             },
             {
                 id: 2,
                 text: "Pets",
-                link: "/customer/manage-pets",
+                link: "/wiggly-tails-vet/customer/manage-pets",
                 items: [],
             },
             {
                 id: 3,
                 text: "About us",
-                link: "/customer/about-us",
+                link: "/wiggly-tails-vet/customer/about-us",
                 items: [],
             },
             {
@@ -46,7 +46,7 @@ class CustomerNavbar extends Component {
 
     onClickBrand = () => {
         const { history } = this.props;
-        const link = "/customer";
+        const link = "/wiggly-tails-vet/customer";
         history.replace(link, {verified: true, id: history.location.state.id});
     }
 

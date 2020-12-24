@@ -10,7 +10,7 @@ class AdminNavbar extends Component {
             {
                 id: 0,
                 text: "Home",
-                link: "/admin",
+                link: "/wiggly-tails-vet/admin",
                 items: []
             },
             {
@@ -22,22 +22,22 @@ class AdminNavbar extends Component {
                     {
                         id: 4,
                         text: "Transactions",
-                        link: "/admin/manage-transactions"
+                        link: "/wiggly-tails-vet/admin/manage-transactions"
                     },
                     {
                         id: 5,
                         text: "Customers",
-                        link: "/admin/manage-customers"
+                        link: "/wiggly-tails-vet/admin/manage-customers"
                     },
                     {
                         id: 6,
                         text: "Pets",
-                        link: "/admin/manage-pets"
+                        link: "/wiggly-tails-vet/admin/manage-pets"
                     },
                     {
                         id: 7,
                         text: "Employees",
-                        link: "/admin/manage-employees"
+                        link: "/wiggly-tails-vet/admin/manage-employees"
                     }
                 ]
             },
