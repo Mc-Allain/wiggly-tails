@@ -11,14 +11,14 @@ class AddPetModal extends Component {
             ownerId: '',
             petClass: '',
             lastVisit: '',
-            pccId: ''
+            pcciRegNo: ''
         },
         errors:
         {
             petName: ' ',
             birthdate: ' ',
             petClass: ' ',
-            pccId: ''
+            pcciRegNo: ''
         },
         submitError: false,
         petClasses:
@@ -90,8 +90,8 @@ class AddPetModal extends Component {
                 errors.petClass=   properLength === 0 ? " " : ""
                 break;
 
-            case 'pccId':
-                errors.pccId=    value.length > 12 ? "Must be at maximum of 12 characters" : ""
+            case 'pcciRegNo':
+                errors.pcciRegNo=    value.length > 12 ? "Must be at maximum of 12 characters" : ""
                 break;
 
             default:
@@ -161,12 +161,12 @@ class AddPetModal extends Component {
         record.petName = '';
         record.birthdate = '';
         record.petClass = '';
-        record.pccId = '';
+        record.pcciRegNo = '';
 
         errors.petName = 'Pet Name is required';
         errors.birthdate = 'Birthdate is required';
         errors.petClass = 'Pet Class is required';
-        errors.pccId = '';
+        errors.pcciRegNo = '';
 
         this.setState({ record, errors, submitError});
     }
@@ -263,12 +263,12 @@ class AddPetModal extends Component {
                                     </div>
 
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">PCC Id</label>
-                                        <input className={this.inputFieldClasses(errors.pccId)}
-                                        type="text" name="pccId" value={record.pccId}
+                                        <label className="m-0 ml-2">PCCI Reg. No.</label>
+                                        <input className={this.inputFieldClasses(errors.pcciRegNo)}
+                                        type="text" name="pcciRegNo" value={record.pcciRegNo}
                                         onChange={this.onChangeRecord}
                                         placeholder="(Optional)" noValidate />
-                                        { this.renderRecordErrors(errors.pccId) }
+                                        { this.renderRecordErrors(errors.pcciRegNo) }
                                     </div>
                                 </form>
                                 {

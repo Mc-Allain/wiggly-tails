@@ -11,7 +11,7 @@ class ViewPetModal extends Component {
             ownerId: '',
             petClass: '',
             lastVisit: '',
-            pccId: ''
+            pcciRegNo: ''
         },
         records: [],
         errors:
@@ -20,7 +20,7 @@ class ViewPetModal extends Component {
             birthdate: '',
             ownerId: '',
             petClass: '',
-            pccId: ''
+            pcciRegNo: ''
         },
         submitError: false,
         updated: false,
@@ -46,7 +46,7 @@ class ViewPetModal extends Component {
         record.ownerId = pet.ownerId;
         record.petClass = pet.petClass;
         record.lastVisit = pet.lastVisit;
-        record.pccId = pet.pccId;
+        record.pcciRegNo = pet.pcciRegNo;
 
         this.setState({ record });
     }
@@ -100,8 +100,8 @@ class ViewPetModal extends Component {
                 errors.petClass=   properLength === 0 ? " " : ""
                 break;
 
-            case 'pccId':
-                errors.pccId=    value.length > 12 ? "Must be at maximum of 12 characters" : ""
+            case 'pcciRegNo':
+                errors.pcciRegNo=    value.length > 12 ? "Must be at maximum of 12 characters" : ""
                 break;
 
             default:
@@ -172,13 +172,13 @@ class ViewPetModal extends Component {
         record.birthdate = pet.birthdate;
         record.ownerId = pet.ownerId;
         record.petClass = pet.petClass;
-        record.pccId = pet.pccId;
+        record.pcciRegNo = pet.pcciRegNo;
 
         errors.petName = '';
         errors.birthdate = '';
         errors.ownerId = '';
         errors.petClass = '';
-        errors.pccId = '';
+        errors.pcciRegNo = '';
 
         const searchValue = '';
 
@@ -319,12 +319,12 @@ class ViewPetModal extends Component {
                                     </div>
 
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">PCC Id</label>
-                                        <input className={this.inputFieldClasses(errors.pccId)}
-                                        type="text" name="pccId" value={record.pccId}
+                                        <label className="m-0 ml-2">PCCI Reg. No.</label>
+                                        <input className={this.inputFieldClasses(errors.pcciRegNo)}
+                                        type="text" name="pcciRegNo" value={record.pcciRegNo}
                                         onChange={this.onChangeRecord}
                                         placeholder="(Optional)" noValidate />
-                                        { this.renderRecordErrors(errors.pccId) }
+                                        { this.renderRecordErrors(errors.pcciRegNo) }
                                     </div>
                                 </form>
                                 {
