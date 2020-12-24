@@ -74,7 +74,7 @@ class CustomerLoginForm extends Component {
 
             if(result.length > 0) {
                 const { history } = this.props;
-                history.replace('/customer', {verified: true, id: result[0].id});
+                history.replace('/wiggly-tails-vet/customer', {verified: true, id: result[0].id});
             }
             else {
                 submitError = true;

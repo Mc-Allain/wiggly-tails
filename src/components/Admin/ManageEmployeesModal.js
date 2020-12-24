@@ -88,7 +88,7 @@ class ManageEmployeesModal extends Component {
                 btnClose.click();
                 
                 const { history } = this.props;
-                history.replace('/admin/manage-employees',
+                history.replace('/wiggly-tails-vet/admin/manage-employees',
                 {verified: true, id: result[0].id, empType: result[0].empType});
             }
             else {
