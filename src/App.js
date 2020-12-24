@@ -30,12 +30,12 @@ function App() {
       <Route path = "/wiggly-tails-vet/customer/manage-pets" component = { CustomerManagePets } />
       <Route path = "/wiggly-tails-vet/customer/about-us" component = { AboutUs } />
 
-      <Route exact path = "/wiggly-tails-vet/admin" component = {Admin} />
-      <Route path = "/wiggly-tails-vet/admin/manage-transactions" component = {ManageTransactions} />
+      <Route exact path = "/wiggly-tails-vet/admin" component = { Admin } />
+      <Route path = "/wiggly-tails-vet/admin/manage-transactions" component = { ManageTransactions } />
       <Route path = "/wiggly-tails-vet/admin/manage-admission" component = { ManageAdmission } />
-      <Route path = "/wiggly-tails-vet/admin/manage-customers" component = {ManageCustomers} />
-      <Route path = "/wiggly-tails-vet/admin/manage-pets" component = {ManagePets} />
-      <Route path = "/wiggly-tails-vet/admin/manage-employees" component = {ManageEmployees} />
+      <Route path = "/wiggly-tails-vet/admin/manage-customers" component = { ManageCustomers } />
+      <Route path = "/wiggly-tails-vet/admin/manage-pets" component = { ManagePets } />
+      <Route path = "/wiggly-tails-vet/admin/manage-employees" component = { ManageEmployees } />
     </Switch>
   </Router>
   );
