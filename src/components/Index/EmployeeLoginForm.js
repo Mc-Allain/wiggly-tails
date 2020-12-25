@@ -85,7 +85,7 @@ class EmployeeLoginForm extends Component {
 
             if(result.length > 0) {
                 const { history } = this.props;
-                history.replace('/wiggly-tails-vet/admin', {verified: true});
+                history.replace('/wiggly-tails/admin', {verified: true});
             }
             else {
                 submitError = true;

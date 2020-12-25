@@ -10,7 +10,7 @@ class AdminNavbar extends Component {
             {
                 id: 0,
                 text: "Home",
-                link: "/wiggly-tails-vet/admin",
+                link: "/wiggly-tails/admin",
                 items: []
             },
             {
@@ -22,29 +22,29 @@ class AdminNavbar extends Component {
                     {
                         id: 4,
                         text: "Transactions",
-                        link: "/wiggly-tails-vet/admin/manage-transactions"
+                        link: "/wiggly-tails/admin/manage-transactions"
                     },
                     {
                         id: 5,
                         text: "Customers",
-                        link: "/wiggly-tails-vet/admin/manage-customers"
+                        link: "/wiggly-tails/admin/manage-customers"
                     },
                     {
                         id: 6,
                         text: "Pets",
-                        link: "/wiggly-tails-vet/admin/manage-pets"
+                        link: "/wiggly-tails/admin/manage-pets"
                     },
                     {
                         id: 7,
                         text: "Employees",
-                        link: "/wiggly-tails-vet/admin/manage-employees"
+                        link: "/wiggly-tails/admin/manage-employees"
                     }
                 ]
             },
             {
                 id: 10,
                 text: "Sign out",
-                link: "/wiggly-tails-vet",
+                link: "/wiggly-tails",
                 items: []
             }
         ]
@@ -58,7 +58,7 @@ class AdminNavbar extends Component {
 
     onClickBrand = () => {
         const { history } = this.props;
-        const link = "/wiggly-tails-vet/admin";
+        const link = "/wiggly-tails/admin";
         history.replace(link, {verified: true});
     }
 

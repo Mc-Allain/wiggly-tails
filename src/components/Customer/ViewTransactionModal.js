@@ -208,7 +208,7 @@ class ViewTransactionModal extends Component {
                                     {
                                         record.transType === 'C' ?
                                         <button className="btn btn-success w-auto mr-1" data-dismiss="modal"
-                                        onClick={() => this.onViewAdmission("/wiggly-tails-vet/customer/view-admission")}>
+                                        onClick={() => this.onViewAdmission("/wiggly-tails/customer/view-admission")}>
                                             <i className="fa fa-hand-holding-medical fa-sm"></i>
                                             <span className="ml-1">Admissions</span>
                                         </button> : null
