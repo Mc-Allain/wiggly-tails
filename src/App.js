@@ -22,20 +22,20 @@ function App() {
   return (
   <Router>
     <Switch>
-      <Route exact path = "/wiggly-tails-vet" component = { Index } />
+      <Route exact path = "/wiggly-tails" component = { Index } />
 
-      <Route exact path = "/wiggly-tails-vet/customer" component = { Customer } />
-      <Route path = "/wiggly-tails-vet/customer/view-transactions" component = { ViewTransactions } />
-      <Route path = "/wiggly-tails-vet/customer/view-admission" component = { ViewAdmission } />
-      <Route path = "/wiggly-tails-vet/customer/manage-pets" component = { CustomerManagePets } />
-      <Route path = "/wiggly-tails-vet/customer/about-us" component = { AboutUs } />
+      <Route exact path = "/wiggly-tails/customer" component = { Customer } />
+      <Route path = "/wiggly-tails/customer/view-transactions" component = { ViewTransactions } />
+      <Route path = "/wiggly-tails/customer/view-admission" component = { ViewAdmission } />
+      <Route path = "/wiggly-tails/customer/manage-pets" component = { CustomerManagePets } />
+      <Route path = "/wiggly-tails/customer/about-us" component = { AboutUs } />
 
-      <Route exact path = "/wiggly-tails-vet/admin" component = { Admin } />
-      <Route path = "/wiggly-tails-vet/admin/manage-transactions" component = { ManageTransactions } />
-      <Route path = "/wiggly-tails-vet/admin/manage-admission" component = { ManageAdmission } />
-      <Route path = "/wiggly-tails-vet/admin/manage-customers" component = { ManageCustomers } />
-      <Route path = "/wiggly-tails-vet/admin/manage-pets" component = { ManagePets } />
-      <Route path = "/wiggly-tails-vet/admin/manage-employees" component = { ManageEmployees } />
+      <Route exact path = "/wiggly-tails/admin" component = { Admin } />
+      <Route path = "/wiggly-tails/admin/manage-transactions" component = { ManageTransactions } />
+      <Route path = "/wiggly-tails/admin/manage-admission" component = { ManageAdmission } />
+      <Route path = "/wiggly-tails/admin/manage-customers" component = { ManageCustomers } />
+      <Route path = "/wiggly-tails/admin/manage-pets" component = { ManagePets } />
+      <Route path = "/wiggly-tails/admin/manage-employees" component = { ManageEmployees } />
     </Switch>
   </Router>
   );
