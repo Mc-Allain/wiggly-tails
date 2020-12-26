@@ -25,7 +25,6 @@ class RegisterModal extends Component {
             email: '@yahoo.com',
             userPassword: ''
         },
-        // confirmId: '',
         confirmUserPassword: '',
         errors:
         {
@@ -45,34 +44,29 @@ class RegisterModal extends Component {
             mobileNumber: ' ',
             emailAddress: ' ',
             userPassword: ' ',
-            // confirmId: ' ',
             confirmUserPassword: ' ',
         },
+        records: [],
+        connected: false,
+        connectionFailed: false,
         submitError: false,
-        registered: ''
+        registered: false
     }
 
     componentDidMount() {
         this.onGenerateId();
+        this.getCustomersData();
     }
 
     onGenerateId = () => {
         const record = {...this.state.record};
-        const errors = {...this.state.errors};
-        const confirmId = '';
         const id = this.generateCharacters(6);
         record.id = id;
-        // errors.confirmId = ' ';
-        this.setState({ record, errors, confirmId });
+        this.setState({ record });
     }
 
     onChangeState = e => {
-        let { name, value } = e.target;
-
-        // if(name === "confirmId") {
-        //     value = value.toUpperCase();
-        // }
-
+        const { name, value } = e.target;
         this.setState(currentState => ({
             ...currentState,
             [name]: value
@@ -88,9 +82,7 @@ class RegisterModal extends Component {
             this.toAbsProperCase(value);
         }
 
-        if(name === "emailAddress") {
-            value = this.removeSpaces(value);
-        }
+        if(name === "emailAddress") value = this.removeSpaces(value);
 
         this.setState(currentState => ({
             ...currentState,
@@ -132,7 +124,7 @@ class RegisterModal extends Component {
 
             case 'mobileNumber':
                 errors.mobileNumber=    value.length === 0 ? " " :
-                                        !isNumeric(value) ? "Please input an appropriate value" :
+                                        !isNumeric(value) ? "Please input a valid value" :
                                         value.length < 10 ? "Must be at exact 10 numbers" : ""
                                         
                 break;
@@ -142,7 +134,14 @@ class RegisterModal extends Component {
                                         value.length < 8 || value.length > 24 ?
                                         "Must be at between 8 and 24 characters" :
                                         !this.isValidEmail(value) ?
-                                        "Please input a valid value" : ""
+                                        "Please input a valid value" :
+                                        this.emailAddressExists() ?
+                                        "Already in use" : ""
+                break;
+            
+            case 'email':
+            errors.emailAddress=    this.emailAddressExists() ?
+                                    "Already in use" : ""
                 break;
 
             case 'userPassword':
@@ -152,12 +151,6 @@ class RegisterModal extends Component {
                 errors.confirmUserPassword= value === confirmUserPassword ? 
                                             confirmUserPassword.length < 12 ? " " : "" : "Passwords do not match"
                 break;
-
-            // case 'confirmId':
-            // errors.confirmId =  value.length === 0 ? " " :
-            //                     value === record.id ?
-            //                     value.length < 6 ? " " : "" : "Id does not match"
-            //     break;
 
             case 'confirmUserPassword':
                 errors.confirmUserPassword= value.length === 0 ? " " :
@@ -170,6 +163,17 @@ class RegisterModal extends Component {
         }
 
         this.setState({ errors });
+    }
+
+    emailAddressExists = () => {
+        const { record, records } = this.state;
+
+        const result = records.filter(row =>
+            (row.emailAddress + row.email).toLowerCase() === (record.emailAddress + record.email).toLowerCase()
+        )
+
+        if(result.length > 0) return true;
+        return false;
     }
 
     isValidEmail = value => {
@@ -251,6 +255,7 @@ class RegisterModal extends Component {
         const errors  = {...this.state.errors};
 
         if(this.validForm({ errors })) {
+            const { getCustomersData } = this.props;
             const record = {...this.state.record};
 
             record.lastName = this.removeLastSpace(record.lastName);
@@ -264,7 +269,7 @@ class RegisterModal extends Component {
             record.homeAddress.province = this.removeLastSpace(record.homeAddress.province);
 
             record.homeAddress.street += " St.";
-            record.homeAddress.barangay = "Brgy. " + record.barangay;
+            record.homeAddress.barangay = "Brgy. " + record.homeAddress.barangay;
             record.homeAddress.municipality += " City";
 
             let mbNo = [];
@@ -273,8 +278,10 @@ class RegisterModal extends Component {
             mbNo.push(record.mobileNumber.substring(6, 10));
             record.mobileNumber = mbNo.join('-');
 
+            this.props.onRegister();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertCustomer.php', record)
-            .then(this.postSubmit());
+            .then(getCustomersData, this.postSubmit());
         }
         else {
             const submitError = true;
@@ -388,7 +395,6 @@ class RegisterModal extends Component {
         const errors = {...this.state.errors};
         const homeAddressErrors = {...this.state.errors.homeAddressErrors};
 
-        // const confirmId = '';
         const confirmUserPassword = '';
         const submitError = false;
 
@@ -425,10 +431,9 @@ class RegisterModal extends Component {
         errors.mobileNumber = ' ';
         errors.emailAddress = ' ';
         errors.userPassword = ' ';
-        // errors.confirmId = ' ';
         errors.confirmUserPassword = ' ';
 
-        this.setState({ record, confirmUserPassword, errors, submitError});
+        this.setState({ record, confirmUserPassword, errors, submitError });
     }
 
     render() {
@@ -452,8 +457,8 @@ class RegisterModal extends Component {
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    registered === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    registered ? 
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
                                         <span>Successfully registered.</span>
                                     </div> : null
@@ -589,29 +594,41 @@ class RegisterModal extends Component {
                                         <label className="m-0 ml-2">
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <div className="input-group d-block d-sm-flex px-0">
-                                            <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
-                                            type="text" name="emailAddress"  value={record.emailAddress}
-                                            onChange={this.onChangeRecord} noValidate />
-                                            <div className="input-group-append justify-content-end">
-                                                <span className="input-group-text">@</span>
-                                                <select className="input-group-text"
-                                                name="email" value={record.email}
-                                                onChange={this.onChangeRecord} noValidate>
-                                                    <option value="@yahoo.com">yahoo.com</option>
-                                                    <option value="@gmail.com">gmail.com</option>
-                                                    <option value="@outlook.com">outlook.com</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        { this.renderRecordErrors(errors.emailAddress) }
-                                        <div>
-                                            <small className="text-success ml-2">
-                                                <i className="fa fa-info-circle mr-1"></i>
-                                                <span>Valid Symbols:&nbsp;</span>
-                                                <span>{"!#$%^&*.?_-"}</span>
-                                            </small>
-                                        </div>
+                                        {
+                                            this.state.connected ?
+                                            <React.Fragment>
+                                                <div className="input-group d-block d-sm-flex px-0">
+                                                    <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                                                    type="text" name="emailAddress"  value={record.emailAddress}
+                                                    onChange={this.onChangeRecord} noValidate />
+                                                    <div className="input-group-append justify-content-end">
+                                                        <span className="input-group-text">@</span>
+                                                        <select className="input-group-text"
+                                                        name="email" value={record.email}
+                                                        onChange={this.onChangeRecord} noValidate>
+                                                            <option value="@yahoo.com">yahoo.com</option>
+                                                            <option value="@gmail.com">gmail.com</option>
+                                                            <option value="@outlook.com">outlook.com</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                { this.renderRecordErrors(errors.emailAddress) }
+                                                <div>
+                                                    <small className="text-success ml-2">
+                                                        <i className="fa fa-info-circle mr-1"></i>
+                                                        <span>Valid Symbols:&nbsp;</span>
+                                                        <span>{"!#$%^&*.?_-"}</span>
+                                                    </small>
+                                                </div>
+                                            </React.Fragment> :
+                                            this.state.connectionFailed ?
+                                            <input className="form-control border border-danger"
+                                            value="Connection Failed: Please try again later..."
+                                            noValidate disabled /> :
+                                            <input className="form-control"
+                                            value="Loading Data: Please wait..."
+                                            noValidate disabled />
+                                        }
                                     </div>
 
                                     <div className="form-group col-lg-6">
@@ -633,22 +650,9 @@ class RegisterModal extends Component {
                                         onChange={this.onChangeState} noValidate />
                                         { this.renderRecordErrors(errors.confirmUserPassword) }
                                     </div>
-
-                                    {/* <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">
-                                            Please do not ever forget your Id
-                                            <span className="text-danger ml-1">*</span>
-                                        </label>
-                                        <input className={this.inputFieldClasses(errors.confirmId)}
-                                        type="text" name="confirmId" value={confirmId} maxLength="6"
-                                        placeholder="Please re-enter your Id"
-                                        onChange={this.onChangeState} onPaste={this.preventPaste}
-                                        noValidate />
-                                        { this.renderRecordErrors(errors.confirmId) }
-                                    </div> */}
                                 </form>
                                 {
-                                    registered === true ?
+                                    registered ? 
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
                                         <span>Successfully registered.</span>
@@ -657,30 +661,10 @@ class RegisterModal extends Component {
                             </div>
 
                             <div className="modal-footer">
-                                    <div className="d-flex justify-content-end">
-                                        <button className="btn btn-primary w-auto mr-1"
-                                        onClick={this.onSubmit}>
-                                            <i className="fa fa-sign-in-alt"></i>
-                                            <span className="ml-1">Submit</span>
-                                        </button>
-                                        <button className="btn btn-danger w-auto"
-                                        onClick={this.onReset}>
-                                            <i className="fa fa-eraser"></i>
-                                            <span className="ml-1">Reset</span>
-                                        </button>
-                                    </div>
-                                {/* <div className="row justify-content-end align-items-end w-100">
-                                    <div className="form-group col-sm-5 col-lg-3 ml-5 mb-3 ml-sm-0 mb-sm-0">
-                                        <label className="m-0 ml-2 small">
-                                            Please do not ever forget your Id<span className="text-danger ml-1">*</span>
-                                        </label><br />{ this.renderRecordErrors(errors.confirmId) }
-                                        <input className={this.inputFieldClasses(errors.confirmId)}
-                                        type="text" name="confirmId" value={confirmId} maxLength="6"
-                                        placeholder="Please re-enter your Id"
-                                        onChange={this.onChangeState} noValidate />
-                                    </div>
-                                    <div className="ml-3 w-auto">
-                                        <div className="d-flex justify-content-end">
+                                <div className="d-flex justify-content-end w-100">
+                                    {
+                                        this.state.connected ?
+                                        <React.Fragment>
                                             <button className="btn btn-primary w-auto mr-1"
                                             onClick={this.onSubmit}>
                                                 <i className="fa fa-sign-in-alt"></i>
@@ -691,9 +675,9 @@ class RegisterModal extends Component {
                                                 <i className="fa fa-eraser"></i>
                                                 <span className="ml-1">Reset</span>
                                             </button>
-                                        </div>
-                                    </div>
-                                </div> */}
+                                        </React.Fragment> : null
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -702,10 +686,6 @@ class RegisterModal extends Component {
         );
     }
 
-    preventPaste = e => {
-        e.preventDefault();
-    }
- 
     generateCharacters = length => {
         var result           = '';
         var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -721,6 +701,20 @@ class RegisterModal extends Component {
         classes+= errorMsg.length > 0 ? 
         this.state.submitError ? "border border-danger" : "" : "border border-success"
         return classes;
+    }
+
+    getCustomersData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
+        .then(res => {
+            const records = res.data;
+            const connected = true;
+            this.setState({ records, connected });
+        })
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed });
+        });
     }
 
     toProperCase = value => {

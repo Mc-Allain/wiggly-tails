@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { Component } from 'react';
 
 class EmployeeLoginForm extends Component {
@@ -9,9 +8,6 @@ class EmployeeLoginForm extends Component {
             empLastName: '',
             empPassword: ''
         },
-        records: [],
-        connected: false,
-        connectionFailed: false,
         errors:
         {
             id: 'Please input your Id',
@@ -71,8 +67,8 @@ class EmployeeLoginForm extends Component {
 
     onSubmit = e => {
         e.preventDefault();
+        const { records } = this.props;
         const errors = { ...this.state.errors };
-        const records = [...this.state.records];
         const record = { ...this.state.record };
 
         if (this.validForm({ errors })) {
@@ -156,14 +152,10 @@ class EmployeeLoginForm extends Component {
         this.setState({ record, errors, submitError, loginError });
     }
 
-    componentDidMount() {
-        this.getData();
-    }
-
     render() {
         const { record, errors } = this.state;
         return (
-            this.state.connected ?
+            this.props.connected ?
             <form className="form-light p-5 mt-4" noValidate
                 onSubmit={this.onSubmit} onReset={this.onReset}>
                 <h2 className="font-weight-normal text-center">Employee Login</h2>
@@ -206,7 +198,7 @@ class EmployeeLoginForm extends Component {
                     </button>
                 </div>
             </form> :
-            this.state.connectionFailed ?
+            this.props.connectionFailed ?
             <React.Fragment>
                 <h1 className="display-5 text-center text-danger">Connection Failed</h1>
                 <h3 className="font-weight-normal text-center text-danger mb-5">Please try again later.</h3>
@@ -222,20 +214,6 @@ class EmployeeLoginForm extends Component {
         let classes = "form-control ";
         classes += errorMsg.length > 0 && this.state.submitError ? "border border-danger" : ""
         return classes;
-    }
-
-    getData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
-            .then(res => {
-                const records = res.data;
-                const connected = true;
-                this.setState({ records, connected });
-            })
-            .catch(error => {
-                console.log(error);
-                const connectionFailed = true;
-                this.setState({ connectionFailed })
-            });
     }
 
     toAbsProperCase = value => {

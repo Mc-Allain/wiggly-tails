@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 
 import Navbar from './Navbar.js';
@@ -8,7 +9,26 @@ import RegisterModal from './RegisterModal.js';
 import Footer from '../Footer.js';
 
 class EmployeeLogin extends Component {
-    state = { activeId: 2 }
+    state = {
+        activeId: 2,
+        customers: [],
+        customerConnected: false,
+        customerConnectionFailed: false,
+        employees: [],
+        employeeConnected: false,
+        employeeConnectionFailed: false
+    }
+
+    componentDidMount = () => {
+        this.getCustomersData();
+        this.getEmployeesData();
+    }
+
+    onRegister = () => {
+        const customerConnected = false;
+        const customerConnectionFailed = false;
+        this.setState({ customerConnected, customerConnectionFailed })
+    }
 
     switchActiveId = id => {
         const activeId = id;
@@ -29,18 +49,52 @@ class EmployeeLogin extends Component {
                                 <div className="col-sm-10 col-md-8 col-lg-12">
                                     {
                                         this.state.activeId === 2 ?
-                                        <CustomerLoginForm history={this.props.history} /> :
-                                        <EmployeeLoginForm history={this.props.history} />
+                                        <CustomerLoginForm history={this.props.history}
+                                        records={ this.state.customers }
+                                        connected={this.state.customerConnected}
+                                        connectionFailed={this.state.customerConnectionFailed} /> :
+                                        <EmployeeLoginForm history={this.props.history} 
+                                        records={ this.state.employees }
+                                        connected={this.state.employeeConnected}
+                                        connectionFailed={this.state.employeeConnectionFailed} />
                                     }
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <RegisterModal />
+                <RegisterModal getCustomersData={this.getCustomersData} onRegister={this.onRegister} />
                 <Footer />
             </React.Fragment>
         );
+    }
+
+    getCustomersData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
+        .then(res => {
+            const customers = res.data;
+            const customerConnected = true;
+            this.setState({ customers, customerConnected });
+        })
+        .catch(error => {
+            console.log(error);
+            const customerConnectionFailed = true;
+            this.setState({ customerConnectionFailed })
+        });
+    }
+
+    getEmployeesData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
+            .then(res => {
+                const employees = res.data;
+                const employeeConnected = true;
+                this.setState({ employees, employeeConnected });
+            })
+            .catch(error => {
+                console.log(error);
+                const employeeConnectionFailed = true;
+                this.setState({ employeeConnectionFailed })
+            });
     }
 }
  
