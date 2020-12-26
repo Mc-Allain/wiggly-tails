@@ -1,3 +1,11 @@
+# Instructions on how to access the database of [Wiggly Tails](https://mc-allain.github.io/wiggly-tails)
+
+1. Move the folder named reactPhpCrud to the installation folder of XAMPP\htdocs\
+2. Start XAMPP's Apache on its Control Panel
+3. Visit the website: https://mc-allain.github.io/wiggly-tails
+4. Register a customer account
+5. Github doesn't support multi-route dynamic pages, so please do not refresh the page after the login
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
