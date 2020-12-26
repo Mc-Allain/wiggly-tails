@@ -422,7 +422,7 @@ class ViewPetModal extends Component {
         const { record } = this.state;
         const { onRefresh } = this.props;
 
-        this.props.onSubmitForm(false);
+        this.props.onSubmitForm();
         
         axios.post('http://localhost/reactPhpCrud/veterinaryClinic/deletePet.php', record)
         .then(onRefresh);

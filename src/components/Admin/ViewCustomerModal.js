@@ -788,7 +788,7 @@ class ViewCustomerModal extends Component {
         const { record } = this.state;
         const { onRefresh } = this.props;
 
-        this.props.onSubmitForm(false);
+        this.props.onSubmitForm();
 
         axios.post('http://localhost/reactPhpCrud/veterinaryClinic/deleteCustomer.php', record)
         .then(onRefresh);
