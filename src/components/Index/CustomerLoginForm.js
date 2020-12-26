@@ -74,8 +74,6 @@ class CustomerLoginForm extends Component {
                 row.userPassword === record.userPassword
             )
 
-            console.log(result);
-
             if(result.length > 0) {
                 const { history } = this.props;
                 history.replace('/wiggly-tails/customer', {verified: true, id: result[0].id});
