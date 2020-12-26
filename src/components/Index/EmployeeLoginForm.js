@@ -11,6 +11,7 @@ class EmployeeLoginForm extends Component {
         },
         records: [],
         connected: false,
+        connectionFailed: false,
         errors:
         {
             id: 'Please input your Id',
@@ -205,6 +206,11 @@ class EmployeeLoginForm extends Component {
                     </button>
                 </div>
             </form> :
+            this.state.connectionFailed ?
+            <React.Fragment>
+                <h1 className="display-5 text-center text-danger">Connection Failed</h1>
+                <h3 className="font-weight-normal text-center text-danger mb-5">Please try again later.</h3>
+            </React.Fragment> :
             <React.Fragment>
                 <h1 className="display-5 text-center">Loading Records</h1>
                 <h3 className="font-weight-normal text-center mb-5">Please wait...</h3>
@@ -225,8 +231,10 @@ class EmployeeLoginForm extends Component {
                 const connected = true;
                 this.setState({ records, connected });
             })
-            .catch(function (error) {
+            .catch(error => {
                 console.log(error);
+                const connectionFailed = true;
+                this.setState({ connectionFailed })
             });
     }
 
