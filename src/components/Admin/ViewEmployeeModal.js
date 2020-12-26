@@ -137,7 +137,7 @@ class ViewEmployeeModal extends Component {
             record.empFirstName = this.removeLastSpace(record.empFirstName);
             record.empMiddleName = this.removeLastSpace(record.empMiddleName);
 
-            console.log(record);
+            this.props.onSubmitForm();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updateEmployee.php', record)
             .then(onRefresh, this.postSubmit());
@@ -155,9 +155,6 @@ class ViewEmployeeModal extends Component {
         const errors = {...this.state.errors};
         errors.confirmEmpPassword = ' '
         this.setState({ errors, confirmEmpPassword, submitError, updated });
-
-        updated = false;
-        setTimeout(() => this.setState({ updated }), 5000);
     }
 
     validForm = ({ errors }) => {
@@ -213,6 +210,7 @@ class ViewEmployeeModal extends Component {
 
         const confirmEmpPassword = '';
         const submitError = false;
+        const updated = false;
 
         const { employee } = this.props;
         
@@ -229,7 +227,7 @@ class ViewEmployeeModal extends Component {
         errors.empPassword = '';
         errors.confirmEmpPassword = ' ';
 
-        this.setState({ record, confirmEmpPassword, errors, submitError});
+        this.setState({ record, confirmEmpPassword, errors, submitError, updated });
     }
 
     onTogglePassword = e => {
@@ -248,7 +246,7 @@ class ViewEmployeeModal extends Component {
 
     render() {
         const { record, errors, confirmEmpPassword, updated, empTypes, passwordState, deleteState } = this.state;
-        const { employee, empType } = this.props;
+        const { employee, empType, connected, connectionFailed } = this.props;
 
         return (
             <React.Fragment>
@@ -258,18 +256,25 @@ class ViewEmployeeModal extends Component {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id={"viewEmployeeModalTitle-" + employee.id}>View Employee</h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                {
+                                    connected || connectionFailed ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> : null
+                                }
                             </div>
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    updated === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    updated ? connected ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -369,10 +374,14 @@ class ViewEmployeeModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    updated === true ?
+                                    updated ? connected ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                             </div>
@@ -391,6 +400,7 @@ class ViewEmployeeModal extends Component {
     
     defaultButtons = () => {
         return(
+            this.props.connected ?
             <React.Fragment>
                 <button className="btn btn-primary w-auto mr-1"
                 onClick={this.onSubmit}>
@@ -407,7 +417,7 @@ class ViewEmployeeModal extends Component {
                     <i className="fa fa-trash"></i>
                     <span className="ml-1">Delete</span>
                 </button>
-            </React.Fragment>
+            </React.Fragment> : null
         )
     }
 
@@ -436,6 +446,9 @@ class ViewEmployeeModal extends Component {
     onDelete = () => {
         const { record } = this.state;
         const { onRefresh } = this.props;
+        
+        this.props.onSubmitForm(false);
+
         axios.post('http://localhost/reactPhpCrud/veterinaryClinic/deleteEmployee.php', record)
         .then(onRefresh);
     }

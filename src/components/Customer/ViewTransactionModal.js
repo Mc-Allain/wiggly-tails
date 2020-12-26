@@ -33,7 +33,10 @@ class ViewTransactionModal extends Component {
             {
                 activity: ''
             }
-        }
+        },
+        checkUpConnected: false,
+        groomConnected: false,
+        connected: false
     }
 
     componentDidMount = () => {
@@ -206,7 +209,7 @@ class ViewTransactionModal extends Component {
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
                                     {
-                                        record.transType === 'C' ?
+                                        record.transType === 'C' && this.state.connected ?
                                         <button className="btn btn-success w-auto mr-1" data-dismiss="modal"
                                         onClick={() => this.onViewAdmission("/wiggly-tails/customer/view-admission")}>
                                             <i className="fa fa-hand-holding-medical fa-sm"></i>
@@ -239,40 +242,49 @@ class ViewTransactionModal extends Component {
         return(
             <div className="col-12 sub-form bt-1 mt-3">
                 <div className="row mt-3">
-                    <div className="form-group col-lg-6">
-                        <label className="m-0 ml-2">Findings</label>
-                        <input className="form-control"
-                        type="text" name="findings" value={checkUp.findings}
-                        noValidate disabled />
-                    </div>
+                    {
+                        this.state.checkUpConnected ?
+                        <React.Fragment>
+                            <div className="form-group col-lg-6">
+                                <label className="m-0 ml-2">Findings</label>
+                                <input className="form-control"
+                                type="text" name="findings" value={checkUp.findings}
+                                noValidate disabled />
+                            </div>
 
-                    <div className="form-group col-lg-6">
-                        <label className="m-0 ml-2">Treatment</label>
-                        <input className="form-control"
-                        type="text" name="treatment" value={checkUp.treatment}
-                        noValidate disabled />
-                    </div>
+                            <div className="form-group col-lg-6">
+                                <label className="m-0 ml-2">Treatment</label>
+                                <input className="form-control"
+                                type="text" name="treatment" value={checkUp.treatment}
+                                noValidate disabled />
+                            </div>
 
-                    <div className="form-group col-lg-6">
-                        <label className="m-0 ml-2">Admission Date</label>
-                        <input className="form-control"
-                        type="date" name="admissionDate" value={checkUp.admissionDate}
-                        noValidate disabled />
-                    </div>
+                            <div className="form-group col-lg-6">
+                                <label className="m-0 ml-2">Admission Date</label>
+                                <input className="form-control"
+                                type="date" name="admissionDate" value={checkUp.admissionDate}
+                                noValidate disabled />
+                            </div>
 
-                    <div className="form-group col-lg-6">
-                        <label className="m-0 ml-2">Released Date</label>
-                        <input className="form-control"
-                        type="date" name="releasedDate" value={checkUp.releasedDate} 
-                        noValidate disabled />
-                    </div>
+                            <div className="form-group col-lg-6">
+                                <label className="m-0 ml-2">Released Date</label>
+                                <input className="form-control"
+                                type="date" name="releasedDate" value={checkUp.releasedDate} 
+                                noValidate disabled />
+                            </div>
 
-                    <div className="form-group col">
-                        <label className="m-0 ml-2">Additional Information</label>
-                        <textarea className="form-control"
-                        type="text" name="addInfo" value={checkUp.addInfo}
-                        rows="2" noValidate disabled />
-                    </div>
+                            <div className="form-group col">
+                                <label className="m-0 ml-2">Additional Information</label>
+                                <textarea className="form-control"
+                                type="text" name="addInfo" value={checkUp.addInfo}
+                                rows="2" noValidate disabled />
+                            </div>
+                        </React.Fragment> :
+                        <div className="col-12">
+                            <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
+                            <h5 className="font-weight-normal text-center">Please wait...</h5>
+                        </div>
+                    }
                 </div>
             </div>
         )
@@ -284,11 +296,20 @@ class ViewTransactionModal extends Component {
         return(
             <div className="col-12 sub-form bt-1 mt-3">
                 <div className="row mt-3">
-                    <div className="form-group col">
-                        <label className="m-0 ml-2">Activity</label>
-                        <input className="form-control"
-                        type="text" name="activity" value={groom.activity} noValidate disabled/>
-                    </div>
+                    {
+                        this.state.groomConnected ?
+                        <React.Fragment>
+                            <div className="form-group col">
+                                <label className="m-0 ml-2">Activity</label>
+                                <input className="form-control"
+                                type="text" name="activity" value={groom.activity} noValidate disabled/>
+                            </div>
+                        </React.Fragment> :
+                        <div className="col-12">
+                            <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
+                            <h5 className="font-weight-normal text-center">Please wait...</h5>
+                        </div>
+                    }
                 </div>
             </div>
         )
@@ -298,13 +319,15 @@ class ViewTransactionModal extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewTransactionCheckUp.php?id='+id)
         .then(res => {
             let checkUp = res.data;
+            const checkUpConnected = true;
+            const connected = true;
             checkUp = checkUp[0];
             this.setState(currentState => ({
                 ...currentState,
                 record: {
                     ...currentState.record,
                     checkUp
-                }
+                }, checkUpConnected, connected
             }))
         })
         .catch(error => console.log(error));
@@ -314,13 +337,15 @@ class ViewTransactionModal extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewTransactionGroom.php?id='+id)
         .then(res => {
             let groom = res.data;
+            const groomConnected = true;
+            const connected = true;
             groom = groom[0];
             this.setState(currentState => ({
                 ...currentState,
                 record: {
                     ...currentState.record,
                     groom
-                }
+                }, groomConnected, connected
             }))
         })
         .catch(error => console.log(error));

@@ -14,6 +14,7 @@ class ManageEmployeesModal extends Component {
             adminPassword: 'Please input your Admin Password'
         },
         records: [],
+        connected: false,
         submitError: false,
         loginError: false
     }
@@ -88,7 +89,7 @@ class ManageEmployeesModal extends Component {
                 btnClose.click();
                 
                 const { history } = this.props;
-                history.replace('/wiggly-tails-vet/admin/manage-employees',
+                history.replace('/wiggly-tails/admin/manage-employees',
                 {verified: true, id: result[0].id, empType: result[0].empType});
             }
             else {
@@ -151,7 +152,7 @@ class ManageEmployeesModal extends Component {
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="manageEmployeesModalTitle">Manage Employee</h5>
+                            <h5 className="modal-title" id="manageEmployeesModalTitle">Manage Employees</h5>
                             <button id="btnClose" className="btn btn-light text-danger p-1"
                             data-dismiss="modal" onClick={this.onReset}>
                                 <i className="fa fa-window-close fa-lg"></i>
@@ -160,37 +161,49 @@ class ManageEmployeesModal extends Component {
                         
                         <div className="modal-body">
                             { this.renderLoginError() }
-                            <form className="row form-light mx-2 p-4" noValidate>
-                                <div className="form-group col-12">
-                                    <label className="m-0 ml-2">Admin Id</label>
-                                    <input className={this.inputFieldClasses(errors.adminId)}
-                                    type="text" name="adminId" value={record.adminId} maxLength="6"
-                                    onChange={this.onChangeRecord} noValidate />
-                                    { this.renderRecordErrors(errors.adminId) }
-                                </div>
+                            {
+                                this.state.connected ?
+                                <form className="row form-light mx-2 p-4" noValidate>
+                                    <div className="form-group col-12">
+                                        <label className="m-0 ml-2">Admin Id</label>
+                                        <input className={this.inputFieldClasses(errors.adminId)}
+                                        type="text" name="adminId" value={record.adminId} maxLength="6"
+                                        onChange={this.onChangeRecord} noValidate />
+                                        { this.renderRecordErrors(errors.adminId) }
+                                    </div>
 
-                                <div className="form-group col-12">
-                                    <label className="m-0 ml-2">Admin Password</label>
-                                    <input className={this.inputFieldClasses(errors.adminPassword)}
-                                    type="password" name="adminPassword" value={record.adminPassword}
-                                    onChange={this.onChangeRecord} noValidate />
-                                    { this.renderRecordErrors(errors.adminPassword) }
-                                </div>
-                            </form>
+                                    <div className="form-group col-12">
+                                        <label className="m-0 ml-2">Admin Password</label>
+                                        <input className={this.inputFieldClasses(errors.adminPassword)}
+                                        type="password" name="adminPassword" value={record.adminPassword}
+                                        onChange={this.onChangeRecord} noValidate />
+                                        { this.renderRecordErrors(errors.adminPassword) }
+                                    </div>
+                                </form> :
+                                <React.Fragment>
+                                    <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
+                                    <h5 className="font-weight-normal text-center">Please wait...</h5>
+                                </React.Fragment>
+                            }
                         </div>
 
                         <div className="modal-footer">
                             <div className="d-flex justify-content-end w-100">
-                                <button className="btn btn-primary w-auto mr-1"
-                                onClick={this.onSubmit}>
-                                    <i className="fa fa-sign-in-alt"></i>
-                                    <span className="ml-1">Submit</span>
-                                </button>
-                                <button className="btn btn-danger w-auto"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-eraser"></i>
-                                    <span className="ml-1">Reset</span>
-                                </button>
+                                {
+                                    this.state.connected ?
+                                    <React.Fragment>
+                                        <button className="btn btn-primary w-auto mr-1"
+                                        onClick={this.onSubmit}>
+                                            <i className="fa fa-sign-in-alt"></i>
+                                            <span className="ml-1">Submit</span>
+                                        </button>
+                                        <button className="btn btn-danger w-auto"
+                                        onClick={this.onReset}>
+                                            <i className="fa fa-eraser"></i>
+                                            <span className="ml-1">Reset</span>
+                                        </button>
+                                    </React.Fragment> : null
+                                }
                             </div>
                         </div>
                     </div>
@@ -215,7 +228,8 @@ class ManageEmployeesModal extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewAdmins.php')
         .then(res => {
             const records = res.data;
-            this.setState({ records });
+            const connected = true;
+            this.setState({ records, connected });
         })
         .catch(function(error) {
             console.log(error);

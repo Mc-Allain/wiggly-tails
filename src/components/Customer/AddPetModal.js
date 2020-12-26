@@ -110,6 +110,8 @@ class AddPetModal extends Component {
 
             record.petName = this.removeLastSpace(record.petName);
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertPet.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -189,10 +191,10 @@ class AddPetModal extends Component {
                             </div>
                             <div className="modal-body">
                                 {
-                                    added === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    added ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -272,10 +274,10 @@ class AddPetModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    added === true ?
+                                    added ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                             </div>

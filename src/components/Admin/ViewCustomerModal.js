@@ -46,7 +46,9 @@ class ViewCustomerModal extends Component {
             userPassword: '',
             confirmUserPassword: ' ',
         },
-        records: [],
+        records: [], 
+        connected: false,
+        connectionFailed: false,
         submitError: false,
         updated: false,
         passwordState:
@@ -58,6 +60,8 @@ class ViewCustomerModal extends Component {
     }
 
     componentDidMount() {
+        this.getCustomersData();
+
         const { customer } = this.props;
         const record = {...this.state.record};
         record.id = customer.id;
@@ -100,10 +104,7 @@ class ViewCustomerModal extends Component {
             this.toAbsProperCase(value);
         }
 
-        if(name === "emailAddress" || name === "email") {
-            if(name === "emailAddress") value = this.removeSpaces(value);
-            this.getCustomersData();
-        }
+        if(name === "emailAddress") value = this.removeSpaces(value);
 
         this.setState(currentState => ({
             ...currentState,
@@ -302,6 +303,8 @@ class ViewCustomerModal extends Component {
             mbNo.push(record.mobileNumber.substring(6, 10));
             record.mobileNumber = mbNo.join('-');
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updateCustomer.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -312,15 +315,18 @@ class ViewCustomerModal extends Component {
     }
 
     postSubmit = () => {
+        const record = {...this.state.record};
+        record.homeAddress.street = record.homeAddress.street.substring(0, record.homeAddress.street.length - 4);
+        record.homeAddress.barangay = record.homeAddress.barangay.substring(6, record.homeAddress.barangay.length);
+        record.homeAddress.municipality =   record.homeAddress.municipality
+                                            .substring(0, record.homeAddress.municipality.length - 5);
+
         let updated = true;
         const submitError = false;
         const confirmUserPassword = '';
         const errors = {...this.state.errors};
         errors.confirmUserPassword = ' '
-        this.setState({ errors, confirmUserPassword, submitError, updated });
-
-        updated = false;
-        setTimeout(() => this.setState({ updated }), 5000);
+        this.setState({ record, errors, confirmUserPassword, submitError, updated });
     }
 
     validForm = ({ errors }) => {
@@ -424,6 +430,7 @@ class ViewCustomerModal extends Component {
 
         const confirmUserPassword = '';
         const submitError = false;
+        const updated = false;
 
         const { passwordState } = this.state;
 
@@ -431,10 +438,10 @@ class ViewCustomerModal extends Component {
         passwordState.inputType = "password";
 
         homeAddress.lotBlock = customer.lotBlock;
-        record.homeAddress.street = customer.street.substring(0, customer.street.length - 4);
-        record.homeAddress.subdivision = customer.subdivision;
-        record.homeAddress.barangay = customer.barangay.substring(6, customer.barangay.length);
-        record.homeAddress.municipality =   customer.municipality
+        homeAddress.street = customer.street.substring(0, customer.street.length - 4);
+        homeAddress.subdivision = customer.subdivision;
+        homeAddress.barangay = customer.barangay.substring(6, customer.barangay.length);
+        homeAddress.municipality =   customer.municipality
                                             .substring(0, customer.municipality.length - 5);
         homeAddress.province = customer.province;
 
@@ -468,7 +475,7 @@ class ViewCustomerModal extends Component {
         errors.userPassword = '';
         errors.confirmUserPassword = ' ';
 
-        this.setState({ record, confirmUserPassword, errors, passwordState, submitError});
+        this.setState({ record, confirmUserPassword, errors, passwordState, submitError, updated });
     }
 
     onTogglePassword = e => {
@@ -489,7 +496,7 @@ class ViewCustomerModal extends Component {
         const { record, errors, confirmUserPassword, passwordState, updated, deleteState } = this.state;
         const { homeAddress } = this.state.record;
         const { homeAddressErrors } = errors;
-        const { customer } = this.props;
+        const { customer, connected } = this.props;
 
         return (
             <React.Fragment>
@@ -499,18 +506,25 @@ class ViewCustomerModal extends Component {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id={"viewCustomerModalTitle-" + customer.id}>View Customer</h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                {
+                                    connected ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> : null
+                                }
                             </div>
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    updated === true ?
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                    updated ? connected ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -636,29 +650,41 @@ class ViewCustomerModal extends Component {
                                         <label className="m-0 ml-2">
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <div className="input-group d-block d-sm-flex px-0">
-                                            <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
-                                            type="text" name="emailAddress"  value={record.emailAddress}
-                                            onChange={this.onChangeRecord} noValidate />
-                                            <div className="input-group-append justify-content-end">
-                                                <span className="input-group-text">@</span>
-                                                <select className="input-group-text"
-                                                name="email" value={record.email}
-                                                onChange={this.onChangeRecord} noValidate>
-                                                    <option value="@yahoo.com">yahoo.com</option>
-                                                    <option value="@gmail.com">gmail.com</option>
-                                                    <option value="@outlook.com">outlook.com</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        { this.renderRecordErrors(errors.emailAddress) }
-                                        <div>
-                                            <small className="text-success ml-2">
-                                                <i className="fa fa-info-circle mr-1"></i>
-                                                <span>Valid Symbols:&nbsp;</span>
-                                                <span>{"!#$%^&*.?_-"}</span>
-                                            </small>
-                                        </div>
+                                        {
+                                            this.state.connected ?
+                                            <React.Fragment>
+                                                <div className="input-group d-block d-sm-flex px-0">
+                                                    <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                                                    type="text" name="emailAddress"  value={record.emailAddress}
+                                                    onChange={this.onChangeRecord} noValidate />
+                                                    <div className="input-group-append justify-content-end">
+                                                        <span className="input-group-text">@</span>
+                                                        <select className="input-group-text"
+                                                        name="email" value={record.email}
+                                                        onChange={this.onChangeRecord} noValidate>
+                                                            <option value="@yahoo.com">yahoo.com</option>
+                                                            <option value="@gmail.com">gmail.com</option>
+                                                            <option value="@outlook.com">outlook.com</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                { this.renderRecordErrors(errors.emailAddress) }
+                                                <div>
+                                                    <small className="text-success ml-2">
+                                                        <i className="fa fa-info-circle mr-1"></i>
+                                                        <span>Valid Symbols:&nbsp;</span>
+                                                        <span>{"!#$%^&*.?_-"}</span>
+                                                    </small>
+                                                </div>
+                                            </React.Fragment> :
+                                            this.state.connectionFailed ?
+                                            <input className="form-control border border-danger"
+                                            value="Connection Failed: Please try again later..."
+                                            noValidate disabled /> :
+                                            <input className="form-control"
+                                            value="Loading Data: Please wait..."
+                                            noValidate disabled />
+                                        }
                                     </div>
 
                                     <div className="form-group col-lg-6">
@@ -689,10 +715,14 @@ class ViewCustomerModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    updated === true ?
+                                    updated ? connected ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                             </div>
@@ -711,6 +741,7 @@ class ViewCustomerModal extends Component {
 
     defaultButtons = () => {
         return(
+            this.props.connected && this.state.connected ?
             <React.Fragment>
                 <button className="btn btn-primary w-auto mr-1"
                 onClick={this.onSubmit}>
@@ -727,7 +758,7 @@ class ViewCustomerModal extends Component {
                     <i className="fa fa-trash"></i>
                     <span className="ml-1">Delete</span>
                 </button>
-            </React.Fragment>
+            </React.Fragment> : null
         )
     }
 
@@ -756,6 +787,9 @@ class ViewCustomerModal extends Component {
     onDelete = () => {
         const { record } = this.state;
         const { onRefresh } = this.props;
+
+        this.props.onSubmitForm(false);
+
         axios.post('http://localhost/reactPhpCrud/veterinaryClinic/deleteCustomer.php', record)
         .then(onRefresh);
     }
@@ -764,9 +798,14 @@ class ViewCustomerModal extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const records = res.data;
-            this.setState({ records });
+            const connected = true;
+            this.setState({ records, connected });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed });
+        });
     }
 
     inputFieldClasses = errorMsg => {

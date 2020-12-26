@@ -10,6 +10,7 @@ class CustomerLoginForm extends Component {
             userPassword: ''
         },
         records: [],
+        connected: false,
         errors:
         {
             emailAddress: 'Please input your Email Address',
@@ -66,9 +67,6 @@ class CustomerLoginForm extends Component {
             let loginError = false;
 
             this.setState({ submitError, loginError });
-
-            console.log(record);
-            console.log(records);
 
             const result = records.filter(row => 
                 (row.emailAddress + row.email).toLowerCase() === (record.emailAddress + record.email).toLowerCase() &&
@@ -154,6 +152,7 @@ class CustomerLoginForm extends Component {
     render() {
         const { record, errors } = this.state;
         return (
+            this.state.connected ?
             <form className="form-light p-5 mt-4" noValidate
             onSubmit={this.onSubmit} onReset={this.onReset}>
                 <h2 className="font-weight-normal text-center">Customer Login</h2>
@@ -199,7 +198,11 @@ class CustomerLoginForm extends Component {
                         <span className="ml-1">Reset</span>
                     </button>
                 </div>
-            </form>
+            </form> :
+            <React.Fragment>
+                <h1 className="display-5 text-center">Loading Records</h1>
+                <h3 className="font-weight-normal text-center mb-5">Please wait...</h3>
+            </React.Fragment>
         );
     }
 
@@ -213,7 +216,8 @@ class CustomerLoginForm extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const records = res.data;
-            this.setState({ records });
+            const connected = true;
+            this.setState({ records, connected });
         })
         .catch(function(error) {
             console.log(error);

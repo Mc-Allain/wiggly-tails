@@ -46,7 +46,7 @@ class TransactionsTable extends Component {
     }
 
     render() {
-        const { transactions, onRefresh, onSearch, searchValue, onClear, history } = this.props;
+        const { transactions, onRefresh, onSearch, searchValue, onClear, history, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -79,10 +79,15 @@ class TransactionsTable extends Component {
                             <th className="w-100px">Action</th>
                         </tr>
                     </thead>
-                    <tbody>{ transactions.length > 0 ? this.renderItems(transactions) : null }</tbody>
+                    <tbody>
+                        {
+                            transactions.length > 0 && connected ?
+                            this.renderItems(transactions) : null
+                        }
+                    </tbody>
                 </table>
                 {
-                    transactions.length > 0 ?
+                    transactions.length > 0 && connected ?
                     <TablePagination
                     setPage={this.setPage}
                     recordsPerPage={recordsPerPage}
@@ -90,10 +95,11 @@ class TransactionsTable extends Component {
                     activePage={activePage}
                     totalRecords={transactions.length} /> : null
                 }
-                <AddTransactionModal onRefresh={onRefresh} customerId='' />
+                <AddTransactionModal onRefresh={onRefresh} customerId='' onSubmitForm={onSubmitForm} />
                 {
                     transactions.map(transaction => <ViewTransactionModal key={transaction.id}
-                    transaction={transaction} onRefresh={onRefresh} history={history} /> )
+                    transaction={transaction} onRefresh={onRefresh} history={history}
+                    connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> )
                 }
             </React.Fragment>
         );

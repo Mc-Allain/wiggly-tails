@@ -46,6 +46,9 @@ class UpdateAccountInfoModal extends Component {
             userPassword: '',
             confirmUserPassword: ' ',
         },
+        records: [], 
+        connected: false,
+        connectionFailed: false,
         submitError: false,
         updated: false,
         passwordState:
@@ -56,6 +59,8 @@ class UpdateAccountInfoModal extends Component {
     }
 
     componentDidMount() {
+        this.getCustomersData();
+
         const { customer } = this.props;
         const record = {...this.state.record};
         record.id = customer.id;
@@ -63,10 +68,11 @@ class UpdateAccountInfoModal extends Component {
         record.firstName = customer.firstName;
         record.middleName = customer.middleName;
         record.homeAddress.lotBlock = customer.lotBlock;
-        record.homeAddress.street = customer.street;
+        record.homeAddress.street = customer.street.substring(0, customer.street.length - 4);
         record.homeAddress.subdivision = customer.subdivision;
-        record.homeAddress.barangay = customer.barangay;
-        record.homeAddress.municipality = customer.municipality;
+        record.homeAddress.barangay = customer.barangay.substring(6, customer.barangay.length);
+        record.homeAddress.municipality =   customer.municipality
+                                            .substring(0, customer.municipality.length - 5);
         record.homeAddress.province = customer.province;
         record.birthdate = customer.birthdate;
         let mobileNumber = customer.mobileNumber.split('-');
@@ -89,7 +95,16 @@ class UpdateAccountInfoModal extends Component {
     }
 
     onChangeRecord = e => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
+
+        if(name !== "mobileNumber" && name !== "emailAddress" && name !== "userPassword") {
+            value = name === "lastName" ?
+            this.toProperCase(value) :
+            this.toAbsProperCase(value);
+        }
+
+        if(name === "emailAddress") value = this.removeSpaces(value);
+
         this.setState(currentState => ({
             ...currentState,
             record: {
@@ -104,22 +119,23 @@ class UpdateAccountInfoModal extends Component {
         const errors = {...this.state.errors};
         const record = {...this.state.record};
         const { confirmUserPassword } = this.state;
+        const properLength = this.removeSpaces(value).length;
 
         switch(name){
             case 'lastName':
-                errors.lastName=    value.length === 0 ? " " :
-                                    value.length < 2 || value.length > 24 ?
+                errors.lastName=    properLength === 0 ? " " :
+                                    properLength < 2 || value.length > 24 ?
                                     "Must be at between 2 and 24 characters" : ""
                 break;
 
             case 'firstName':
-                errors.firstName=   value.length === 0 ? " " :
-                                    value.length < 2 || value.length > 24 ?
+                errors.firstName=   properLength === 0 ? " " :
+                                    properLength < 2 || value.length > 24 ?
                                     "Must be at between 2 and 24 characters" : ""
                 break;
 
             case 'middleName':
-                errors.middleName=  value.length > 24 ?
+                errors.middleName=  properLength > 24 ?
                                     "Must be at maximum of 24 characters" : ""
                 break;
             
@@ -129,7 +145,7 @@ class UpdateAccountInfoModal extends Component {
 
             case 'mobileNumber':
                 errors.mobileNumber=    value.length === 0 ? " " :
-                                        !isNumeric(value) ? "Please input an appropriate value" :
+                                        !isNumeric(value) ? "Please input a valid value" :
                                         value.length < 10 ? "Must be at exact 10 numbers" : ""
                                         
                 break;
@@ -137,7 +153,16 @@ class UpdateAccountInfoModal extends Component {
             case 'emailAddress':
                 errors.emailAddress=    value.length === 0 ? " " :
                                         value.length < 8 || value.length > 24 ?
-                                        "Must be at between 8 and 24 characters" : ""
+                                        "Must be at between 8 and 24 characters" :
+                                        !this.isValidEmail(value) ?
+                                        "Please input a valid value" :
+                                        this.emailAddressExists() ?
+                                        "Already in use" : ""
+                break;
+            
+            case 'email':
+            errors.emailAddress=    this.emailAddressExists() ?
+                                    "Already in use" : ""
                 break;
 
             case 'userPassword':
@@ -161,8 +186,29 @@ class UpdateAccountInfoModal extends Component {
         this.setState({ errors });
     }
 
+    emailAddressExists = () => {
+        const { record, records } = this.state;
+        const { customer } = this.props;
+
+        const result = records.filter(row =>
+            (row.emailAddress + row.email).toLowerCase() === (record.emailAddress + record.email).toLowerCase() &&
+            (row.emailAddress + row.email).toLowerCase() !== (customer.emailAddress + customer.email).toLowerCase()
+        )
+
+        if(result.length > 0) return true;
+        return false;
+    }
+    
+    isValidEmail = value => {
+        const emailPattern = new RegExp(/^[a-zA-Z0-9!#$%^&*.?_-]+$/);
+        return emailPattern.test(value);
+    }
+
     onChangeHomeAddress = e => {
-        const { name, value } = e.target;
+        let { name, value } = e.target;
+
+        value = this.toProperCase(value);
+
         this.setState(currentState => ({
             ...currentState,
             record: {
@@ -179,6 +225,8 @@ class UpdateAccountInfoModal extends Component {
         const { name, value } = e.target;
         const homeAddressErrors = {...this.state.errors.homeAddressErrors};
 
+        const properLength = this.removeSpaces(value).length;
+
         switch(name){
             case 'lotBlock':
                 homeAddressErrors.lotBlock= value.length > 12 ?
@@ -186,26 +234,26 @@ class UpdateAccountInfoModal extends Component {
                 break;
 
             case 'street':
-                homeAddressErrors.street=   value.length === 0 ? " " :
-                                            value.length < 2 || value.length > 24 ?
+                homeAddressErrors.street=   properLength === 0 ? " " :
+                                            properLength < 2 || value.length > 24 ?
                                             "Street must be at between 2 and 24 characters" : ""
                 break;
 
             case 'subdivision':
-                homeAddressErrors.subdivision=  value.length === 0 ? " " :
-                                                value.length < 2  || value.length > 24 ?
+                homeAddressErrors.subdivision=  properLength === 0 ? " " :
+                                                properLength < 2  || value.length > 24 ?
                                                 "Subdivision must be at between 2 and 24 characters" : ""
                 break;
 
             case 'barangay':
-                homeAddressErrors.barangay= value.length === 0 ? " " :
-                                            value.length < 2  || value.length > 24 ?
+                homeAddressErrors.barangay= properLength === 0 ? " " :
+                                            properLength < 2  || value.length > 24 ?
                                             "Barangay must be at between 2 and 24 characters" : ""
                 break;
 
             case 'municipality':
-                homeAddressErrors.municipality= value.length === 0 ? " " :
-                                                value.length < 2 || value.length > 24 ?
+                homeAddressErrors.municipality= properLength === 0 ? " " :
+                                                properLength < 2 || value.length > 24 ?
                                                 "Municipality must be at between 2 and 24 characters" : ""
                 break;
             
@@ -234,16 +282,28 @@ class UpdateAccountInfoModal extends Component {
             const { onRefresh } = this.props;
             const record = {...this.state.record};
 
-            record.street += " St.";
-            record.barangay = "Brgy. " + record.barangay;
-            record.municipality += " City";
+            record.lastName = this.removeLastSpace(record.lastName);
+            record.firstName = this.removeLastSpace(record.firstName);
+            record.middleName = this.removeLastSpace(record.middleName);
+            record.homeAddress.lotBlock = this.removeLastSpace(record.homeAddress.lotBlock);
+            record.homeAddress.street = this.removeLastSpace(record.homeAddress.street);
+            record.homeAddress.subdivision = this.removeLastSpace(record.homeAddress.subdivision);
+            record.homeAddress.barangay = this.removeLastSpace(record.homeAddress.barangay);
+            record.homeAddress.municipality = this.removeLastSpace(record.homeAddress.municipality);
+            record.homeAddress.province = this.removeLastSpace(record.homeAddress.province);
 
+            record.homeAddress.street += " St.";
+            record.homeAddress.barangay = "Brgy. " + record.homeAddress.barangay;
+            record.homeAddress.municipality += " City";
+            
             let mbNo = [];
             mbNo.push("+63" + record.mobileNumber.substring(0, 3));
             mbNo.push(record.mobileNumber.substring(3, 6));
             mbNo.push(record.mobileNumber.substring(6, 10));
             record.mobileNumber = mbNo.join('-');
-            
+
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updateCustomer.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -254,11 +314,18 @@ class UpdateAccountInfoModal extends Component {
     }
 
     postSubmit = () => {
+        const record = {...this.state.record};
+        record.homeAddress.street = record.homeAddress.street.substring(0, record.homeAddress.street.length - 4);
+        record.homeAddress.barangay = record.homeAddress.barangay.substring(6, record.homeAddress.barangay.length);
+        record.homeAddress.municipality =   record.homeAddress.municipality
+                                            .substring(0, record.homeAddress.municipality.length - 5);
+
         let updated = true;
         const submitError = false;
-        this.setState({ submitError, updated });
-        updated = false;
-        setTimeout(() => this.setState({ updated }), 5000);
+        const confirmUserPassword = '';
+        const errors = {...this.state.errors};
+        errors.confirmUserPassword = ' '
+        this.setState({ record, errors, confirmUserPassword, submitError, updated });
     }
 
     validForm = ({ errors }) => {
@@ -362,6 +429,7 @@ class UpdateAccountInfoModal extends Component {
 
         const confirmUserPassword = '';
         const submitError = false;
+        const updated = false;
 
         const { passwordState } = this.state;
 
@@ -369,16 +437,18 @@ class UpdateAccountInfoModal extends Component {
         passwordState.inputType = "password";
 
         homeAddress.lotBlock = customer.lotBlock;
-        homeAddress.street = customer.street;
+        homeAddress.street = customer.street.substring(0, customer.street.length - 4);
         homeAddress.subdivision = customer.subdivision;
-        homeAddress.barangay = customer.barangay;
-        homeAddress.municipality = customer.municipality;
+        homeAddress.barangay = customer.barangay.substring(6, customer.barangay.length);
+        homeAddress.municipality =   customer.municipality
+                                            .substring(0, customer.municipality.length - 5);
         homeAddress.province = customer.province;
 
         record.lastName = customer.lastName;
         record.firstName = customer.firstName;
         record.middleName = customer.middleName
         record.homeAddress = homeAddress;
+        record.birthdate = customer.birthdate;
         let mobileNumber = customer.mobileNumber.split('-');
         mobileNumber = mobileNumber.join('');
         mobileNumber = mobileNumber.substring(3, mobileNumber.length);
@@ -398,12 +468,13 @@ class UpdateAccountInfoModal extends Component {
         errors.firstName = '';
         errors.middleName = ''
         errors.homeAddressErrors = homeAddressErrors;
+        errors.birthdate = ''
         errors.mobileNumber = '';
         errors.emailAddress = '';
         errors.userPassword = '';
         errors.confirmUserPassword = ' ';
 
-        this.setState({ record, confirmUserPassword, errors, submitError, passwordState});
+        this.setState({ record, confirmUserPassword, errors, passwordState, submitError, updated });
     }
 
     onTogglePassword = e => {
@@ -421,39 +492,45 @@ class UpdateAccountInfoModal extends Component {
     }
 
     render() {
-        const { record, errors, confirmUserPassword, passwordState, updated } = this.state;
+        const { record, errors, confirmUserPassword, passwordState, updated, deleteState } = this.state;
         const { homeAddress } = this.state.record;
         const { homeAddressErrors } = errors;
+        const { connected } = this.props;
 
         return (
             <React.Fragment>
                 <div className="modal fade" id="updateAccountInfoModal" tabIndex="-1" role="dialog"
-                    aria-labelledby="updateAccountInforModalTitle" aria-hidden="true">
+                    aria-labelledby="updateAccountInfoModalTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="updateAccountInfoModalTitle">Update Account Information</h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                <h5 className="modal-title" id="updateAccountInfoModalTitle">View Customer</h5>
+                                {
+                                    connected ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> : null
+                                }
                             </div>
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    updated === true ?
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                    updated ? connected ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">Id</label>
                                         <input className="form-control zi-10" type="text"
-                                            name="id" value={record.id}
-                                            placeholder="Please click 'Generate'"
-                                            noValidate disabled />
+                                            name="id" value={record.id} noValidate disabled />
                                     </div>
 
                                     <div className="form-group col-lg-6">
@@ -572,24 +649,42 @@ class UpdateAccountInfoModal extends Component {
                                         <label className="m-0 ml-2">
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <div className="input-group d-block d-sm-flex px-0">
-                                            <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
-                                            type="text" name="emailAddress"  value={record.emailAddress}
-                                            onChange={this.onChangeRecord} noValidate />
-                                            <div className="input-group-append justify-content-end">
-                                                <span className="input-group-text">@</span>
-                                                <select className="input-group-text"
-                                                name="email" value={record.email}
-                                                onChange={this.onChangeRecord} noValidate>
-                                                    <option value="@yahoo.com">yahoo.com</option>
-                                                    <option value="@gmail.com">gmail.com</option>
-                                                    <option value="@outlook.com">outlook.com</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        { this.renderRecordErrors(errors.emailAddress) }
+                                        {
+                                            this.state.connected ?
+                                            <React.Fragment>
+                                                <div className="input-group d-block d-sm-flex px-0">
+                                                    <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                                                    type="text" name="emailAddress"  value={record.emailAddress}
+                                                    onChange={this.onChangeRecord} noValidate />
+                                                    <div className="input-group-append justify-content-end">
+                                                        <span className="input-group-text">@</span>
+                                                        <select className="input-group-text"
+                                                        name="email" value={record.email}
+                                                        onChange={this.onChangeRecord} noValidate>
+                                                            <option value="@yahoo.com">yahoo.com</option>
+                                                            <option value="@gmail.com">gmail.com</option>
+                                                            <option value="@outlook.com">outlook.com</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                { this.renderRecordErrors(errors.emailAddress) }
+                                                <div>
+                                                    <small className="text-success ml-2">
+                                                        <i className="fa fa-info-circle mr-1"></i>
+                                                        <span>Valid Symbols:&nbsp;</span>
+                                                        <span>{"!#$%^&*.?_-"}</span>
+                                                    </small>
+                                                </div>
+                                            </React.Fragment> :
+                                            this.state.connectionFailed ?
+                                            <input className="form-control border border-danger"
+                                            value="Connection Failed: Please try again later..."
+                                            noValidate disabled /> :
+                                            <input className="form-control"
+                                            value="Loading Data: Please wait..."
+                                            noValidate disabled />
+                                        }
                                     </div>
-                                    
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">
@@ -619,26 +714,21 @@ class UpdateAccountInfoModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    updated === true ?
+                                    updated ? connected ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                             </div>
 
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
-                                    <button className="btn btn-primary w-auto mr-1"
-                                    onClick={this.onSubmit}>
-                                        <i className="fa fa-pen fa-sm"></i>
-                                        <span className="ml-1">Update</span>
-                                    </button>
-                                    <button className="btn btn-danger w-auto mr-1"
-                                    onClick={this.onReset}>
-                                        <i className="fa fa-eraser"></i>
-                                        <span className="ml-1">Reset</span>
-                                    </button>
+                                    { deleteState ?  this.deleteButtons() : this.defaultButtons() }
                                 </div>
                             </div>
                         </div>
@@ -648,11 +738,123 @@ class UpdateAccountInfoModal extends Component {
         );
     }
 
+    defaultButtons = () => {
+        return(
+            this.props.connected && this.state.connected ?
+            <React.Fragment>
+                <button className="btn btn-primary w-auto mr-1"
+                onClick={this.onSubmit}>
+                    <i className="fa fa-pen fa-sm"></i>
+                    <span className="ml-1">Update</span>
+                </button>
+                <button className="btn btn-danger w-auto mr-1"
+                onClick={this.onReset}>
+                    <i className="fa fa-eraser"></i>
+                    <span className="ml-1">Reset</span>
+                </button>
+            </React.Fragment> : null
+        )
+    }
+
+    getCustomersData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
+        .then(res => {
+            const records = res.data;
+            const connected = true;
+            this.setState({ records, connected });
+        })
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed });
+        });
+    }
+
     inputFieldClasses = errorMsg => {
         let classes = "form-control ";
         classes+= errorMsg.length > 0 ? 
         this.state.submitError ? "border border-danger" : "" : "border border-success"
         return classes;
+    }
+
+    toProperCase = value => {
+        let propervalue = ""
+        let isCapital = false;
+        for(var i = 0; i < value.length; i++) {
+            if(value.charAt(i) === " ") {
+                if(i !== 0 && value.charAt(i-1) !== " ") {
+                    propervalue += value.charAt(i);
+                }
+                isCapital = true;
+            }
+            else {
+                if(i === 0 || isCapital === true) {
+                    propervalue += value.charAt(i).toUpperCase();
+                    isCapital = false;
+                }
+                else {
+                    propervalue += value.charAt(i);
+                }           
+            }
+        }
+        return propervalue;
+    }
+    
+    toAbsProperCase = value => {
+        let propervalue = ""
+        let isCapital = false;
+        for(var i = 0; i < value.length; i++) {
+            if(value.charAt(i) === " ") {
+                if(i !== 0 && value.charAt(i-1) !== " ") {
+                    propervalue += value.charAt(i);
+                }
+                isCapital = true;
+            }
+            else {
+                if(i === 0 || isCapital === true) {
+                    propervalue += value.charAt(i).toUpperCase();
+                    isCapital = false;
+                }
+                else {
+                    propervalue += value.charAt(i).toLowerCase();
+                }           
+            }
+        }
+        return propervalue;
+    }
+
+    removeLastSpace = value => {
+        let result = value;
+        if(value.charAt(value.length-1) === ' ') {
+            result = value.substring(0, value.length-1);
+        }
+        return result;
+    }
+    
+    removeSpaces = value => {
+        let result = "";
+        for(var i = 0; i < value.length; i++) {
+            if(value.charAt(i) !== " ") {
+                result += value.charAt(i);         
+            }
+        }
+        return result;
+    }
+    
+    removeMultipleSpaces = value => {
+        let result = "";
+        for(var i = 0; i < value.length; i++) {
+            if(value.charAt(i) === " ") {
+                if(i !== 0 && value.charAt(i-1) !== " ") {
+                    result += value.charAt(i);
+                }
+            }
+            else {
+                result += value.charAt(i);         
+            }
+        }
+        
+        return result;
     }
 }
  

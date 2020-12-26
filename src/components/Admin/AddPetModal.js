@@ -14,6 +14,7 @@ class AddPetModal extends Component {
             pcciRegNo: ''
         },
         records: [],
+        connected: false,
         errors:
         {
             petName: ' ',
@@ -23,14 +24,14 @@ class AddPetModal extends Component {
             pcciRegNo: ''
         },
         submitError: false,
+        added: false,
         petClasses:
         [ 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
         'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
         'Horse', 'Iguana', 'Jaguar', 'Lizard', 'Mantis', 'Monkey', 'Newt', 'Octopus', 'Pig', 'Panda', 'Quill',
         'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake','Spider', 'Tortoise', 'Turtle', 'Whale'],
         search: false,
-        searchValue: '',
-        added: false
+        searchValue: ''
     }
 
     componentDidMount() {
@@ -114,6 +115,8 @@ class AddPetModal extends Component {
 
             record.petName = this.removeLastSpace(record.petName);
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertPet.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -176,7 +179,7 @@ class AddPetModal extends Component {
 
         const searchValue = '';
 
-        this.setState({ record, errors, searchValue, submitError});
+        this.setState({ record, errors, searchValue, submitError });
     }
 
     onToggleSearch = e => {
@@ -210,10 +213,10 @@ class AddPetModal extends Component {
                             </div>
                             <div className="modal-body">
                                 {
-                                    added === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    added ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -259,46 +262,58 @@ class AddPetModal extends Component {
                                         <label className="m-0 ml-2">
                                             Owner Id<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <div className="input-group">
-                                            <select className={"zi-10 " + this.inputFieldClasses(errors.ownerId)}
-                                            name="ownerId" value={record.ownerId} onChange={this.onChangeRecord}
-                                            noValidate>
-                                                <option value=''>Choose one</option>
-                                                {
-                                                    records.length > 0 ?
-                                                    records.filter(row =>
-                                                        (row.lastName + ", " + row.firstName + " " + row.middleName)
-                                                        .toLowerCase().match(searchValue.toLowerCase()) ||
-                                                        searchValue === ''
-                                                    ).map(row =>
-                                                        <option key={row.id} value={row.id}>
-                                                            {row.id + " | " + row.lastName + ", " + row.firstName + " " + row.middleName}
-                                                        </option>
-                                                    ) : null
-                                                }
-                                            </select>
-                                            <div className="input-group-append">
-                                                <button type="button" className="btn btn-light input-group-text"
-                                                onClick={this.onToggleSearch}>
-                                                    Search
-                                                </button>
-                                            </div>
-                                        </div>
                                         {
-                                            search ?
-                                            <div className="input-group">
-                                                <input className="form-control"
-                                                type="text" name="searchValue"
-                                                value={searchValue} onChange={this.onChangeState}
-                                                placeholder="Search by Owner Name" noValidate />
-                                                <div className="input-group-append">
-                                                    <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.onClearSearch}>
-                                                        Clear
-                                                    </button>
+                                            this.state.connected ?
+                                            <React.Fragment>
+                                                <div className="input-group">
+                                                    <select className={"zi-10 " + this.inputFieldClasses(errors.ownerId)}
+                                                    name="ownerId" value={record.ownerId} onChange={this.onChangeRecord}
+                                                    noValidate>
+                                                        <option value=''>Choose one</option>
+                                                        {
+                                                            records.length > 0 ?
+                                                            records.filter(row =>
+                                                                (row.lastName + ", " + row.firstName + " " + row.middleName)
+                                                                .toLowerCase().match(searchValue.toLowerCase()) ||
+                                                                searchValue === ''
+                                                            ).map(row =>
+                                                                <option key={row.id} value={row.id}>
+                                                                    {row.id + " | " + row.lastName + ", " + row.firstName + " " + row.middleName}
+                                                                </option>
+                                                            ) : null
+                                                        }
+                                                    </select>
+                                                    <div className="input-group-append">
+                                                        <button type="button" className="btn btn-light input-group-text"
+                                                        onClick={this.onToggleSearch}>
+                                                            Search
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div> : null
-                                        } { this.renderRecordErrors(errors.ownerId) }
+                                                {
+                                                    search ?
+                                                    <div className="input-group">
+                                                        <input className="form-control"
+                                                        type="text" name="searchValue"
+                                                        value={searchValue} onChange={this.onChangeState}
+                                                        placeholder="Search by Owner Name" noValidate />
+                                                        <div className="input-group-append">
+                                                            <button type="button" className="btn btn-light input-group-text"
+                                                            onClick={this.onClearSearch}>
+                                                                Clear
+                                                            </button>
+                                                        </div>
+                                                    </div> : null
+                                                } { this.renderRecordErrors(errors.ownerId) }
+                                            </React.Fragment> :
+                                            this.state.connectionFailed ?
+                                            <input className="form-control border border-danger"
+                                            value="Connection Failed: Please try again later..."
+                                            noValidate disabled /> :
+                                            <input className="form-control"
+                                            value="Loading Data: Please wait..."
+                                            noValidate disabled />
+                                        }
                                     </div>
 
                                     <div className="form-group col-lg-6">
@@ -329,26 +344,31 @@ class AddPetModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    added === true ?
+                                    added ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                             </div>
 
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
-                                    <button className="btn btn-primary w-auto mr-1"
-                                    onClick={this.onSubmit}>
-                                        <i className="fa fa-sign-in-alt"></i>
-                                        <span className="ml-1">Submit</span>
-                                    </button>
-                                    <button className="btn btn-danger w-auto"
-                                    onClick={this.onReset}>
-                                        <i className="fa fa-eraser"></i>
-                                        <span className="ml-1">Reset</span>
-                                    </button>
+                                    {
+                                        this.state.connected ?
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1"
+                                            onClick={this.onSubmit}>
+                                                <i className="fa fa-sign-in-alt"></i>
+                                                <span className="ml-1">Submit</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto"
+                                            onClick={this.onReset}>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment> : null
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -379,9 +399,14 @@ class AddPetModal extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const records = res.data;
-            this.setState({ records });
+            const connected = true;
+            this.setState({ records, connected });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed });
+        });
     }
     
     toAbsProperCase = value => {

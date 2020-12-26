@@ -9,6 +9,8 @@ import Forbidden from './Forbidden.js';
 class ManageCustomers extends Component {
     state = {
         customers: [],
+        connected: false,
+        connectionFailed: false,
         searchValue: ""
     }
 
@@ -16,20 +18,33 @@ class ManageCustomers extends Component {
         this.getData();
     }
 
+    onSubmitForm = () => {
+        const connected = false;
+        const connectionFailed = false;
+        this.setState({ connected, connectionFailed })
+    }
+
     onRefresh = () => {
         this.getData();
+        const connected = false;
+        const connectionFailed = false;
+        this.setState({ connected, connectionFailed })
     }
 
     onSearch = e => {
         const searchValue = e.target.value;
         searchValue.length > 0 ? this.searchData(searchValue) : this.getData()
-        this.setState({ searchValue })
+        const connected = false;
+        const connectionFailed = false;
+        this.setState({ connected, connectionFailed, searchValue })
     }
 
     onClear = () => {
         const searchValue = '';
         this.getData();
-        this.setState({ searchValue })
+        const connected = false;
+        const connectionFailed = false;
+        this.setState({ connected, connectionFailed, searchValue })
     }
 
     renderContent = () => {
@@ -43,11 +58,23 @@ class ManageCustomers extends Component {
                             <h3>Manage Customers</h3>
                             <CustomersTable customers={this.state.customers}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
-                            searchValue={this.state.searchValue} onClear={this.onClear} />
+                            searchValue={this.state.searchValue} onClear={this.onClear}
+                            connected={this.state.connected} connectionFailed={this.state.connectionFailed}
+                            onSubmitForm={this.onSubmitForm} />
                             <div className="mt-5">
                                 {
+                                    this.state.connected ?
                                     this.state.customers.length === 0 ?
-                                    <h1 className="display-5 text-center mb-5">No Record Found</h1> : null
+                                    <h1 className="display-5 text-center mb-5">No Record Found</h1> : null :
+                                    this.state.connectionFailed ?
+                                    <React.Fragment>
+                                        <h1 className="display-5 text-center text-danger">Connection Failed</h1>
+                                        <h3 className="font-weight-normal text-center text-danger mb-5">Please try again later.</h3>
+                                    </React.Fragment> :
+                                    <React.Fragment>
+                                        <h1 className="display-5 text-center">Loading Records</h1>
+                                        <h3 className="font-weight-normal text-center mb-5">Please wait...</h3>
+                                    </React.Fragment>
                                 }
                             </div>
                         </div>
@@ -75,18 +102,28 @@ class ManageCustomers extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const customers = res.data;
-            this.setState({ customers });
+            const connected = true;
+            this.setState({ customers, connected });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed })
+        });
     }
 
     searchData = searchValue => {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchCustomer.php?search='+searchValue)
         .then(res => {
             const customers = res.data;
-            this.setState({ customers });
+            const connected = true;
+            this.setState({ customers, connected });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed });
+        });
     }
 }
 

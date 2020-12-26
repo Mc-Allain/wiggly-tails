@@ -14,6 +14,8 @@ class ViewPetModal extends Component {
             pcciRegNo: ''
         },
         records: [],
+        connected: false,
+        connectionFailed: false,
         errors:
         {
             petName: '',
@@ -120,6 +122,8 @@ class ViewPetModal extends Component {
 
             record.petName = this.removeLastSpace(record.petName);
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updatePet.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -133,9 +137,6 @@ class ViewPetModal extends Component {
         let updated = true;
         const submitError = false;
         this.setState({ submitError, updated });
-        
-        updated = false;
-        setTimeout(() => this.setState({ updated }), 5000);
     }
 
     validForm = ({ errors }) => {
@@ -165,6 +166,7 @@ class ViewPetModal extends Component {
         const record = {...this.state.record};
         const errors = {...this.state.errors};
         const submitError = false;
+        const updated = false;
 
         const { pet } = this.props;
 
@@ -182,7 +184,7 @@ class ViewPetModal extends Component {
 
         const searchValue = '';
 
-        this.setState({ record, errors, searchValue, submitError});
+        this.setState({ record, errors, searchValue, submitError, updated });
     }
 
     onToggleSearch = e => {
@@ -199,7 +201,7 @@ class ViewPetModal extends Component {
 
     render() {
         const { record, records, errors, petClasses, search, searchValue, updated, deleteState } = this.state;
-        const { pet } = this.props;
+        const { pet, connected, connectionFailed } = this.props;
 
         return (
             <React.Fragment>
@@ -209,17 +211,24 @@ class ViewPetModal extends Component {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id={"viewPetModalTitle-" + pet.id}>View Pet</h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                {
+                                    connected || connectionFailed ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> : null
+                                }
                             </div>
                             <div className="modal-body">
                                 {
-                                    updated === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    updated ? connected ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -258,46 +267,58 @@ class ViewPetModal extends Component {
                                         <label className="m-0 ml-2">
                                             Owner Id<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <div className="input-group">
-                                            <select className={"zi-10 " + this.inputFieldClasses(errors.ownerId)}
-                                            name="ownerId" value={record.ownerId} onChange={this.onChangeRecord}
-                                            noValidate>
-                                                <option value=''>Choose one</option>
-                                                {
-                                                    records.length > 0 ?
-                                                    records.filter(row =>
-                                                        (row.lastName + ", " + row.firstName + " " + row.middleName)
-                                                        .toLowerCase().match(searchValue.toLowerCase()) ||
-                                                        searchValue === ''
-                                                    ).map(row =>
-                                                        <option key={row.id} value={row.id}>
-                                                            {row.id + " | " + row.lastName + ", " + row.firstName + " " + row.middleName}
-                                                        </option>
-                                                    ) : null
-                                                }
-                                            </select>
-                                            <div className="input-group-append">
-                                                <button type="button" className="btn btn-light input-group-text"
-                                                onClick={this.onToggleSearch}>
-                                                    Search
-                                                </button>
-                                            </div>
-                                        </div>
                                         {
-                                            search ?
-                                            <div className="input-group">
-                                                <input className="form-control"
-                                                type="text" name="searchValue"
-                                                value={searchValue} onChange={this.onChangeState}
-                                                placeholder="Search by Owner Name" noValidate />
-                                                <div className="input-group-append">
-                                                    <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.onClearSearch}>
-                                                        Clear
-                                                    </button>
+                                            this.state.connected ?
+                                            <React.Fragment>
+                                                <div className="input-group">
+                                                    <select className={"zi-10 " + this.inputFieldClasses(errors.ownerId)}
+                                                    name="ownerId" value={record.ownerId} onChange={this.onChangeRecord}
+                                                    noValidate>
+                                                        <option value=''>Choose one</option>
+                                                        {
+                                                            records.length > 0 ?
+                                                            records.filter(row =>
+                                                                (row.lastName + ", " + row.firstName + " " + row.middleName)
+                                                                .toLowerCase().match(searchValue.toLowerCase()) ||
+                                                                searchValue === ''
+                                                            ).map(row =>
+                                                                <option key={row.id} value={row.id}>
+                                                                    {row.id + " | " + row.lastName + ", " + row.firstName + " " + row.middleName}
+                                                                </option>
+                                                            ) : null
+                                                        }
+                                                    </select>
+                                                    <div className="input-group-append">
+                                                        <button type="button" className="btn btn-light input-group-text"
+                                                        onClick={this.onToggleSearch}>
+                                                            Search
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div> : null
-                                        } { this.renderRecordErrors(errors.ownerId) }
+                                                {
+                                                    search ?
+                                                    <div className="input-group">
+                                                        <input className="form-control"
+                                                        type="text" name="searchValue"
+                                                        value={searchValue} onChange={this.onChangeState}
+                                                        placeholder="Search by Owner Name" noValidate />
+                                                        <div className="input-group-append">
+                                                            <button type="button" className="btn btn-light input-group-text"
+                                                            onClick={this.onClearSearch}>
+                                                                Clear
+                                                            </button>
+                                                        </div>
+                                                    </div> : null
+                                                } { this.renderRecordErrors(errors.ownerId) }
+                                            </React.Fragment> :
+                                            this.state.connectionFailed ?
+                                            <input className="form-control border border-danger"
+                                            value="Connection Failed: Please try again later..."
+                                            noValidate disabled /> :
+                                            <input className="form-control"
+                                            value="Loading Data: Please wait..."
+                                            noValidate disabled />
+                                        }
                                     </div>
 
                                     <div className="form-group col-lg-6">
@@ -328,10 +349,14 @@ class ViewPetModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    updated === true ?
+                                    updated ? connected ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                             </div>
@@ -350,6 +375,7 @@ class ViewPetModal extends Component {
 
     defaultButtons = () => {
         return(
+            this.props.connected && this.state.connected ?
             <React.Fragment>
                 <button className="btn btn-primary w-auto mr-1"
                 onClick={this.onSubmit}>
@@ -366,7 +392,7 @@ class ViewPetModal extends Component {
                     <i className="fa fa-trash"></i>
                     <span className="ml-1">Delete</span>
                 </button>
-            </React.Fragment>
+            </React.Fragment> : null
         )
     }
 
@@ -395,6 +421,9 @@ class ViewPetModal extends Component {
     onDelete = () => {
         const { record } = this.state;
         const { onRefresh } = this.props;
+
+        this.props.onSubmitForm(false);
+        
         axios.post('http://localhost/reactPhpCrud/veterinaryClinic/deletePet.php', record)
         .then(onRefresh);
     }
@@ -410,9 +439,14 @@ class ViewPetModal extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const records = res.data;
-            this.setState({ records });
+            const connected = true;
+            this.setState({ records, connected });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed });
+        });
     }
     
     toAbsProperCase = value => {

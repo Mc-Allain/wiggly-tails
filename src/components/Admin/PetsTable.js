@@ -49,7 +49,7 @@ class PetsTable extends Component {
     }
 
     render() {
-        const { pets, onRefresh, onSearch, searchValue, onClear } = this.props;
+        const { pets, onRefresh, onSearch, searchValue, onClear, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -82,10 +82,15 @@ class PetsTable extends Component {
                             <th className="w-100px">Action</th>
                         </tr>
                     </thead>
-                    <tbody>{ pets.length > 0 ? this.renderItems(pets) : null }</tbody>
+                    <tbody>
+                        {
+                            pets.length > 0 && connected ?
+                            this.renderItems(pets) : null
+                        }
+                    </tbody>
                 </table>
                 {
-                    pets.length > 0 ?
+                    pets.length > 0 && connected ?
                     <TablePagination
                     setPage={this.setPage}
                     recordsPerPage={recordsPerPage}
@@ -93,8 +98,9 @@ class PetsTable extends Component {
                     activePage={activePage}
                     totalRecords={pets.length} /> : null
                 }
-                <AddPetModal onRefresh={onRefresh} />
-                { pets.map(pet => <ViewPetModal key={pet.id} pet={pet} onRefresh={onRefresh} /> ) }
+                <AddPetModal onRefresh={onRefresh} onSubmitForm={onSubmitForm} />
+                { pets.map(pet => <ViewPetModal key={pet.id} pet={pet} onRefresh={onRefresh}
+                connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> ) }
             </React.Fragment>
         );
     }

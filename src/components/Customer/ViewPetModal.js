@@ -116,6 +116,8 @@ class ViewPetModal extends Component {
 
             record.petName = this.removeLastSpace(record.petName);
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updatePet.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -179,7 +181,7 @@ class ViewPetModal extends Component {
 
     render() {
         const { record, errors, petClasses, updated, deleteState } = this.state;
-        const { pet } = this.props;
+        const { pet, connected } = this.props;
 
         return (
             <React.Fragment>
@@ -196,10 +198,14 @@ class ViewPetModal extends Component {
                             </div>
                             <div className="modal-body">
                                 {
-                                    updated === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    updated ? connected ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -270,10 +276,14 @@ class ViewPetModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    updated === true ?
+                                    updated ? connected ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                             </div>

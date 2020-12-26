@@ -128,6 +128,8 @@ class AddEmployeeModal extends Component {
             record.empFirstName = this.removeLastSpace(record.empFirstName);
             record.empMiddleName = this.removeLastSpace(record.empMiddleName);
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertEmployee.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -142,8 +144,6 @@ class AddEmployeeModal extends Component {
         let added = true;
         const submitError = false;
         this.setState({ submitError, added });
-        added = false;
-        setTimeout(() => this.setState({ added }), 5000);
     }
 
     validForm = ({ errors }) => {
@@ -199,6 +199,7 @@ class AddEmployeeModal extends Component {
 
         const confirmEmpPassword = '';
         const submitError = false;
+        const added = false;
 
         record.id = this.generateCharacters(6);
         record.empLastName = '';
@@ -214,7 +215,7 @@ class AddEmployeeModal extends Component {
         errors.empPassword = ' ';
         errors.confirmEmpPassword = ' ';
 
-        this.setState({ record, confirmEmpPassword, errors, submitError});
+        this.setState({ record, confirmEmpPassword, errors, submitError, added });
     }
 
     render() {
@@ -236,10 +237,10 @@ class AddEmployeeModal extends Component {
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    added === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    added ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -332,10 +333,10 @@ class AddEmployeeModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    added === true ?
+                                    added ?
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                             </div>

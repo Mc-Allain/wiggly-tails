@@ -46,12 +46,16 @@ class AddCustomerModal extends Component {
             userPassword: ' ',
             confirmUserPassword: ' ',
         },
+        records: [],
+        connected: false,
+        connectionFailed: false,
         submitError: false,
-        added: ''
+        added: false
     }
 
     componentDidMount() {
         this.onGenerateId();
+        this.getCustomersData();
     }
 
     onGenerateId = () => {
@@ -78,10 +82,7 @@ class AddCustomerModal extends Component {
             this.toAbsProperCase(value);
         }
 
-        if(name === "emailAddress" || name === "email") {
-            if(name === "emailAddress") value = this.removeSpaces(value);
-            this.getCustomersData();
-        }
+        if(name === "emailAddress") value = this.removeSpaces(value);
 
         this.setState(currentState => ({
             ...currentState,
@@ -277,6 +278,8 @@ class AddCustomerModal extends Component {
             mbNo.push(record.mobileNumber.substring(6, 10));
             record.mobileNumber = mbNo.join('-');
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertCustomer.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -430,7 +433,7 @@ class AddCustomerModal extends Component {
         errors.userPassword = ' ';
         errors.confirmUserPassword = ' ';
 
-        this.setState({ record, confirmUserPassword, errors, submitError});
+        this.setState({ record, confirmUserPassword, errors, submitError });
     }
 
     render() {
@@ -454,10 +457,10 @@ class AddCustomerModal extends Component {
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    added === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    added ? 
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -591,29 +594,41 @@ class AddCustomerModal extends Component {
                                         <label className="m-0 ml-2">
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <div className="input-group d-block d-sm-flex px-0">
-                                            <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
-                                            type="text" name="emailAddress"  value={record.emailAddress}
-                                            onChange={this.onChangeRecord} noValidate />
-                                            <div className="input-group-append justify-content-end">
-                                                <span className="input-group-text">@</span>
-                                                <select className="input-group-text"
-                                                name="email" value={record.email}
-                                                onChange={this.onChangeRecord} noValidate>
-                                                    <option value="@yahoo.com">yahoo.com</option>
-                                                    <option value="@gmail.com">gmail.com</option>
-                                                    <option value="@outlook.com">outlook.com</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        { this.renderRecordErrors(errors.emailAddress) }
-                                        <div>
-                                            <small className="text-success ml-2">
-                                                <i className="fa fa-info-circle mr-1"></i>
-                                                <span>Valid Symbols:&nbsp;</span>
-                                                <span>{"!#$%^&*.?_-"}</span>
-                                            </small>
-                                        </div>
+                                        {
+                                            this.state.connected ?
+                                            <React.Fragment>
+                                                <div className="input-group d-block d-sm-flex px-0">
+                                                    <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                                                    type="text" name="emailAddress"  value={record.emailAddress}
+                                                    onChange={this.onChangeRecord} noValidate />
+                                                    <div className="input-group-append justify-content-end">
+                                                        <span className="input-group-text">@</span>
+                                                        <select className="input-group-text"
+                                                        name="email" value={record.email}
+                                                        onChange={this.onChangeRecord} noValidate>
+                                                            <option value="@yahoo.com">yahoo.com</option>
+                                                            <option value="@gmail.com">gmail.com</option>
+                                                            <option value="@outlook.com">outlook.com</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                { this.renderRecordErrors(errors.emailAddress) }
+                                                <div>
+                                                    <small className="text-success ml-2">
+                                                        <i className="fa fa-info-circle mr-1"></i>
+                                                        <span>Valid Symbols:&nbsp;</span>
+                                                        <span>{"!#$%^&*.?_-"}</span>
+                                                    </small>
+                                                </div>
+                                            </React.Fragment> :
+                                            this.state.connectionFailed ?
+                                            <input className="form-control border border-danger"
+                                            value="Connection Failed: Please try again later..."
+                                            noValidate disabled /> :
+                                            <input className="form-control"
+                                            value="Loading Data: Please wait..."
+                                            noValidate disabled />
+                                        }
                                     </div>
 
                                     <div className="form-group col-lg-6">
@@ -637,26 +652,31 @@ class AddCustomerModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    added === true ?
+                                    added ? 
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                             </div>
 
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
-                                    <button className="btn btn-primary w-auto mr-1"
-                                    onClick={this.onSubmit}>
-                                        <i className="fa fa-sign-in-alt"></i>
-                                        <span className="ml-1">Submit</span>
-                                    </button>
-                                    <button className="btn btn-danger w-auto"
-                                    onClick={this.onReset}>
-                                        <i className="fa fa-eraser"></i>
-                                        <span className="ml-1">Reset</span>
-                                    </button>
+                                    {
+                                        this.state.connected ?
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1"
+                                            onClick={this.onSubmit}>
+                                                <i className="fa fa-sign-in-alt"></i>
+                                                <span className="ml-1">Submit</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto"
+                                            onClick={this.onReset}>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment> : null
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -687,9 +707,14 @@ class AddCustomerModal extends Component {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const records = res.data;
-            this.setState({ records });
+            const connected = true;
+            this.setState({ records, connected });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed });
+        });
     }
 
     toProperCase = value => {

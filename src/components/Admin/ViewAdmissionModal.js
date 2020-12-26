@@ -90,6 +90,8 @@ class ViewAdmissionModal extends Component {
             record.title = this.removeLastSpace(record.title);
             record.content = this.removeLastSpace(record.content);
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updateAdmission.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -103,9 +105,6 @@ class ViewAdmissionModal extends Component {
         let updated = true;
         const submitError = false;
         this.setState({ submitError, updated });
-        
-        updated = false;
-        setTimeout(() => this.setState({ updated }), 5000);
     }
 
     validForm = ({ errors }) => {
@@ -136,6 +135,7 @@ class ViewAdmissionModal extends Component {
         const record = {...this.state.record};
         const errors = {...this.state.errors};
         const submitError = false;
+        const updated = false;
 
         record.id = admission.id;
         record.transId = admission.transId;
@@ -145,12 +145,12 @@ class ViewAdmissionModal extends Component {
         errors.title = '';
         errors.content = '';
 
-        this.setState({ record, errors, submitError });
+        this.setState({ record, errors, submitError, updated });
     }
 
     render() {
         const { record, errors, updated } = this.state;
-        const { admission } = this.props;
+        const { admission, connected, connectionFailed } = this.props;
         return (
             <React.Fragment>
                 <div className="modal fade" id={"viewAdmissionModal-" + admission.id} tabIndex="-1" role="dialog"
@@ -161,17 +161,24 @@ class ViewAdmissionModal extends Component {
                                 <h5 className="modal-title" id={"viewAdmissionModalTitle-" + admission.id}>
                                     View Admission
                                 </h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                {
+                                    connected || connectionFailed ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> : null
+                                }
                             </div>
                             <div className="modal-body">
                                 {
-                                    updated === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    updated ? connected ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -199,26 +206,35 @@ class ViewAdmissionModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    updated === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    updated ? connected ?
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully updated.</span>
+                                        <span>Record successfully updated.</span>
+                                    </div> : 
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Updating a record...</span>
                                     </div> : null
                                 }
                             </div>
 
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
-                                    <button className="btn btn-primary w-auto mr-1"
-                                    onClick={this.onSubmit}>
-                                        <i className="fa fa-pen fa-sm"></i>
-                                        <span className="ml-1">Update</span>
-                                    </button>
-                                    <button className="btn btn-danger w-auto mr-1"
-                                    onClick={this.onReset}>
-                                        <i className="fa fa-eraser"></i>
-                                        <span className="ml-1">Reset</span>
-                                    </button>
+                                    {
+                                        this.props.connected ?
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1"
+                                            onClick={this.onSubmit}>
+                                                <i className="fa fa-pen fa-sm"></i>
+                                                <span className="ml-1">Update</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto mr-1"
+                                            onClick={this.onReset}>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment> : null
+                                    }
                                 </div>
                             </div>
                         </div>

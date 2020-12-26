@@ -46,7 +46,7 @@ class TransactionsTable extends Component {
     }
 
     render() {
-        const { transactions, onRefresh, onSearch, searchValue, onClear, history } = this.props;
+        const { transactions, onRefresh, onSearch, searchValue, onClear, history, connected } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -74,10 +74,15 @@ class TransactionsTable extends Component {
                             <th className="w-100px">Action</th>
                         </tr>
                     </thead>
-                    <tbody>{ transactions.length > 0 ? this.renderItems(transactions) : null }</tbody>
+                    <tbody>
+                        {
+                            transactions.length > 0 && connected ?
+                            this.renderItems(transactions) : null
+                        }
+                    </tbody>
                 </table>
                 {
-                    transactions.length > 0 ?
+                    transactions.length > 0 && connected ?
                     <TablePagination
                     setPage={this.setPage}
                     recordsPerPage={recordsPerPage}

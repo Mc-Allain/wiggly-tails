@@ -83,6 +83,8 @@ class ViewAdmissionModal extends Component {
             record.title = this.removeLastSpace(record.title);
             record.content = this.removeLastSpace(record.content);
 
+            this.props.onSubmitForm();
+
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertAdmission.php', record)
             .then(onRefresh, this.postSubmit());
         }
@@ -97,8 +99,6 @@ class ViewAdmissionModal extends Component {
         let added = true;
         const submitError = false;
         this.setState({ submitError, added });
-        added = false;
-        setTimeout(() => this.setState({ added }), 5000);
     }
 
     validForm = ({ errors }) => {
@@ -129,6 +129,7 @@ class ViewAdmissionModal extends Component {
         const record = {...this.state.record};
         const errors = {...this.state.errors};
         const submitError = false;
+        const added = false;
 
         record.id = this.generateCharacters(6);
         record.transId = history.location.state.transId;
@@ -138,11 +139,12 @@ class ViewAdmissionModal extends Component {
         errors.title = ' ';
         errors.content = ' ';
 
-        this.setState({ record, errors, submitError });
+        this.setState({ record, errors, submitError, added });
     }
 
     render() {
         const { record, errors, added } = this.state;
+        
         return (
             <React.Fragment>
                 <div className="modal fade" id="addAdmissionModal" tabIndex="-1" role="dialog"
@@ -160,10 +162,10 @@ class ViewAdmissionModal extends Component {
                             </div>
                             <div className="modal-body">
                                 {
-                                    added === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    added ?
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -191,10 +193,10 @@ class ViewAdmissionModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    added === true ?
-                                    <div className="alert alert-success d-flex align-items-center">
+                                    added ?
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Successfully added.</span>
+                                        <span>Record successfully added.</span>
                                     </div> : null
                                 }
                             </div>

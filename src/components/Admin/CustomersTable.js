@@ -49,7 +49,7 @@ class CustomersTable extends Component {
     }
 
     render() {
-        const { customers, onRefresh, onSearch, searchValue, onClear, } = this.props;
+        const { customers, onRefresh, onSearch, searchValue, onClear, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -81,10 +81,15 @@ class CustomersTable extends Component {
                             <th className="w-190px min-w-95px">Action</th>
                         </tr>
                     </thead>
-                    <tbody>{ customers.length > 0 ? this.renderItems(customers) : null }</tbody>
+                    <tbody>
+                        {
+                            customers.length > 0 && connected ?
+                            this.renderItems(customers) : null
+                        }
+                    </tbody>
                 </table>
                 {
-                    customers.length > 0 ?
+                    customers.length > 0 && connected ?
                     <TablePagination
                     setPage={this.setPage}
                     recordsPerPage={recordsPerPage}
@@ -92,11 +97,13 @@ class CustomersTable extends Component {
                     activePage={activePage}
                     totalRecords={customers.length} /> : null
                 }
-                <AddCustomerModal onRefresh={onRefresh} />
+                <AddCustomerModal onRefresh={onRefresh} onSubmitForm={onSubmitForm} />
                 { customers.map(customer => 
                     <React.Fragment key={customer.id}>
-                        <ViewCustomerModal customer={customer} onRefresh={onRefresh} />
-                        <InitiateTransactionModal customer={customer} />
+                        <ViewCustomerModal customer={customer} onRefresh={onRefresh}
+                        connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} />
+                        <InitiateTransactionModal customer={customer}
+                        connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} />
                     </React.Fragment>
                 ) }
             </React.Fragment>

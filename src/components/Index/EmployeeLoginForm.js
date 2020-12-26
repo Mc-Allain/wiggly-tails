@@ -10,6 +10,7 @@ class EmployeeLoginForm extends Component {
             empPassword: ''
         },
         records: [],
+        connected: false,
         errors:
         {
             id: 'Please input your Id',
@@ -23,11 +24,11 @@ class EmployeeLoginForm extends Component {
     onChangeRecord = e => {
         let { name, value } = e.target;
 
-        if(name === "id") {
+        if (name === "id") {
             value = value.toUpperCase();
         }
 
-        if(name === "empLastName") {
+        if (name === "empLastName") {
             value = this.toAbsProperCase(value);
         }
 
@@ -42,22 +43,22 @@ class EmployeeLoginForm extends Component {
 
     onCheckRecordErrors = e => {
         const { name, value } = e.target;
-        const errors = {...this.state.errors};
+        const errors = { ...this.state.errors };
 
-        switch(name){
+        switch (name) {
             case 'id':
-                errors.id=  value.length === 0 ? "Please input your Id" :
-                            value.length !== 6 ? "Must be at exact 6 characters" : ""
+                errors.id = value.length === 0 ? "Please input your Id" :
+                    value.length !== 6 ? "Must be at exact 6 characters" : ""
                 break;
 
             case 'empLastName':
-                errors.empLastName= value.length === 0 ? "Please input your Last Name" :
-                                    value.length < 2 || value.length > 24 ?
-                                    "Must be at between 2 and 24 characters" : ""
+                errors.empLastName = value.length === 0 ? "Please input your Last Name" :
+                    value.length < 2 || value.length > 24 ?
+                        "Must be at between 2 and 24 characters" : ""
                 break;
-            
+
             case 'empPassword':
-                errors.empPassword= value.length === 0 ? "Please input your Password" : ""
+                errors.empPassword = value.length === 0 ? "Please input your Password" : ""
                 break;
 
             default:
@@ -69,23 +70,23 @@ class EmployeeLoginForm extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const errors  = {...this.state.errors};
+        const errors = { ...this.state.errors };
         const records = [...this.state.records];
-        const record = {...this.state.record};
+        const record = { ...this.state.record };
 
-        if(this.validForm({ errors })) {
+        if (this.validForm({ errors })) {
             let submitError = false;
             let loginError = false;
 
-            const result = records.filter(row => 
+            const result = records.filter(row =>
                 row.id === record.id &&
                 row.empLastName === record.empLastName &&
                 row.empPassword === record.empPassword
             )
 
-            if(result.length > 0) {
+            if (result.length > 0) {
                 const { history } = this.props;
-                history.replace('/wiggly-tails/admin', {verified: true});
+                history.replace('/wiggly-tails/admin', { verified: true });
             }
             else {
                 submitError = true;
@@ -104,30 +105,30 @@ class EmployeeLoginForm extends Component {
 
     validForm = ({ errors }) => {
         let valid = true;
-      
+
         Object.values(errors).forEach(value => {
             value.length > 0 && (valid = false);
         });
-      
+
         return valid;
     }
 
     renderRecordErrors = errorMsg => {
-        if(this.state.submitError) {
-            if(errorMsg.length > 0 && errorMsg !== ' ') {
-                return(
+        if (this.state.submitError) {
+            if (errorMsg.length > 0 && errorMsg !== ' ') {
+                return (
                     <small className="text-danger ml-2">
                         <i className="fa fa-exclamation text-danger mr-1"></i>
                         {errorMsg}
                     </small>
                 )
-            }   
+            }
         }
     }
 
     renderLoginError = () => {
-        if(this.state.loginError) {
-            return(
+        if (this.state.loginError) {
+            return (
                 <div className="alert alert-danger d-flex align-items-center my-1 py-0">
                     <i className="fa fa-exclamation text-danger mr-2"></i>
                     <span className="lh-0 my-1">Incorrect Id, Last Name or Password</span>
@@ -138,12 +139,12 @@ class EmployeeLoginForm extends Component {
 
     onReset = e => {
         e.preventDefault();
-        const record = {...this.state.record};
+        const record = { ...this.state.record };
         record.id = '';
         record.empLastName = '';
         record.empPassword = '';
 
-        const errors = {...this.state.errors};
+        const errors = { ...this.state.errors };
         errors.id = 'Please input your Id';
         errors.empLastName = 'Please input your Last Name';
         errors.empPassword = 'Please input your Password';
@@ -161,19 +162,20 @@ class EmployeeLoginForm extends Component {
     render() {
         const { record, errors } = this.state;
         return (
+            this.state.connected ?
             <form className="form-light p-5 mt-4" noValidate
-            onSubmit={this.onSubmit} onReset={this.onReset}>
+                onSubmit={this.onSubmit} onReset={this.onReset}>
                 <h2 className="font-weight-normal text-center">Employee Login</h2>
                 <h5 className="font-weight-light text-center mb-4">
                     Please input your credentials.
-                </h5> { this.renderLoginError() }
+                </h5> { this.renderLoginError()}
 
                 <div className="form-group">
                     <label className="m-0 ml-2">Id</label>
                     <input className={this.inputFieldClasses(errors.id)}
                         type="text" name="id" value={record.id} maxLength="6"
                         onChange={this.onChangeRecord} noValidate />
-                    { this.renderRecordErrors(errors.id) }
+                    {this.renderRecordErrors(errors.id)}
                 </div>
 
                 <div className="form-group">
@@ -181,7 +183,7 @@ class EmployeeLoginForm extends Component {
                     <input className={this.inputFieldClasses(errors.empLastName)}
                         type="text" name="empLastName" value={record.empLastName}
                         onChange={this.onChangeRecord} noValidate />
-                    { this.renderRecordErrors(errors.empLastName) }
+                    {this.renderRecordErrors(errors.empLastName)}
                 </div>
 
                 <div className="form-group">
@@ -189,7 +191,7 @@ class EmployeeLoginForm extends Component {
                     <input className={this.inputFieldClasses(errors.empPassword)}
                         type="password" name="empPassword" value={record.empPassword}
                         onChange={this.onChangeRecord} noValidate />
-                    { this.renderRecordErrors(errors.empPassword) }
+                    {this.renderRecordErrors(errors.empPassword)}
                 </div>
 
                 <div className="d-flex justify-content-between align-items-center mt-4">
@@ -202,49 +204,54 @@ class EmployeeLoginForm extends Component {
                         <span className="ml-1">Reset</span>
                     </button>
                 </div>
-            </form>
+            </form> :
+            <React.Fragment>
+                <h1 className="display-5 text-center">Loading Records</h1>
+                <h3 className="font-weight-normal text-center mb-5">Please wait...</h3>
+            </React.Fragment>
         );
     }
 
     inputFieldClasses = errorMsg => {
         let classes = "form-control ";
-        classes+= errorMsg.length > 0 && this.state.submitError ? "border border-danger" : ""
+        classes += errorMsg.length > 0 && this.state.submitError ? "border border-danger" : ""
         return classes;
     }
 
     getData = () => {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
-        .then(res => {
-            const records = res.data;
-            this.setState({ records });
-        })
-        .catch(function(error) {
-            console.log(error);
-        });
+            .then(res => {
+                const records = res.data;
+                const connected = true;
+                this.setState({ records, connected });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     toAbsProperCase = value => {
         let propervalue = ""
         let isCapital = false;
-        for(var i = 0; i < value.length; i++) {
-            if(value.charAt(i) === " ") {
-                if(i !== 0 && value.charAt(i-1) !== " ") {
+        for (var i = 0; i < value.length; i++) {
+            if (value.charAt(i) === " ") {
+                if (i !== 0 && value.charAt(i - 1) !== " ") {
                     propervalue += value.charAt(i);
                 }
                 isCapital = true;
             }
             else {
-                if(i === 0 || isCapital === true) {
+                if (i === 0 || isCapital === true) {
                     propervalue += value.charAt(i).toUpperCase();
                     isCapital = false;
                 }
                 else {
                     propervalue += value.charAt(i).toLowerCase();
-                }           
+                }
             }
         }
         return propervalue;
     }
 }
- 
+
 export default EmployeeLoginForm;

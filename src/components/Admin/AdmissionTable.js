@@ -41,7 +41,7 @@ class AdmissionTable extends Component {
     }
 
     render() {
-        const { admission, onRefresh, onSearch, searchValue, onClear, history } = this.props;
+        const { admission, onRefresh, onSearch, searchValue, onClear, history, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         const { state } = history.location;
         return (
@@ -89,10 +89,15 @@ class AdmissionTable extends Component {
                             <th className="w-100px">Action</th>
                         </tr>
                     </thead>
-                    <tbody>{ admission.length > 0 ? this.renderItems(admission) : null }</tbody>
+                    <tbody>
+                        {
+                            admission.length > 0 && connected ?
+                            this.renderItems(admission) : null
+                        }
+                    </tbody>
                 </table>
                 {
-                    admission.length > 0 ?
+                    admission.length > 0 && connected ?
                     <TablePagination
                     setPage={this.setPage}
                     recordsPerPage={recordsPerPage}
@@ -100,10 +105,11 @@ class AdmissionTable extends Component {
                     activePage={activePage}
                     totalRecords={admission.length} /> : null
                 }
-                <AddAdmissionModal history={history} onRefresh={onRefresh} />
+                <AddAdmissionModal history={history} onSubmitForm={onSubmitForm} />
                 {
                     admission.map(admission => <ViewAdmissionModal key={admission.id}
-                    admission={admission} onRefresh={onRefresh} /> )
+                    admission={admission} onRefresh={onRefresh}
+                    connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> )
                 }
             </React.Fragment>
         );

@@ -50,7 +50,7 @@ class EmployeesTable extends Component {
     }
     
     render() {
-        const { employees, onRefresh, onSearch, searchValue, onClear, empType } = this.props;
+        const { employees, onRefresh, onSearch, searchValue, onClear, empType, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -80,10 +80,15 @@ class EmployeesTable extends Component {
                             <th className="w-100px">Action</th>
                         </tr>
                     </thead>
-                    <tbody>{ employees.length > 0 ? this.renderItems(employees) : null }</tbody>
+                    <tbody>
+                        {
+                            employees.length > 0 && connected ?
+                            this.renderItems(employees) : null
+                        }
+                    </tbody>
                 </table>
                 {
-                    employees.length > 0 ?
+                    employees.length > 0 && connected ?
                     <TablePagination
                     setPage={this.setPage}
                     recordsPerPage={recordsPerPage}
@@ -91,9 +96,10 @@ class EmployeesTable extends Component {
                     activePage={activePage}
                     totalRecords={employees.length} /> : null
                 }
-                <AddEmployeeModal onRefresh={onRefresh} empType={empType} />
+                <AddEmployeeModal onRefresh={onRefresh} empType={empType} onSubmitForm={onSubmitForm} />
                 { employees.map(employee => <ViewEmployeeModal key={employee.id}
-                employee={employee} onRefresh={onRefresh} empType={empType} /> ) }
+                employee={employee} onRefresh={onRefresh} empType={empType}
+                connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> ) }
             </React.Fragment>
         );
     }
