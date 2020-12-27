@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 
 import AdminNavbar from './AdminNavbar.js';
-import ManageEmployeesModal from './ManageEmployeesModal.js';
+import ManageEmployeesModal from './Employees/ManageEmployeesModal.js';
 import Footer from '../Footer.js';
 import Forbidden from './Forbidden.js';
 
 import noImage from '../../img/no-image.png';
-// import transactions from '../../img/transactions.jpg';
-// import customers from '../../img/customers.jpg';
-// import pets from '../../img/pets.jpg';
-// import employees from '../../img/employees.jpg';
 
 class Admin extends Component {
     state = { }

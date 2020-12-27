@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
+import TablePagination from '../../TablePagination';
+import AddTransactionModal from './AddTransactionModal.js';
 import ViewTransactionModal from './ViewTransactionModal.js';
-import TablePagination from '../TablePagination';
-
 
 class TransactionsTable extends Component {
     state = {
@@ -46,17 +46,22 @@ class TransactionsTable extends Component {
     }
 
     render() {
-        const { transactions, onRefresh, onSearch, searchValue, onClear, history, connected } = this.props;
+        const { transactions, onRefresh, onSearch, searchValue, onClear, history, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
                 <div className="d-flex mb-2">
-                    <button className="btn btn-warning mr-2 ml-auto" onClick={onRefresh}>
+                    <button className="btn btn-outline-primary mr-auto"
+                    data-toggle="modal" data-target="#addTransactionModal">
+                        <i className="fa fa-plus"></i>
+                        <span className="ml-1 d-sm-inline d-none">New</span>
+                    </button>
+                    <button className="btn btn-warning mr-2" onClick={onRefresh}>
                         <i className="fa fa-sync"></i>
                         <span className="ml-1 d-sm-inline d-none">Refresh</span>
                     </button>
                     <input type="text" className="form-control w-25 min-w-175px"
-                    placeholder="Search" onChange={onSearch} value={searchValue}></input>
+                    placeholder="Search" onChange={onSearch} value={searchValue} ></input>
                     <button className="btn btn-danger ml-2" onClick={onClear}>
                         <i className="fa fa-eraser"></i>
                         <span className="ml-1 d-sm-inline d-none">Clear</span>
@@ -90,9 +95,11 @@ class TransactionsTable extends Component {
                     activePage={activePage}
                     totalRecords={transactions.length} /> : null
                 }
+                <AddTransactionModal onRefresh={onRefresh} customerId='' onSubmitForm={onSubmitForm} />
                 {
                     transactions.map(transaction => <ViewTransactionModal key={transaction.id}
-                    transaction={transaction} onRefresh={onRefresh} history={history} /> )
+                    transaction={transaction} onRefresh={onRefresh} history={history}
+                    connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> )
                 }
             </React.Fragment>
         );

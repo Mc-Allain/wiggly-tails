@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import wiggy_tails_icon from '../../img/wiggly-tails-icon.png';
-import ManageEmployeesModal from './ManageEmployeesModal';
+import ManageEmployeesModal from './Employees/ManageEmployeesModal.js';
 
 class AdminNavbar extends Component {
     state = {

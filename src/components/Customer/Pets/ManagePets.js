@@ -1,19 +1,20 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-import AdminNavbar from "./AdminNavbar.js"
-import EmployeesTable from './EmployeesTable.js';
-import Footer from '../Footer.js';
+import CustomerNavbar from '../CustomerNavbar.js';
+import PetsTable from './PetsTable.js';
+import Footer from '../../Footer.js';
+import Forbidden from '../Forbidden.js';
 
-class ManageEmployees extends Component {
+class ManagePets extends Component {
     state = {
-        employees: [],
+        pets: [],
         connected: false,
         connectionFailed: false,
         searchValue: ""
     }
 
-    componentDidMount() {
+    componentDidMount() {        
         this.getData();
     }
 
@@ -27,7 +28,7 @@ class ManageEmployees extends Component {
         this.getData();
         const connected = false;
         const connectionFailed = false;
-        this.setState({ connected, connectionFailed })
+        this.setState({ connected, connectionFailed})
     }
 
     onSearch = e => {
@@ -46,52 +47,16 @@ class ManageEmployees extends Component {
         this.setState({ connected, connectionFailed, searchValue })
     }
 
-    onBackToHome = () => {
-        const { history } = this.props;
-        const link = "/admin";
-        history.replace(link, {verified: true});
-    }
-
-    renderForbidden = () => {
-        return (
-            <div className="container-fluid">
-                <div className="row min-h-full justify-content-center align-items-center">
-                    <div className="col-10 col-md-8 col-lg-6 form-light">
-                        <div className="alert alert-warning text-warning text-center my-3 mx-1 py-4">
-                            <div className="d-flex justify-content-center align-items-center">
-                                <i className="fa fa-exclamation fa-lg"></i>
-                                <span className="ml-2">
-                                    <h2 className="font-weight-normal">Forbidden Access</h2>
-                                </span>
-                            </div>
-                            <h5 className="font-weight-light">
-                                Please login the Master account first.
-                            </h5>
-                        </div>
-                        <div className="text-center mb-3">
-                            <button type="button" className="btn btn-primary btn-lg"
-                                onClick={this.onBackToHome}>
-                                Back to Home
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     renderContent = () => {
         const { history } = this.props;
-        const { state } = history.location;
         return (
             <React.Fragment>
-                <AdminNavbar sourceId={3} activeId={7} history={this.props.history} />
+                <CustomerNavbar activeId={2} history={history} />
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark py-4">
                         <div className="col-12 mt-5 table-responsive">
-                            <h3>Manage Employees</h3>
-                            <EmployeesTable employees={this.state.employees}
-                            empType={state.empType} id={state.id}
+                            <h3>Manage Pets</h3>
+                            <PetsTable pets={this.state.pets} ownerId={history.location.state.id}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
                             connected={this.state.connected} connectionFailed={this.state.connectionFailed}
@@ -99,7 +64,7 @@ class ManageEmployees extends Component {
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
-                                    this.state.employees.length === 0 ?
+                                    this.state.pets.length === 0 ?
                                     <h1 className="display-5 text-center mb-5">No Record Found</h1> : null :
                                     this.state.connectionFailed ?
                                     <React.Fragment>
@@ -128,17 +93,19 @@ class ManageEmployees extends Component {
 
         return (
             <React.Fragment>
-                { verified ? this.renderContent() : this.renderForbidden() }
+                { verified ? this.renderContent() : <Forbidden history={history} /> }
             </React.Fragment>
         );
     }
 
     getData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
+        const { history } = this.props;
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewAccountPets.php?id='+
+        history.location.state.id)
         .then(res => {
-            const employees = res.data;
+            const pets = res.data;
             const connected = true;
-            this.setState({ employees, connected });
+            this.setState({ pets, connected });
         })
         .catch(error => {
             console.log(error);
@@ -148,11 +115,13 @@ class ManageEmployees extends Component {
     }
 
     searchData = searchValue => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchEmployee.php?search='+searchValue)
+        const { history } = this.props;
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchAccountPet.php?id='+
+        history.location.state.id+'&search='+searchValue)
         .then(res => {
-            const employees = res.data;
+            const pets = res.data;
             const connected = true;
-            this.setState({ employees, connected });
+            this.setState({ pets, connected });
         })
         .catch(error => {
             console.log(error);
@@ -162,4 +131,4 @@ class ManageEmployees extends Component {
     }
 }
 
-export default ManageEmployees;
+export default ManagePets;

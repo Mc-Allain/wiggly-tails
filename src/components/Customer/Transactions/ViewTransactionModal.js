@@ -230,7 +230,7 @@ class ViewTransactionModal extends Component {
         const { history } = this.props;
         history.push(link, {
             ...history.location.state,
-            admissionId: record.id,
+            transId: record.id,
             petName: record.petName,
             transDate: record.transDate
         });

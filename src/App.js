@@ -6,17 +6,17 @@ import './App.css';
 import Index from './components/Index/Index.js';
 
 import Customer from './components/Customer/Customer.js';
-import ViewTransactions from './components/Customer/ViewTransactions.js';
-import ViewAdmission from './components/Customer/ViewAdmission.js';
-import CustomerManagePets from './components/Customer/ManagePets.js';
+import ViewTransactions from './components/Customer/Transactions/ViewTransactions.js';
+import ViewAdmission from './components/Customer/Admission/ViewAdmission.js';
+import CustomerManagePets from './components/Customer/Pets/ManagePets.js';
 import AboutUs from './components/Customer/AboutUs.js';
 
 import Admin from './components/Admin/Admin.js';
-import ManageTransactions from './components/Admin/ManageTransactions.js';
-import ManageAdmission from './components/Admin/ManageAdmission.js';
-import ManageCustomers from './components/Admin/ManageCustomers';
-import ManagePets from './components/Admin/ManagePets';
-import ManageEmployees from './components/Admin/ManageEmployees.js';
+import ManageTransactions from './components/Admin/Transactions/ManageTransactions.js';
+import ManageAdmission from './components/Admin/Admission/ManageAdmission.js';
+import ManageCustomers from './components/Admin/Customers/ManageCustomers';
+import ManagePets from './components/Admin/Pets/ManagePets';
+import ManageEmployees from './components/Admin/Employees/ManageEmployees.js';
 
 function App() {
   return (

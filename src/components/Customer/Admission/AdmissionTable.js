@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import ViewAdmissionModal from './ViewAdmissionModal.js';
-import TablePagination from '../TablePagination';
+import TablePagination from '../../TablePagination';
 
 class AdmissionTable extends Component {
     state = {

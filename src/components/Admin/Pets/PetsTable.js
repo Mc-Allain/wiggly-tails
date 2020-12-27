@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import TablePagination from '../TablePagination.js';
+import TablePagination from '../../TablePagination.js';
 import AddPetModal from './AddPetModal.js';
 import ViewPetModal from './ViewPetModal.js';
 
@@ -33,7 +33,7 @@ class PetsTable extends Component {
                     </td>
                     <td>
                         <button className="btn btn-outline-primary btn-sm mr-1"
-                        data-toggle="modal" data-target={"#viewPetModal" + pets[i].id}>
+                        data-toggle="modal" data-target={"#viewPetModal-" + pets[i].id}>
                             <i className="fa fa-eye"></i><span className="ml-1">View</span>
                         </button>
                     </td>
@@ -49,7 +49,7 @@ class PetsTable extends Component {
     }
 
     render() {
-        const { pets, ownerId, onRefresh, onSearch, searchValue, onClear, connected, connectionFailed, onSubmitForm } = this.props;
+        const { pets, onRefresh, onSearch, searchValue, onClear, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -98,7 +98,7 @@ class PetsTable extends Component {
                     activePage={activePage}
                     totalRecords={pets.length} /> : null
                 }
-                <AddPetModal onRefresh={onRefresh} ownerId={ownerId} onSubmitForm={onSubmitForm} />
+                <AddPetModal onRefresh={onRefresh} onSubmitForm={onSubmitForm} />
                 { pets.map(pet => <ViewPetModal key={pet.id} pet={pet} onRefresh={onRefresh}
                 connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> ) }
             </React.Fragment>

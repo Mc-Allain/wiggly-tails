@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-import CustomerNavbar from './CustomerNavbar.js';
+import AdminNavbar from "../AdminNavbar.js"
 import PetsTable from './PetsTable.js';
-import Footer from '../Footer.js';
-import Forbidden from './Forbidden.js';
+import Footer from '../../Footer.js';
+import Forbidden from '../Forbidden.js';
 
 class ManagePets extends Component {
     state = {
@@ -51,12 +51,12 @@ class ManagePets extends Component {
         const { history } = this.props;
         return (
             <React.Fragment>
-                <CustomerNavbar activeId={2} history={history} />
+                <AdminNavbar  sourceId={3} activeId={6} history={history} />
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark py-4">
                         <div className="col-12 mt-5 table-responsive">
                             <h3>Manage Pets</h3>
-                            <PetsTable pets={this.state.pets} ownerId={history.location.state.id}
+                            <PetsTable pets={this.state.pets}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
                             connected={this.state.connected} connectionFailed={this.state.connectionFailed}
@@ -99,9 +99,7 @@ class ManagePets extends Component {
     }
 
     getData = () => {
-        const { history } = this.props;
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewAccountPets.php?id='+
-        history.location.state.id)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewPets.php')
         .then(res => {
             const pets = res.data;
             const connected = true;
@@ -115,9 +113,7 @@ class ManagePets extends Component {
     }
 
     searchData = searchValue => {
-        const { history } = this.props;
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchAccountPet.php?id='+
-        history.location.state.id+'&search='+searchValue)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchPet.php?search='+searchValue)
         .then(res => {
             const pets = res.data;
             const connected = true;
@@ -130,5 +126,5 @@ class ManagePets extends Component {
         });
     }
 }
-
+ 
 export default ManagePets;

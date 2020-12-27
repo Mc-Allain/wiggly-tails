@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 
 import Navbar from './Navbar.js';
 import IndexCarousel from './IndexCarousel.js';
-import CustomerLoginForm from './CustomerLoginForm.js';
-import EmployeeLoginForm from './EmployeeLoginForm.js';
-import RegisterModal from './RegisterModal.js';
+import CustomerLoginForm from './Forms/CustomerLoginForm.js';
+import EmployeeLoginForm from './Forms/EmployeeLoginForm.js';
+import RegisterModal from './Forms/RegisterModal.js';
 import Footer from '../Footer.js';
 
 class EmployeeLogin extends Component {

@@ -1,14 +1,13 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-import AdminNavbar from "./AdminNavbar.js"
-import CustomersTable from './CustomersTable.js';
-import Footer from '../Footer.js';
-import Forbidden from './Forbidden.js';
+import AdminNavbar from "../AdminNavbar.js"
+import EmployeesTable from './EmployeesTable.js';
+import Footer from '../../Footer.js';
 
-class ManageCustomers extends Component {
+class ManageEmployees extends Component {
     state = {
-        customers: [],
+        employees: [],
         connected: false,
         connectionFailed: false,
         searchValue: ""
@@ -47,16 +46,52 @@ class ManageCustomers extends Component {
         this.setState({ connected, connectionFailed, searchValue })
     }
 
+    onBackToHome = () => {
+        const { history } = this.props;
+        const link = "/admin";
+        history.replace(link, {verified: true});
+    }
+
+    renderForbidden = () => {
+        return (
+            <div className="container-fluid">
+                <div className="row min-h-full justify-content-center align-items-center">
+                    <div className="col-10 col-md-8 col-lg-6 form-light">
+                        <div className="alert alert-warning text-warning text-center my-3 mx-1 py-4">
+                            <div className="d-flex justify-content-center align-items-center">
+                                <i className="fa fa-exclamation fa-lg"></i>
+                                <span className="ml-2">
+                                    <h2 className="font-weight-normal">Forbidden Access</h2>
+                                </span>
+                            </div>
+                            <h5 className="font-weight-light">
+                                Please login the Master account first.
+                            </h5>
+                        </div>
+                        <div className="text-center mb-3">
+                            <button type="button" className="btn btn-primary btn-lg"
+                                onClick={this.onBackToHome}>
+                                Back to Home
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     renderContent = () => {
         const { history } = this.props;
+        const { state } = history.location;
         return (
             <React.Fragment>
-                <AdminNavbar sourceId={3} activeId={5} history={history} />
+                <AdminNavbar sourceId={3} activeId={7} history={this.props.history} />
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark py-4">
-                        <div className="col-12 mt-5">
-                            <h3>Manage Customers</h3>
-                            <CustomersTable customers={this.state.customers}
+                        <div className="col-12 mt-5 table-responsive">
+                            <h3>Manage Employees</h3>
+                            <EmployeesTable employees={this.state.employees}
+                            empType={state.empType} id={state.id}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
                             connected={this.state.connected} connectionFailed={this.state.connectionFailed}
@@ -64,7 +99,7 @@ class ManageCustomers extends Component {
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
-                                    this.state.customers.length === 0 ?
+                                    this.state.employees.length === 0 ?
                                     <h1 className="display-5 text-center mb-5">No Record Found</h1> : null :
                                     this.state.connectionFailed ?
                                     <React.Fragment>
@@ -93,17 +128,17 @@ class ManageCustomers extends Component {
 
         return (
             <React.Fragment>
-                { verified ? this.renderContent() : <Forbidden history={history} /> }
+                { verified ? this.renderContent() : this.renderForbidden() }
             </React.Fragment>
         );
     }
 
     getData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
         .then(res => {
-            const customers = res.data;
+            const employees = res.data;
             const connected = true;
-            this.setState({ customers, connected });
+            this.setState({ employees, connected });
         })
         .catch(error => {
             console.log(error);
@@ -113,18 +148,18 @@ class ManageCustomers extends Component {
     }
 
     searchData = searchValue => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchCustomer.php?search='+searchValue)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchEmployee.php?search='+searchValue)
         .then(res => {
-            const customers = res.data;
+            const employees = res.data;
             const connected = true;
-            this.setState({ customers, connected });
+            this.setState({ employees, connected });
         })
         .catch(error => {
             console.log(error);
             const connectionFailed = true;
-            this.setState({ connectionFailed });
+            this.setState({ connectionFailed })
         });
     }
 }
 
-export default ManageCustomers;
+export default ManageEmployees;

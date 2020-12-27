@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-import CustomerNavbar from './CustomerNavbar.js';
+import AdminNavbar from "../AdminNavbar.js"
 import TransactionsTable from './TransactionsTable.js';
-import Footer from '../Footer.js';
-import Forbidden from './Forbidden.js';
+import Footer from '../../Footer.js';
+import Forbidden from '../Forbidden.js';
 
-class ViewTransactions extends Component {
+class ManageTransactions extends Component {
     state = {
         transactions: [],
         connected: false,
@@ -51,15 +51,16 @@ class ViewTransactions extends Component {
         const { history } = this.props;
         return (
             <React.Fragment>
-                <CustomerNavbar activeId={1} history={history} />
+                <AdminNavbar sourceId={3} activeId={4} history={history} />
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark py-4">
                         <div className="col-12 mt-5 table-responsive">
-                            <h3>View Transactions</h3>
+                            <h3>Manage Transactions</h3>
                             <TransactionsTable transactions={this.state.transactions}
                             onRefresh={this.onRefresh} onSearch={this.onSearch} history={history}
                             searchValue={this.state.searchValue} onClear={this.onClear}
-                            connected={this.state.connected} />
+                            connected={this.state.connected} connectionFailed={this.state.connectionFailed}
+                            onSubmitForm={this.onSubmitForm} />
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
@@ -98,9 +99,7 @@ class ViewTransactions extends Component {
     }
 
     getData = () => {
-        const { history } = this.props;
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewAccountTransactions.php?id='+
-        history.location.state.id)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewTransactions.php')
         .then(res => {
             const transactions = res.data;
             const connected = true;
@@ -114,12 +113,11 @@ class ViewTransactions extends Component {
     }
 
     searchData = searchValue => {
-        const { history } = this.props;
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchAccountTransaction.php?id='+
-        history.location.state.id+"&search="+searchValue)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchTransaction.php?search='+searchValue)
         .then(res => {
             const transactions = res.data;
-            this.setState({ transactions });
+            const connected = true;
+            this.setState({ transactions, connected });
         })
         .catch(error => {
             console.log(error);
@@ -129,4 +127,4 @@ class ViewTransactions extends Component {
     }
 }
 
-export default ViewTransactions;
+export default ManageTransactions;

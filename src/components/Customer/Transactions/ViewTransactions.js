@@ -1,14 +1,14 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-import CustomerNavbar from './CustomerNavbar.js';
-import AdmissionTable from './AdmissionTable.js';
-import Footer from '../Footer.js';
-import Forbidden from './Forbidden.js';
+import CustomerNavbar from '../CustomerNavbar.js';
+import TransactionsTable from './TransactionsTable.js';
+import Footer from '../../Footer.js';
+import Forbidden from '../Forbidden.js';
 
-class ViewAdmission extends Component {
+class ViewTransactions extends Component {
     state = {
-        admission: [],
+        transactions: [],
         connected: false,
         connectionFailed: false,
         searchValue: ""
@@ -55,15 +55,15 @@ class ViewAdmission extends Component {
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark py-4">
                         <div className="col-12 mt-5 table-responsive">
-                            <h3>View Admission</h3>
-                            <AdmissionTable admission={this.state.admission} history={history}
-                            onRefresh={this.onRefresh} onSearch={this.onSearch}
+                            <h3>View Transactions</h3>
+                            <TransactionsTable transactions={this.state.transactions}
+                            onRefresh={this.onRefresh} onSearch={this.onSearch} history={history}
                             searchValue={this.state.searchValue} onClear={this.onClear}
                             connected={this.state.connected} />
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
-                                    this.state.admission.length === 0 ?
+                                    this.state.transactions.length === 0 ?
                                     <h1 className="display-5 text-center mb-5">No Record Found</h1> : null :
                                     this.state.connectionFailed ?
                                     <React.Fragment>
@@ -99,47 +99,34 @@ class ViewAdmission extends Component {
 
     getData = () => {
         const { history } = this.props;
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewTransactionAdmission.php?id='+
-        history.location.state.admissionId)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewAccountTransactions.php?id='+
+        history.location.state.id)
         .then(res => {
-            const admission = res.data;
+            const transactions = res.data;
             const connected = true;
-            this.setState({ admission, connected });
+            this.setState({ transactions, connected });
         })
         .catch(error => {
             console.log(error);
             const connectionFailed = true;
-            this.setState({ connectionFailed });
+            this.setState({ connectionFailed })
         });
     }
 
     searchData = searchValue => {
         const { history } = this.props;
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchTransactionAdmission.php?id='+
-        history.location.state.admissionId+"&search="+searchValue)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchAccountTransaction.php?id='+
+        history.location.state.id+"&search="+searchValue)
         .then(res => {
-            const admission = res.data;
-            const connected = true;
-            this.setState({ admission, connected });
+            const transactions = res.data;
+            this.setState({ transactions });
         })
         .catch(error => {
             console.log(error);
             const connectionFailed = true;
-            this.setState({ connectionFailed });
+            this.setState({ connectionFailed })
         });
-    }
-
-    formatDate = dateValue => {        
-        const MMM = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"];
-
-        dateValue = new Date(dateValue);
-        const day = dateValue.getDate();
-        const month = MMM[dateValue.getMonth()];
-        const year = dateValue.getFullYear();
-
-        return year + "-" + month + "-" + day;
     }
 }
 
-export default ViewAdmission;
+export default ViewTransactions;

@@ -1,20 +1,20 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-import AdminNavbar from "./AdminNavbar.js"
-import PetsTable from './PetsTable.js';
-import Footer from '../Footer.js';
-import Forbidden from './Forbidden.js';
+import AdminNavbar from "../AdminNavbar.js"
+import CustomersTable from './CustomersTable.js';
+import Footer from '../../Footer.js';
+import Forbidden from '../Forbidden.js';
 
-class ManagePets extends Component {
+class ManageCustomers extends Component {
     state = {
-        pets: [],
+        customers: [],
         connected: false,
         connectionFailed: false,
         searchValue: ""
     }
 
-    componentDidMount() {        
+    componentDidMount() {
         this.getData();
     }
 
@@ -28,7 +28,7 @@ class ManagePets extends Component {
         this.getData();
         const connected = false;
         const connectionFailed = false;
-        this.setState({ connected, connectionFailed})
+        this.setState({ connected, connectionFailed })
     }
 
     onSearch = e => {
@@ -51,12 +51,12 @@ class ManagePets extends Component {
         const { history } = this.props;
         return (
             <React.Fragment>
-                <AdminNavbar  sourceId={3} activeId={6} history={history} />
+                <AdminNavbar sourceId={3} activeId={5} history={history} />
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark py-4">
-                        <div className="col-12 mt-5 table-responsive">
-                            <h3>Manage Pets</h3>
-                            <PetsTable pets={this.state.pets}
+                        <div className="col-12 mt-5">
+                            <h3>Manage Customers</h3>
+                            <CustomersTable customers={this.state.customers}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
                             connected={this.state.connected} connectionFailed={this.state.connectionFailed}
@@ -64,7 +64,7 @@ class ManagePets extends Component {
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
-                                    this.state.pets.length === 0 ?
+                                    this.state.customers.length === 0 ?
                                     <h1 className="display-5 text-center mb-5">No Record Found</h1> : null :
                                     this.state.connectionFailed ?
                                     <React.Fragment>
@@ -99,11 +99,11 @@ class ManagePets extends Component {
     }
 
     getData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewPets.php')
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
-            const pets = res.data;
+            const customers = res.data;
             const connected = true;
-            this.setState({ pets, connected });
+            this.setState({ customers, connected });
         })
         .catch(error => {
             console.log(error);
@@ -113,18 +113,18 @@ class ManagePets extends Component {
     }
 
     searchData = searchValue => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchPet.php?search='+searchValue)
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchCustomer.php?search='+searchValue)
         .then(res => {
-            const pets = res.data;
+            const customers = res.data;
             const connected = true;
-            this.setState({ pets, connected });
+            this.setState({ customers, connected });
         })
         .catch(error => {
             console.log(error);
             const connectionFailed = true;
-            this.setState({ connectionFailed })
+            this.setState({ connectionFailed });
         });
     }
 }
- 
-export default ManagePets;
+
+export default ManageCustomers;

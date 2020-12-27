@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-import AdminNavbar from './AdminNavbar.js';
+import CustomerNavbar from '../CustomerNavbar.js';
 import AdmissionTable from './AdmissionTable.js';
-import Footer from '../Footer.js';
-import Forbidden from './Forbidden.js';
+import Footer from '../../Footer.js';
+import Forbidden from '../Forbidden.js';
 
-class ManageAdmission extends Component {
+class ViewAdmission extends Component {
     state = {
         admission: [],
         connected: false,
@@ -51,16 +51,15 @@ class ManageAdmission extends Component {
         const { history } = this.props;
         return (
             <React.Fragment>
-                <AdminNavbar sourceId={3} activeId={4} history={history} />
+                <CustomerNavbar activeId={1} history={history} />
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark py-4">
                         <div className="col-12 mt-5 table-responsive">
-                            <h3>Manage Admission</h3>
+                            <h3>View Admission</h3>
                             <AdmissionTable admission={this.state.admission} history={history}
-                            onRefresh={this.onRefresh} onSearch={this.onSearch} 
+                            onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
-                            connected={this.state.connected} connectionFailed={this.state.connectionFailed}
-                            onSubmitForm={this.onSubmitForm} />
+                            connected={this.state.connected} />
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
@@ -101,7 +100,7 @@ class ManageAdmission extends Component {
     getData = () => {
         const { history } = this.props;
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewTransactionAdmission.php?id='+
-        history.location.state.admissionId)
+        history.location.state.transId)
         .then(res => {
             const admission = res.data;
             const connected = true;
@@ -143,4 +142,4 @@ class ManageAdmission extends Component {
     }
 }
 
-export default ManageAdmission;
+export default ViewAdmission;

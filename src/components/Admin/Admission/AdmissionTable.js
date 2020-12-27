@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import TablePagination from '../TablePagination';
+import TablePagination from '../../TablePagination';
 import AddAdmissionModal from './AddAdmissionModal.js';
 import ViewAdmissionModal from './ViewAdmissionModal.js';
 
@@ -109,7 +109,8 @@ class AdmissionTable extends Component {
                 {
                     admission.map(admission => <ViewAdmissionModal key={admission.id}
                     admission={admission} onRefresh={onRefresh}
-                    connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> )
+                    connected={connected} connectionFailed={connectionFailed}
+                    onSubmitForm={onSubmitForm} /> )
                 }
             </React.Fragment>
         );

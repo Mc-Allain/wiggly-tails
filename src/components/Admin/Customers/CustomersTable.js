@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import TablePagination from '../TablePagination.js';
+import TablePagination from '../../TablePagination.js';
 import AddCustomerModal from './AddCustomerModal.js';
 import ViewCustomerModal from './ViewCustomerModal.js';
 import InitiateTransactionModal from './InitiateTransactionModal.js'

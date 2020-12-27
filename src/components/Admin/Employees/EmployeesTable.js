@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import TablePagination from '../TablePagination';
+import TablePagination from '../../TablePagination';
 import AddEmployeeModal from './AddEmployeeModal';
 import ViewEmployeeModal from './ViewEmployeeModal';
 
