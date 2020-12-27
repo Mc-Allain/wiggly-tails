@@ -57,10 +57,6 @@ class AddTransactionModal extends Component {
         employees: [],
         employeeConnected: false,
         employeeConnectionFailed: false,
-        checkUpConnected: false,
-        checkUpConnectionFailed: false,
-        groomConnected: false,
-        groomConnectionFailed: false,
         customer:
         {
             search: false,
@@ -581,9 +577,15 @@ class AddTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.empId) }
                                             </React.Fragment> :
                                             this.state.employeeConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.retryEmployeesData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -639,9 +641,15 @@ class AddTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.customerId) }
                                             </React.Fragment> :
                                             this.state.customerConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.retryCustomersData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -711,9 +719,15 @@ class AddTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.petId) }
                                             </React.Fragment> :
                                             this.state.petConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.retryPetsData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -882,6 +896,13 @@ class AddTransactionModal extends Component {
         return classes;
     }
 
+    retryCustomersData = () => {
+        this.getCustomersData();
+        const customerConnected = false;
+        const customerConnectionFailed = false;
+        this.setState({ customerConnected, customerConnectionFailed })
+    }
+
     getCustomersData = () => {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
         .then(res => {
@@ -896,6 +917,13 @@ class AddTransactionModal extends Component {
         });
     }
 
+    retryPetsData = () => {
+        this.getPetsData();
+        const petConnected = false;
+        const petConnectionFailed = false;
+        this.setState({ petConnected, petConnectionFailed })
+    }
+
     getPetsData = () => {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewPets.php')
         .then(res => {
@@ -908,6 +936,13 @@ class AddTransactionModal extends Component {
             const petConnectionFailed = true;
             this.setState({ petConnectionFailed });
         });
+    }
+
+    retryEmployeesData = () => {
+        this.getEmployeesData();
+        const employeeConnected = false;
+        const employeeConnectionFailed = false;
+        this.setState({ employeeConnected, employeeConnectionFailed })
     }
 
     getEmployeesData = () => {

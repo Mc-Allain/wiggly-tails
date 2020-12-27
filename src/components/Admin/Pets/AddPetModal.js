@@ -307,9 +307,15 @@ class AddPetModal extends Component {
                                                 } { this.renderRecordErrors(errors.ownerId) }
                                             </React.Fragment> :
                                             this.state.connectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.retryCustomersData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -393,6 +399,13 @@ class AddPetModal extends Component {
         classes+= errorMsg.length > 0 ? 
         this.state.submitError ? "border border-danger" : "" : "border border-success"
         return classes;
+    }
+
+    retryCustomersData = () => {
+        this.getCustomersData();
+        const connected = false;
+        const connectionFailed = false;
+        this.setState({ connected, connectionFailed })
     }
 
     getCustomersData = () => {

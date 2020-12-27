@@ -25,9 +25,7 @@ class ManageEmployees extends Component {
 
     onRefresh = () => {
         this.getData();
-        const connected = false;
-        const connectionFailed = false;
-        this.setState({ connected, connectionFailed })
+        this.onSubmitForm();
     }
 
     onSearch = e => {
@@ -102,13 +100,15 @@ class ManageEmployees extends Component {
                                     this.state.employees.length === 0 ?
                                     <h1 className="display-5 text-center mb-5">No Record Found</h1> : null :
                                     this.state.connectionFailed ?
-                                    <React.Fragment>
-                                        <h1 className="display-5 text-center text-danger">Connection Failed</h1>
-                                        <h3 className="font-weight-normal text-center text-danger mb-5">Please try again later.</h3>
-                                    </React.Fragment> :
+                                    <div className="text-center">
+                                        <h1 className="display-5 text-danger">Database Connection Failed</h1>
+                                        <h3 className="font-weight-normal text-danger mb-3">Please try again later.</h3>
+                                        <button type="button" className="btn btn-primary btn-lg"
+                                        onClick={this.onRefresh}>Retry</button>
+                                    </div> :
                                     <React.Fragment>
                                         <h1 className="display-5 text-center">Loading Records</h1>
-                                        <h3 className="font-weight-normal text-center mb-5">Please wait...</h3>
+                                        <h3 className="font-weight-normal text-center">Please wait...</h3>
                                     </React.Fragment>
                                 }
                             </div>

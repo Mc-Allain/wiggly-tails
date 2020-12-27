@@ -24,6 +24,18 @@ class EmployeeLogin extends Component {
         this.getEmployeesData();
     }
 
+    retryCustomersData = () => {
+        this.getCustomersData();
+        this.onRegister();
+    }
+
+    retryEmployeesData = () => {
+        this.getEmployeesData();
+        const employeeConnected = false;
+        const employeeConnectionFailed = false;
+        this.setState({ employeeConnected, employeeConnectionFailed })
+    }
+
     onRegister = () => {
         const customerConnected = false;
         const customerConnectionFailed = false;
@@ -52,11 +64,13 @@ class EmployeeLogin extends Component {
                                         <CustomerLoginForm history={this.props.history}
                                         records={ this.state.customers }
                                         connected={this.state.customerConnected}
-                                        connectionFailed={this.state.customerConnectionFailed} /> :
+                                        connectionFailed={this.state.customerConnectionFailed}
+                                        getData={this.retryCustomersData} /> :
                                         <EmployeeLoginForm history={this.props.history} 
                                         records={ this.state.employees }
                                         connected={this.state.employeeConnected}
-                                        connectionFailed={this.state.employeeConnectionFailed} />
+                                        connectionFailed={this.state.employeeConnectionFailed}
+                                        getData={this.retryEmployeesData} />
                                     }
                                 </div>
                             </div>

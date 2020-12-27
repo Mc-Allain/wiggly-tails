@@ -15,6 +15,7 @@ class ManageEmployeesModal extends Component {
         },
         records: [],
         connected: false,
+        connectionFailed: false,
         submitError: false,
         loginError: false
     }
@@ -180,10 +181,17 @@ class ManageEmployeesModal extends Component {
                                         { this.renderRecordErrors(errors.adminPassword) }
                                     </div>
                                 </form> :
+                                this.state.connectionFailed ?
+                                <div className="text-center">
+                                    <h3 className="text-danger mb-0">Database Connection Failed</h3>
+                                    <h5 className="font-weight-normal text-danger mb-3">Please try again later.</h5>
+                                    <button type="button" className="btn btn-primary" onClick={this.onRefresh}>Retry</button>
+                                </div> :
                                 <React.Fragment>
-                                    <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
+                                    <h3 className="text-center mb-0">Loading Records</h3>
                                     <h5 className="font-weight-normal text-center">Please wait...</h5>
                                 </React.Fragment>
+                                
                             }
                         </div>
 
@@ -212,16 +220,23 @@ class ManageEmployeesModal extends Component {
         )
     }
 
-    componentDidMount() {
-        this.getData();
-    }
-
     render() {
         return (
             <React.Fragment>
                 {  this.renderModal() }
             </React.Fragment>
         );
+    }
+
+    componentDidMount = () => {
+        this.getData();
+    }
+
+    onRefresh = () => {
+        this.getData();
+        const connected = false;
+        const connectionFailed = false;
+        this.setState({ connected, connectionFailed })
     }
 
     getData = () => {
@@ -231,8 +246,10 @@ class ManageEmployeesModal extends Component {
             const connected = true;
             this.setState({ records, connected });
         })
-        .catch(function(error) {
+        .catch(error => {
             console.log(error);
+            const connectionFailed = true;
+            this.setState({ connectionFailed })
         });
     }
 

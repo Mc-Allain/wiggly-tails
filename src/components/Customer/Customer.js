@@ -37,11 +37,10 @@ class Customer extends Component {
     }
 
     onRefresh = () => {
-        this.onSubmitForm();
-
         const { history } = this.props;
         const { id } = history.location.state;
         this.searchData(id);
+        this.onSubmitForm();
     }
 
     onClickLink = link => {
@@ -113,13 +112,14 @@ class Customer extends Component {
                                         </div>
                                     </React.Fragment> :
                                     connectionFailed ?
-                                    <div className="col-12 my-5">
-                                        <h1 className="display-5 text-center text-danger">Connection Failed</h1>
-                                        <h3 className="font-weight-normal text-center text-danger">Please try again later.</h3>
+                                    <div className="col-12 text-center mt-3">
+                                        <h3 className="text-danger mb-0">Database Connection Failed</h3>
+                                        <h5 className="font-weight-normal text-danger mb-3">Please try again later.</h5>
+                                        <button type="button" className="btn btn-primary" onClick={this.onRefresh}>Retry</button>
                                     </div> :
-                                    <div className="col-12 my-5">
-                                        <h1 className="display-5 text-center">Loading Data</h1>
-                                        <h3 className="font-weight-normal text-center">Please wait...</h3>
+                                    <div className="col-12 text-center mt-3">
+                                        <h3 className="mb-0">Loading Data</h3>
+                                        <h5 className="font-weight-normal">Please wait...</h5>
                                     </div>
                                 }
 

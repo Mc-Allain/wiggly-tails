@@ -154,6 +154,7 @@ class ViewTransactionModal extends Component {
 
             const checkUpConnected = true;
             const groomConnected = true;
+            const connected = true;
 
             this.setState(currentState => ({
                 ...currentState,
@@ -166,7 +167,7 @@ class ViewTransactionModal extends Component {
                     ...currentState.errors,
                     checkUpErrors,
                     groomErrors
-                }, checkUpConnected, groomConnected
+                }, checkUpConnected, groomConnected, connected
             }))
         }
     }
@@ -614,9 +615,15 @@ class ViewTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.empId) }
                                             </React.Fragment> :
                                             this.state.employeeConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.retryEmployeesData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -672,9 +679,15 @@ class ViewTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.customerId) }
                                             </React.Fragment> :
                                             this.state.customerConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.retryCustomersData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -744,9 +757,15 @@ class ViewTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.petId) }
                                             </React.Fragment> :
                                             this.state.petConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.retryPetsData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -902,13 +921,14 @@ class ViewTransactionModal extends Component {
                             </div>
                         </React.Fragment> : 
                         this.state.checkUpConnectionFailed ?
-                        <div className="col-12">
-                            <h3 className="font-weight-normal text-center text-danger mb-0">Connection Failed</h3>
-                            <h5 className="font-weight-normal text-center text-danger">Please try again later...</h5>
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
+                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                            <button type="button" className="btn btn-primary" onClick={this.retryCheckUpData}>Retry</button>
                         </div> :
-                        <div className="col-12">
-                            <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal text-center">Please wait...</h5>
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
+                            <h5 className="font-weight-normal">Please wait...</h5>
                         </div>
                     }
                 </div>
@@ -937,13 +957,14 @@ class ViewTransactionModal extends Component {
                             </div>
                         </React.Fragment> :
                         this.state.groomConnectionFailed ?
-                        <div className="col-12">
-                            <h3 className="font-weight-normal text-center text-danger mb-0">Connection Failed</h3>
-                            <h5 className="font-weight-normal text-center text-danger">Please try again later...</h5>
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
+                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                            <button type="button" className="btn btn-primary" onClick={this.retryGroomData}>Retry</button>
                         </div> :
-                        <div className="col-12">
-                            <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal text-center">Please wait...</h5>
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
+                            <h5 className="font-weight-normal">Please wait...</h5>
                         </div>
                     }
                 </div>
@@ -956,6 +977,13 @@ class ViewTransactionModal extends Component {
         classes+= errorMsg.length > 0 ? 
         this.state.submitError ? "border border-danger" : "" : "border border-success"
         return classes;
+    }
+
+    retryCustomersData = () => {
+        this.getCustomersData();
+        const customerConnected = false;
+        const customerConnectionFailed = false;
+        this.setState({ customerConnected, customerConnectionFailed })
     }
 
     getCustomersData = () => {
@@ -972,6 +1000,13 @@ class ViewTransactionModal extends Component {
         });
     }
 
+    retryPetsData = () => {
+        this.getPetsData();
+        const petConnected = false;
+        const petConnectionFailed = false;
+        this.setState({ petConnected, petConnectionFailed })
+    }
+
     getPetsData = () => {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewPets.php')
         .then(res => {
@@ -986,6 +1021,13 @@ class ViewTransactionModal extends Component {
         });
     }
 
+    retryEmployeesData = () => {
+        this.getEmployeesData();
+        const employeeConnected = false;
+        const employeeConnectionFailed = false;
+        this.setState({ employeeConnected, employeeConnectionFailed })
+    }
+
     getEmployeesData = () => {
         axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
         .then(res => {
@@ -998,6 +1040,14 @@ class ViewTransactionModal extends Component {
             const employeeConnectionFailed = true;
             this.setState({ employeeConnectionFailed });
         });
+    }
+
+    retryCheckUpData = () => {
+        this.getCheckUpData();
+        const checkUpConnected = false;
+        const checkUpConnectionFailed = false;
+        const connected = false;
+        this.setState({ checkUpConnected, checkUpConnectionFailed, connected })
     }
 
     getCheckUpData = id => {
@@ -1020,6 +1070,14 @@ class ViewTransactionModal extends Component {
             const checkUpConnectionFailed = true;
             this.setState({ checkUpConnectionFailed });
         });
+    }
+
+    retryGroomData = () => {
+        this.getGroomData();
+        const groomConnected = false;
+        const groomConnectionFailed = false;
+        const connected = false;
+        this.setState({ groomConnected, groomConnectionFailed, connected })
     }
 
     getGroomData = id => {

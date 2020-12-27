@@ -35,7 +35,9 @@ class ViewTransactionModal extends Component {
             }
         },
         checkUpConnected: false,
+        checkUpConnectionFailed: false,
         groomConnected: false,
+        groomConnectionFailed: false,
         connected: false
     }
 
@@ -280,9 +282,15 @@ class ViewTransactionModal extends Component {
                                 rows="2" noValidate disabled />
                             </div>
                         </React.Fragment> :
-                        <div className="col-12">
-                            <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal text-center">Please wait...</h5>
+                        this.state.checkUpConnectionFailed ?
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
+                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                            <button type="button" className="btn btn-primary" onClick={this.retryCheckUpData}>Retry</button>
+                        </div> :
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
+                            <h5 className="font-weight-normal">Please wait...</h5>
                         </div>
                     }
                 </div>
@@ -305,14 +313,28 @@ class ViewTransactionModal extends Component {
                                 type="text" name="activity" value={groom.activity} noValidate disabled/>
                             </div>
                         </React.Fragment> :
-                        <div className="col-12">
-                            <h3 className="font-weight-normal text-center mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal text-center">Please wait...</h5>
+                        this.state.groomConnectionFailed ?
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
+                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                            <button type="button" className="btn btn-primary" onClick={this.retryGroomData}>Retry</button>
+                        </div> :
+                        <div className="col-12 text-center">
+                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
+                            <h5 className="font-weight-normal">Please wait...</h5>
                         </div>
                     }
                 </div>
             </div>
         )
+    }
+
+    retryCheckUpData = () => {
+        this.getCheckUpData();
+        const checkUpConnected = false;
+        const checkUpConnectionFailed = false;
+        const connected = false;
+        this.setState({ checkUpConnected, checkUpConnectionFailed, connected })
     }
 
     getCheckUpData = id => {
@@ -330,7 +352,19 @@ class ViewTransactionModal extends Component {
                 }, checkUpConnected, connected
             }))
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const checkUpConnectionFailed = true;
+            this.setState({ checkUpConnectionFailed });
+        });
+    }
+
+    retryGroomData = () => {
+        this.getGroomData();
+        const groomConnected = false;
+        const groomConnectionFailed = false;
+        const connected = false;
+        this.setState({ groomConnected, groomConnectionFailed, connected })
     }
 
     getGroomData = id => {
@@ -348,7 +382,11 @@ class ViewTransactionModal extends Component {
                 }, groomConnected, connected
             }))
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            console.log(error);
+            const groomConnectionFailed = true;
+            this.setState({ groomConnectionFailed });
+        });
     }
 }
  
