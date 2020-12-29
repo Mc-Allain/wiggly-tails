@@ -103,7 +103,8 @@ class ViewPetModal extends Component {
                 break;
 
             case 'pcciRegNo':
-                errors.pcciRegNo=    value.length > 6 ? "Must be at exact 6 characters" : ""
+                errors.pcciRegNo=    value.length < 6 && value.length !== 0 ?
+                                        "Must be at exact 6 characters" : ""
                 break;
 
             default:

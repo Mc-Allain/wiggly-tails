@@ -23,7 +23,15 @@ class AddCustomerModal extends Component {
             mobileNumber: '',
             emailAddress: '',
             email: '@yahoo.com',
-            userPassword: ''
+            userPassword: '',
+            pet:
+            {
+                petName: '',
+                birthdate: '',
+                petClass: '',
+                lastVisit: '',
+                pcciRegNo: ''
+            }
         },
         confirmUserPassword: '',
         errors:
@@ -45,8 +53,20 @@ class AddCustomerModal extends Component {
             emailAddress: ' ',
             userPassword: ' ',
             confirmUserPassword: ' ',
+            petErrors:
+            {
+                petName: ' ',
+                birthdate: ' ',
+                petClass: ' ',
+                pcciRegNo: ''
+            }
         },
         records: [],
+        petClasses:
+        [ 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
+        'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
+        'Horse', 'Iguana', 'Jaguar', 'Lizard', 'Mantis', 'Monkey', 'Newt', 'Octopus', 'Pig', 'Panda', 'Quill',
+        'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake','Spider', 'Tortoise', 'Turtle', 'Whale'],
         connected: false,
         connectionFailed: false,
         submitError: false,
@@ -251,6 +271,64 @@ class AddCustomerModal extends Component {
         }))
     }
 
+    onChangePet = e => {
+        let { name, value } = e.target;
+
+        value = name === "petName" ?
+        this.toAbsProperCase(value) :
+        name !== "petClass" ?
+        this.removeSpaces(value).toUpperCase() : value
+
+        this.setState(currentState => ({
+            ...currentState,
+            record: {
+                ...currentState.record,
+                pet: {
+                    ...currentState.record.pet,
+                    [name]: value
+                }
+            }
+        }), () => this.onCheckPetErrors(e))
+    }
+
+    onCheckPetErrors = e => {
+        const { name, value } = e.target;
+        const petErrors = {...this.state.errors.petErrors};
+        const properLength = this.removeSpaces(value).length;
+
+        switch(name){
+            case 'petName':
+                petErrors.petName=    properLength === 0 ? " " :
+                                    properLength < 2 || value.length > 24 ?
+                                    "Must be at between 2 and 24 characters" : ""
+                break;
+
+            case 'birthdate':
+                petErrors.birthdate=   properLength === 0 ? " " : ""
+                break;
+            
+            case 'petClass':
+                petErrors.petClass=   properLength === 0 ? " " : ""
+                break;
+
+            case 'pcciRegNo':
+                petErrors.pcciRegNo=    value.length < 6 && value.length !== 0 ?
+                                        "Must be at exact 6 characters" : ""
+                break;
+
+            default:
+                break;
+        }
+
+        this.setState(currentState => ({
+            ...currentState,
+            errors: {
+                ...currentState.errors,
+                petErrors
+            }
+        }), () => console.log(this.state))
+    }
+
     onSubmit = () => {
         const errors  = {...this.state.errors};
 
@@ -267,6 +345,7 @@ class AddCustomerModal extends Component {
             record.homeAddress.barangay = this.removeLastSpace(record.homeAddress.barangay);
             record.homeAddress.municipality = this.removeLastSpace(record.homeAddress.municipality);
             record.homeAddress.province = this.removeLastSpace(record.homeAddress.province);
+            record.pet.petName = this.removeLastSpace(record.pet.petName);
 
             record.homeAddress.street += " St.";
             record.homeAddress.barangay = "Brgy. " + record.homeAddress.barangay;
@@ -280,7 +359,7 @@ class AddCustomerModal extends Component {
 
             this.props.onSubmitForm();
 
-            axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertCustomer.php', record)
+            axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertCustomerPet.php', record)
             .then(onRefresh, this.postSubmit());
         }
         else {
@@ -391,9 +470,11 @@ class AddCustomerModal extends Component {
     onReset = () => {
         const record = {...this.state.record};
         const homeAddress = {...this.state.record.homeAddress};
+        const pet = {...this.state.record.pet};
 
         const errors = {...this.state.errors};
         const homeAddressErrors = {...this.state.errors.homeAddressErrors};
+        const petErrors = {...this.state.errors.petErrors};
 
         const confirmUserPassword = '';
         const submitError = false;
@@ -404,6 +485,11 @@ class AddCustomerModal extends Component {
         homeAddress.barangay = '';
         homeAddress.municipality = '';
         homeAddress.province = '';
+        
+        pet.petName = '';
+        pet.birthdate = '';
+        pet.petClass = '';
+        pet.pcciRegNo = '';
 
         record.id = this.generateCharacters(6);
         record.lastName = '';
@@ -415,6 +501,7 @@ class AddCustomerModal extends Component {
         record.emailAddress = '';
         record.email = '@yahoo.com';
         record.userPassword = '';
+        record.pet = pet;
 
         homeAddressErrors.lotBlock = '';
         homeAddressErrors.street = ' ';
@@ -422,6 +509,10 @@ class AddCustomerModal extends Component {
         homeAddressErrors.barangay = ' ';
         homeAddressErrors.municipality = ' ';
         homeAddressErrors.province = '';
+
+        petErrors.petName = ' ';
+        petErrors.birthdate = ' ';
+        petErrors.petClass = ' ';
 
         errors.lastName = ' ';
         errors.firstName = ' ';
@@ -437,9 +528,9 @@ class AddCustomerModal extends Component {
     }
 
     render() {
-        const { record, errors, confirmUserPassword, added } = this.state;
-        const { homeAddress } = record;
-        const { homeAddressErrors } = errors;
+        const { record, errors, confirmUserPassword, petClasses, added } = this.state;
+        const { homeAddress, pet } = record;
+        const { homeAddressErrors, petErrors } = errors;
 
         return (
             <React.Fragment>
@@ -653,6 +744,57 @@ class AddCustomerModal extends Component {
                                         type="password" name="confirmUserPassword" value={confirmUserPassword}
                                         onChange={this.onChangeState} noValidate />
                                         { this.renderRecordErrors(errors.confirmUserPassword) }
+                                    </div>
+
+                                    <div className="col-12 sub-form bt-1 mt-3">
+                                        <div className="row mt-3">
+                                            <div className="form-group col-lg-6">
+                                                <label className="m-0 ml-2">
+                                                    Pet Name <span className="text-danger ml-1">*</span>
+                                                </label>
+                                                <input className={this.inputFieldClasses(petErrors.petName)}
+                                                type="text" name="petName" value={pet.petName}
+                                                onChange={this.onChangePet} noValidate />
+                                                { this.renderRecordErrors(petErrors.petName) }
+                                            </div>
+
+                                            <div className="form-group col-lg-6">
+                                                <label className="m-0 ml-2">
+                                                    Pet Birthdate<span className="text-danger ml-1">*</span>
+                                                </label>
+                                                <input className={this.inputFieldClasses(petErrors.birthdate)}
+                                                type="date" name="birthdate" value={pet.birthdate}
+                                                onChange={this.onChangePet} noValidate />
+                                                { this.renderRecordErrors(petErrors.birthdate) }
+                                            </div>
+
+                                            <div className="form-group col-lg-6">
+                                                <label className="m-0 ml-2">
+                                                    Pet Class<span className="text-danger ml-1">*</span>
+                                                </label>
+                                                <select className={this.inputFieldClasses(petErrors.petClass)}
+                                                name="petClass" value={pet.petClass} onChange={this.onChangePet}
+                                                noValidate>
+                                                    <option value=''>Choose one</option>
+                                                    {
+                                                        petClasses.length > 0 ?
+                                                        petClasses.map(value =>
+                                                            <option key={value} value={value}>{value}</option>
+                                                        ) : null
+                                                    }
+                                                </select>
+                                                { this.renderRecordErrors(petErrors.petClass) }
+                                            </div>
+
+                                            <div className="form-group col-lg-6">
+                                                <label className="m-0 ml-2">PCCI Reg. No.</label>
+                                                <input className={this.inputFieldClasses(petErrors.pcciRegNo)}
+                                                type="text" name="pcciRegNo" value={pet.pcciRegNo}
+                                                onChange={this.onChangePet} maxLength="6"
+                                                placeholder="(Optional)" noValidate />
+                                                { this.renderRecordErrors(petErrors.pcciRegNo) }
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                                 {
