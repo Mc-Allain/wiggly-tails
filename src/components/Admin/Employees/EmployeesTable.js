@@ -50,7 +50,7 @@ class EmployeesTable extends Component {
     }
     
     render() {
-        const { employees, onRefresh, onSearch, searchValue, onClear, empType, connected, connectionFailed, onSubmitForm } = this.props;
+        const { employees, onRefresh, onSearch, searchValue, onClear, empType, connected, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -97,9 +97,8 @@ class EmployeesTable extends Component {
                     totalRecords={employees.length} /> : null
                 }
                 <AddEmployeeModal onRefresh={onRefresh} empType={empType} onSubmitForm={onSubmitForm} />
-                { employees.map(employee => <ViewEmployeeModal key={employee.id}
-                employee={employee} onRefresh={onRefresh} empType={empType}
-                connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> ) }
+                { employees.map(employee => <ViewEmployeeModal key={employee.id} employee={employee}
+                onRefresh={onRefresh} empType={empType} connected={connected} onSubmitForm={onSubmitForm} /> ) }
             </React.Fragment>
         );
     }

@@ -16,7 +16,9 @@ class ViewAdmissionModal extends Component {
             content: ' '
         },
         submitError: false,
-        added: false
+        submitted: false,
+        added: false,
+        failed: false,
     }
 
     componentDidMount = () => {
@@ -84,9 +86,19 @@ class ViewAdmissionModal extends Component {
             record.content = this.removeLastSpace(record.content);
 
             this.props.onSubmitForm();
+            this.submission();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertAdmission.php', record)
-            .then(onRefresh, this.postSubmit());
+            .then(() => {
+                onRefresh();
+                this.onReset();
+                this.postSubmit();
+            })
+            .catch(error => {
+                console.log(error);
+                onRefresh();
+                this.failedSubmit();
+            });
         }
         else {
             const submitError = true;
@@ -94,11 +106,30 @@ class ViewAdmissionModal extends Component {
         }
     }
     
-    postSubmit = () => {
-        this.onReset();
-        let added = true;
+    submission = () => {
+        const submitted = true;
         const submitError = false;
-        this.setState({ submitError, added });
+        this.setState({ submitted, submitError });
+    }
+    
+    postSubmit = () => {
+        const submitted = false;
+        let added = true;
+        this.setState({ submitted, added });
+        setTimeout(() => {
+            added = false;
+            this.setState({ added });
+        }, 5000)
+    }
+
+    failedSubmit = () => {
+        const submitted = false;
+        let failed = true;
+        this.setState({ submitted, failed });
+        setTimeout(() => {
+            failed = false;
+            this.setState({ failed });
+        }, 5000)
     }
 
     validForm = ({ errors }) => {
@@ -128,8 +159,10 @@ class ViewAdmissionModal extends Component {
         const { history } = this.props;
         const record = {...this.state.record};
         const errors = {...this.state.errors};
+        
         const submitError = false;
         const added = false;
+        const failed = false;
 
         record.id = this.generateCharacters(6);
         record.transId = history.location.state.transId;
@@ -139,11 +172,11 @@ class ViewAdmissionModal extends Component {
         errors.title = ' ';
         errors.content = ' ';
 
-        this.setState({ record, errors, submitError, added });
+        this.setState({ record, errors, submitError, added, failed });
     }
 
     render() {
-        const { record, errors, added } = this.state;
+        const { record, errors, submitted, added, failed } = this.state;
         
         return (
             <React.Fragment>
@@ -155,17 +188,30 @@ class ViewAdmissionModal extends Component {
                                 <h5 className="modal-title" id="addAdmissionModalTitle">
                                     Add Admission
                                 </h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                {
+                                    !submitted ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> : null
+                                }
                             </div>
                             <div className="modal-body">
                                 {
-                                    added ?
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
+                                    added ? 
                                     <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mb-3">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -176,9 +222,14 @@ class ViewAdmissionModal extends Component {
                                                 *<span className="small ml-1">Required</span>
                                             </span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.title)}
-                                        type="text" name="title" value={record.title}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="title"
+                                            value={record.title} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.title)}
+                                            type="text" name="title" value={record.title}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.title) }
                                     </div>
 
@@ -186,33 +237,53 @@ class ViewAdmissionModal extends Component {
                                         <label className="m-0 ml-2">
                                             Content<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <textarea className={this.inputFieldClasses(errors.content)}
-                                        type="text" name="content" value={record.content} rows="7"
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <textarea className="form-control" type="text" name="content"
+                                            value={record.content} rows="7" noValidate disabled /> :
+                                            <textarea className={this.inputFieldClasses(errors.content)}
+                                            type="text" name="content" value={record.content} rows="7"
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.content) }
                                     </div>
                                 </form>
                                 {
-                                    added ?
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
+                                    added ? 
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                             </div>
 
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
-                                    <button className="btn btn-primary w-auto mr-1"
-                                    onClick={this.onSubmit}>
-                                        <i className="fa fa-pen fa-sm"></i>
-                                        <span className="ml-1">Submit</span>
-                                    </button>
-                                    <button className="btn btn-danger w-auto mr-1"
-                                    onClick={this.onReset}>
-                                        <i className="fa fa-eraser"></i>
-                                        <span className="ml-1">Reset</span>
-                                    </button>
+                                    {
+                                        !submitted ?
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1"
+                                            onClick={this.onSubmit}>
+                                                <i className="fa fa-pen fa-sm"></i>
+                                                <span className="ml-1">Submit</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto mr-1"
+                                            onClick={this.onReset}>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment> : null
+                                    }
                                 </div>
                             </div>
                         </div>

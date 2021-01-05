@@ -28,6 +28,9 @@ class Customer extends Component {
         },
         connected: false,
         connectionFailed: false,
+        records: [],
+        customerConnected: false,
+        customerConnectionFailed: false
     }
 
     onSubmitForm = () => {
@@ -50,7 +53,10 @@ class Customer extends Component {
 
     componentDidMount = () => {
         const { record } = this.state;
-        try{this.onRefresh();}
+        try {
+            this.onRefresh();
+            this.getCustomersData();
+        }
         catch(error) { record.id = ''; }
     }
 
@@ -149,8 +155,14 @@ class Customer extends Component {
                 </div>
                 {
                     record.id.length > 0 ?
-                    <UpdateAccountInfoModal customer={record} onRefresh={this.onRefresh}
-                    connected={connected} connectionFailed={connectionFailed} onSubmitForm={this.onSubmitForm} /> : null
+                    <UpdateAccountInfoModal
+                    customer={record}
+                    onRefresh={this.onRefresh}
+                    records={this.state.records}
+                    connected={this.state.customerConnected}
+                    connectionFailed={this.state.customerConnectionFailed}
+                    onSubmitForm={this.onSubmitForm}
+                    retryCustomersData={this.retryCustomersData} /> : null
                 }
                 <Footer />
             </React.Fragment>
@@ -182,6 +194,27 @@ class Customer extends Component {
             console.log(error);
             const connectionFailed = true;
             this.setState({ connectionFailed })
+        });
+    }
+
+    retryCustomersData = () => {
+        this.getCustomersData();
+        const customerConnected = false;
+        const customerConnectionFailed = false;
+        this.setState({ customerConnected, customerConnectionFailed })
+    }
+
+    getCustomersData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
+        .then(res => {
+            const records = res.data;
+            const customerConnected = true;
+            this.setState({ records, customerConnected });
+        })
+        .catch(error => {
+            console.log(error);
+            const customerConnectionFailed = true;
+            this.setState({ customerConnectionFailed });
         });
     }
 

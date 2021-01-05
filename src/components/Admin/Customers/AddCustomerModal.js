@@ -61,21 +61,19 @@ class AddCustomerModal extends Component {
                 pcciRegNo: ''
             }
         },
-        records: [],
         petClasses:
         [ 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
         'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
         'Horse', 'Iguana', 'Jaguar', 'Lizard', 'Mantis', 'Monkey', 'Newt', 'Octopus', 'Pig', 'Panda', 'Quill',
         'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake','Spider', 'Tortoise', 'Turtle', 'Whale'],
-        connected: false,
-        connectionFailed: false,
         submitError: false,
-        added: false
+        submitted: false,
+        added: false,
+        failed: false
     }
 
     componentDidMount() {
         this.onGenerateId();
-        this.getCustomersData();
     }
 
     onGenerateId = () => {
@@ -160,7 +158,12 @@ class AddCustomerModal extends Component {
                 break;
             
             case 'email':
-            errors.emailAddress=    this.emailAddressExists() ?
+            errors.emailAddress=    record.emailAddress.length === 0 ? " " :
+                                    record.emailAddress.length < 8 || record.emailAddress.length > 24 ?
+                                    "Must be at between 8 and 24 characters" :
+                                    !this.isValidEmail(record.emailAddress) ?
+                                    "Please input a valid value" :
+                                    this.emailAddressExists() ?
                                     "Already in use" : ""
                 break;
 
@@ -186,10 +189,12 @@ class AddCustomerModal extends Component {
     }
 
     emailAddressExists = () => {
-        const { record, records } = this.state;
+        const { record } = this.state;
+        const { customers } = this.props;
 
-        const result = records.filter(row =>
-            (row.emailAddress + row.email).toLowerCase() === (record.emailAddress + record.email).toLowerCase()
+        const result = customers.filter(row =>
+            (row.emailAddress + row.email).toLowerCase() ===
+            (record.emailAddress + record.email).toLowerCase()
         )
 
         if(result.length > 0) return true;
@@ -347,9 +352,9 @@ class AddCustomerModal extends Component {
             record.homeAddress.province = this.removeLastSpace(record.homeAddress.province);
             record.pet.petName = this.removeLastSpace(record.pet.petName);
 
-            record.homeAddress.street += " St.";
-            record.homeAddress.barangay = "Brgy. " + record.homeAddress.barangay;
-            record.homeAddress.municipality += " City";
+            // record.homeAddress.street += " St.";
+            // record.homeAddress.barangay = "Brgy. " + record.homeAddress.barangay;
+            // record.homeAddress.municipality += " City";
 
             let mbNo = [];
             mbNo.push("+63" + record.mobileNumber.substring(0, 3));
@@ -358,23 +363,50 @@ class AddCustomerModal extends Component {
             record.mobileNumber = mbNo.join('-');
 
             this.props.onSubmitForm();
+            this.submission();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertCustomerPet.php', record)
-            .then(onRefresh, this.postSubmit());
+            .then(() => {
+                onRefresh();
+                this.onReset();
+                this.postSubmit();
+            })
+            .catch(error => {
+                console.log(error);
+                onRefresh();
+                this.failedSubmit();
+            });
         }
         else {
             const submitError = true;
             this.setState({ submitError });
         }
     }
+
+    submission = () => {
+        const submitted = true;
+        const submitError = false;
+        this.setState({ submitted, submitError });
+    }
     
     postSubmit = () => {
-        this.onReset();
+        const submitted = false;
         let added = true;
-        const submitError = false;
-        this.setState({ submitError, added });
-        added = false;
-        setTimeout(() => this.setState({ added }), 5000);
+        this.setState({ submitted, added });
+        setTimeout(() => {
+            added = false;
+            this.setState({ added });
+        }, 5000)
+    }
+
+    failedSubmit = () => {
+        const submitted = false;
+        let failed = true;
+        this.setState({ submitted, failed });
+        setTimeout(() => {
+            failed = false;
+            this.setState({ failed });
+        }, 5000)
     }
 
     validForm = ({ errors }) => {
@@ -478,6 +510,8 @@ class AddCustomerModal extends Component {
 
         const confirmUserPassword = '';
         const submitError = false;
+        const added = false;
+        const failed = false;
 
         homeAddress.lotBlock = '';
         homeAddress.street = '';
@@ -524,11 +558,11 @@ class AddCustomerModal extends Component {
         errors.userPassword = ' ';
         errors.confirmUserPassword = ' ';
 
-        this.setState({ record, confirmUserPassword, errors, submitError });
+        this.setState({ record, confirmUserPassword, errors, submitError, added, failed });
     }
 
     render() {
-        const { record, errors, confirmUserPassword, petClasses, added } = this.state;
+        const { record, errors, confirmUserPassword, petClasses, submitted, added, failed } = this.state;
         const { homeAddress, pet } = record;
         const { homeAddressErrors, petErrors } = errors;
 
@@ -540,18 +574,31 @@ class AddCustomerModal extends Component {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="addCustomerModalTitle">Add Customer</h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                {
+                                    !submitted ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> : null
+                                }
                             </div>
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
                                     added ? 
                                     <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mb-3">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -560,10 +607,13 @@ class AddCustomerModal extends Component {
                                         <div className="input-group">
                                             <input className="form-control zi-10" type="text"
                                             name="id" value={record.id} noValidate disabled />
-                                            <div className="input-group-append">
-                                                <button type="button" className="btn btn-light input-group-text"
-                                                onClick={this.onGenerateId}>Generate</button>
-                                            </div>
+                                            {
+                                                !submitted ?
+                                                <div className="input-group-append">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.onGenerateId}>Generate</button>
+                                                </div> : null
+                                            }
                                         </div>
                                     </div>
 
@@ -574,9 +624,14 @@ class AddCustomerModal extends Component {
                                                 *<span className="small ml-1">Required</span>
                                             </span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.lastName)}
-                                        type="text" name="lastName" value={record.lastName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="lastName"
+                                            value={record.lastName} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.lastName)}
+                                            type="text" name="lastName" value={record.lastName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.lastName) }
                                     </div>
 
@@ -584,17 +639,27 @@ class AddCustomerModal extends Component {
                                         <label className="m-0 ml-2">
                                             First Name<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.firstName)}
-                                        type="text" name="firstName" value={record.firstName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="firstName"
+                                            value={record.firstName} onChange={this.onChangeRecord} noValidate disabled /> : 
+                                            <input className={this.inputFieldClasses(errors.firstName)}
+                                            type="text" name="firstName" value={record.firstName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.firstName) }
                                     </div>
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">Middle Name</label>
-                                        <input className={this.inputFieldClasses(errors.middleName)}
-                                        type="text" name="middleName" value={record.middleName}
-                                        onChange={this.onChangeRecord} placeholder="(Optional)" noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="middleName"
+                                            value={record.middleName} placeholder="(Optional)" noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.middleName)}
+                                            type="text" name="middleName" value={record.middleName}
+                                            onChange={this.onChangeRecord} placeholder="(Optional)" noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.middleName) }
                                     </div>
 
@@ -604,54 +669,85 @@ class AddCustomerModal extends Component {
                                         </label>
                                         <div className="row mx-0">
                                             <div className="col-lg-3 col-md-6 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.lotBlock)}
-                                                type="text" name="lotBlock" value={homeAddress.lotBlock}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Lot/Block (Optional)" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="lotBlock"
+                                                    value={homeAddress.lotBlock} placeholder="Lot/Block (Optional)" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.lotBlock)}
+                                                    type="text" name="lotBlock" value={homeAddress.lotBlock}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Lot/Block (Optional)" noValidate />
+                                                }
                                             </div>
 
                                             <div className="col-lg-3 col-md-6 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.street)}
-                                                type="text" name="street" value={homeAddress.street}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Street" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="street"
+                                                    value={homeAddress.street} placeholder="Street" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.street)}
+                                                    type="text" name="street" value={homeAddress.street}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Street" noValidate />
+                                                }
                                                 <div className="input-group-append">
                                                     <span className="input-group-text">St.</span>
                                                 </div>
                                             </div>
 
                                             <div className="col-lg-6 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
-                                                type="text" name="subdivision" value={homeAddress.subdivision}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Subdivision" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="subdivision"
+                                                    value={homeAddress.subdivision} placeholder="Subdivision" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
+                                                    type="text" name="subdivision" value={homeAddress.subdivision}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Subdivision" noValidate />
+                                                }
                                             </div>
 
                                             <div className="col-lg-4 input-group px-0">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">Brgy.</span>
                                                 </div>
-                                                <input className={this.inputFieldClasses(homeAddressErrors.barangay)}
-                                                type="text" name="barangay" value={homeAddress.barangay}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Barangay" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="barangay"
+                                                    value={homeAddress.barangay} placeholder="Barangay" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.barangay)}
+                                                    type="text" name="barangay" value={homeAddress.barangay}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Barangay" noValidate />
+                                                }
                                             </div>
 
                                             <div className="col-lg-4 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.municipality)}
-                                                type="text" name="municipality" value={homeAddress.municipality}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Municipality" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="municipality"
+                                                    value={homeAddress.municipality} placeholder="Municipality" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.municipality)}
+                                                    type="text" name="municipality" value={homeAddress.municipality}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Municipality" noValidate />
+                                                }
                                                 <div className="input-group-append">
                                                     <span className="input-group-text">City</span>
                                                 </div>
                                             </div>
 
                                             <div className="col-lg-4 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.province)}
-                                                type="text" name="province" value={homeAddress.province}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Province (Optional)" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="province"
+                                                    value={homeAddress.province} placeholder="Province (Optional)"
+                                                    noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.province)}
+                                                    type="text" name="province" value={homeAddress.province}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Province (Optional)" noValidate />
+                                                }
                                             </div>
                                         </div> { this.renderHomeAddressErrors(homeAddressErrors) }
                                     </div>
@@ -660,9 +756,14 @@ class AddCustomerModal extends Component {
                                         <label className="m-0 ml-2">
                                             Birthdate<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.birthdate)}
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="date" name="birthdate"
+                                            value={record.birthdate}  noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.birthdate)}
                                             type="date" name="birthdate" value={record.birthdate}
                                             onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.birthdate) }
                                     </div>
 
@@ -672,9 +773,15 @@ class AddCustomerModal extends Component {
                                         </label>
                                         <div className="input-group px-0">
                                             <span className="input-group-text">+63</span>
-                                            <input className={this.inputFieldClasses(errors.mobileNumber)}
-                                            type="tel" maxLength="10" name="mobileNumber" value={record.mobileNumber}
-                                            onChange={this.onChangeRecord} noValidate />
+                                            {
+                                                submitted ?
+                                                <input className="form-control" type="tel" maxLength="10"
+                                                name="mobileNumber" value={record.mobileNumber} onChange={this.onChangeRecord}
+                                                noValidate disabled /> :
+                                                <input className={this.inputFieldClasses(errors.mobileNumber)}
+                                                type="tel" maxLength="10" name="mobileNumber" value={record.mobileNumber}
+                                                onChange={this.onChangeRecord} noValidate />
+                                            }
                                         </div>
                                         { this.renderRecordErrors(errors.mobileNumber) }
                                     </div>
@@ -684,21 +791,35 @@ class AddCustomerModal extends Component {
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.state.connected ?
+                                            this.props.connected ?
                                             <React.Fragment>
                                                 <div className="input-group d-block d-sm-flex px-0">
-                                                    <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
-                                                    type="text" name="emailAddress"  value={record.emailAddress}
-                                                    onChange={this.onChangeRecord} noValidate />
+                                                    {
+                                                        submitted ?
+                                                        <input className="w-sm-100 form-control" type="text"
+                                                        name="emailAddress" value={record.emailAddress} noValidate disabled /> :
+                                                        <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                                                        type="text" name="emailAddress"  value={record.emailAddress}
+                                                        onChange={this.onChangeRecord} noValidate />
+                                                    }
                                                     <div className="input-group-append justify-content-end">
                                                         <span className="input-group-text">@</span>
-                                                        <select className="input-group-text"
-                                                        name="email" value={record.email}
-                                                        onChange={this.onChangeRecord} noValidate>
-                                                            <option value="@yahoo.com">yahoo.com</option>
-                                                            <option value="@gmail.com">gmail.com</option>
-                                                            <option value="@outlook.com">outlook.com</option>
-                                                        </select>
+                                                        {
+                                                            submitted ?
+                                                            <select className="input-group-text form-control"
+                                                            name="email" value={record.email} noValidate disabled>
+                                                                <option value="@yahoo.com">yahoo.com</option>
+                                                                <option value="@gmail.com">gmail.com</option>
+                                                                <option value="@outlook.com">outlook.com</option>
+                                                            </select> :
+                                                            <select className="input-group-text form-control"
+                                                            name="email" value={record.email}
+                                                            onChange={this.onChangeRecord} noValidate>
+                                                                <option value="@yahoo.com">yahoo.com</option>
+                                                                <option value="@gmail.com">gmail.com</option>
+                                                                <option value="@outlook.com">outlook.com</option>
+                                                            </select>
+                                                        }
                                                     </div>
                                                 </div>
                                                 { this.renderRecordErrors(errors.emailAddress) }
@@ -710,14 +831,14 @@ class AddCustomerModal extends Component {
                                                     </small>
                                                 </div>
                                             </React.Fragment> :
-                                            this.state.connectionFailed ?
+                                            this.props.connectionFailed ?
                                             <div className="input-group d-block d-sm-flex px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.retryCustomersData}>Retry</button>
+                                                    onClick={this.props.onRefresh}>Retry</button>
                                                 </div>
                                             </div> :
                                             <input className="form-control"
@@ -730,9 +851,14 @@ class AddCustomerModal extends Component {
                                         <label className="m-0 ml-2">
                                             Password<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.userPassword)}
-                                        type="password" name="userPassword" value={record.userPassword}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="password" name="userPassword"
+                                            value={record.userPassword} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.userPassword)}
+                                            type="password" name="userPassword" value={record.userPassword}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.userPassword) }
                                     </div>
 
@@ -740,9 +866,14 @@ class AddCustomerModal extends Component {
                                         <label className="m-0 ml-2">
                                             Confirm Password<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.confirmUserPassword)}
-                                        type="password" name="confirmUserPassword" value={confirmUserPassword}
-                                        onChange={this.onChangeState} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="password" name="confirmUserPassword"
+                                            value={confirmUserPassword} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.confirmUserPassword)}
+                                            type="password" name="confirmUserPassword" value={confirmUserPassword}
+                                            onChange={this.onChangeState} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.confirmUserPassword) }
                                     </div>
 
@@ -752,9 +883,14 @@ class AddCustomerModal extends Component {
                                                 <label className="m-0 ml-2">
                                                     Pet Name <span className="text-danger ml-1">*</span>
                                                 </label>
-                                                <input className={this.inputFieldClasses(petErrors.petName)}
-                                                type="text" name="petName" value={pet.petName}
-                                                onChange={this.onChangePet} noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="petName"
+                                                    value={pet.petName} noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(petErrors.petName)}
+                                                    type="text" name="petName" value={pet.petName}
+                                                    onChange={this.onChangePet} noValidate />
+                                                }
                                                 { this.renderRecordErrors(petErrors.petName) }
                                             </div>
 
@@ -762,9 +898,14 @@ class AddCustomerModal extends Component {
                                                 <label className="m-0 ml-2">
                                                     Pet Birthdate<span className="text-danger ml-1">*</span>
                                                 </label>
-                                                <input className={this.inputFieldClasses(petErrors.birthdate)}
-                                                type="date" name="birthdate" value={pet.birthdate}
-                                                onChange={this.onChangePet} noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="date" name="birthdate"
+                                                    value={pet.birthdate} noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(petErrors.birthdate)}
+                                                    type="date" name="birthdate" value={pet.birthdate}
+                                                    onChange={this.onChangePet} noValidate />
+                                                }
                                                 { this.renderRecordErrors(petErrors.birthdate) }
                                             </div>
 
@@ -772,36 +913,65 @@ class AddCustomerModal extends Component {
                                                 <label className="m-0 ml-2">
                                                     Pet Class<span className="text-danger ml-1">*</span>
                                                 </label>
-                                                <select className={this.inputFieldClasses(petErrors.petClass)}
-                                                name="petClass" value={pet.petClass} onChange={this.onChangePet}
-                                                noValidate>
-                                                    <option value=''>Choose one</option>
-                                                    {
-                                                        petClasses.length > 0 ?
-                                                        petClasses.map(value =>
-                                                            <option key={value} value={value}>{value}</option>
-                                                        ) : null
-                                                    }
-                                                </select>
+                                                {
+                                                    submitted ?
+                                                    <select className="form-control" name="petClass"
+                                                    value={pet.petClass} noValidate disabled >
+                                                        <option value=''>Choose one</option>
+                                                        {
+                                                            petClasses.length > 0 ?
+                                                            petClasses.map(value =>
+                                                                <option key={value} value={value}>{value}</option>
+                                                            ) : null
+                                                        }
+                                                    </select> :
+                                                    <select className={this.inputFieldClasses(petErrors.petClass)}
+                                                    name="petClass" value={pet.petClass} onChange={this.onChangePet}
+                                                    noValidate>
+                                                        <option value=''>Choose one</option>
+                                                        {
+                                                            petClasses.length > 0 ?
+                                                            petClasses.map(value =>
+                                                                <option key={value} value={value}>{value}</option>
+                                                            ) : null
+                                                        }
+                                                    </select>
+                                                }
                                                 { this.renderRecordErrors(petErrors.petClass) }
                                             </div>
 
                                             <div className="form-group col-lg-6">
                                                 <label className="m-0 ml-2">PCCI Reg. No.</label>
-                                                <input className={this.inputFieldClasses(petErrors.pcciRegNo)}
-                                                type="text" name="pcciRegNo" value={pet.pcciRegNo}
-                                                onChange={this.onChangePet} maxLength="6"
-                                                placeholder="(Optional)" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="pcciRegNo"
+                                                    value={pet.pcciRegNo} maxLength="6" placeholder="(Optional)"
+                                                    noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(petErrors.pcciRegNo)}
+                                                    type="text" name="pcciRegNo" value={pet.pcciRegNo}
+                                                    onChange={this.onChangePet} maxLength="6"
+                                                    placeholder="(Optional)" noValidate />
+                                                }
                                                 { this.renderRecordErrors(petErrors.pcciRegNo) }
                                             </div>
                                         </div>
                                     </div>
                                 </form>
                                 {
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
                                     added ? 
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                             </div>
@@ -809,7 +979,7 @@ class AddCustomerModal extends Component {
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
                                     {
-                                        this.state.connected ?
+                                        this.props.connected && !submitted ?
                                         <React.Fragment>
                                             <button className="btn btn-primary w-auto mr-1"
                                             onClick={this.onSubmit}>
@@ -847,27 +1017,6 @@ class AddCustomerModal extends Component {
         classes+= errorMsg.length > 0 ? 
         this.state.submitError ? "border border-danger" : "" : "border border-success"
         return classes;
-    }
-
-    retryCustomersData = () => {
-        this.getCustomersData();
-        const connected = false;
-        const connectionFailed = false;
-        this.setState({ connected, connectionFailed })
-    }
-
-    getCustomersData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
-        .then(res => {
-            const records = res.data;
-            const connected = true;
-            this.setState({ records, connected });
-        })
-        .catch(error => {
-            console.log(error);
-            const connectionFailed = true;
-            this.setState({ connectionFailed });
-        });
     }
 
     toProperCase = value => {

@@ -23,14 +23,16 @@ class ViewEmployeeModal extends Component {
             confirmEmpPassword: ' ',
         },
         empTypes: ['Admin', 'Groomer', 'Veterinarian' ],
-        submitError: false,
-        updated: false,
         passwordState:
         {
             inputType: 'password',
             buttonText: 'Show'
         },
-        deleteState: false
+        deleteState: false,
+        submitError: false,
+        submitted: false,
+        updated: false,
+        failed: false
     }
 
     componentDidMount() {
@@ -137,10 +139,23 @@ class ViewEmployeeModal extends Component {
             record.empFirstName = this.removeLastSpace(record.empFirstName);
             record.empMiddleName = this.removeLastSpace(record.empMiddleName);
 
+            if(this.state.passwordState.inputType === "text") {
+                this.onTogglePassword()
+            }
+
             this.props.onSubmitForm();
+            this.submission();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updateEmployee.php', record)
-            .then(onRefresh, this.postSubmit());
+            .then(() => {
+                onRefresh();
+                this.postSubmit();
+            })
+            .catch(error => {
+                console.log(error);
+                onRefresh();
+                this.failedSubmit();
+            });
         }
         else {
             const submitError = true;
@@ -148,13 +163,33 @@ class ViewEmployeeModal extends Component {
         }
     }
     
-    postSubmit = () => {
-        let updated = true;
+    submission = () => {
+        const submitted = true;
         const submitError = false;
+        this.setState({ submitted, submitError });
+    }
+
+    postSubmit = () => {
         const confirmEmpPassword = '';
         const errors = {...this.state.errors};
         errors.confirmEmpPassword = ' '
-        this.setState({ errors, confirmEmpPassword, submitError, updated });
+        const submitted = false;
+        let updated = true;
+        this.setState({ errors, confirmEmpPassword, submitted, updated });
+        setTimeout(() => {
+            updated = false;
+            this.setState({ updated });
+        }, 5000)
+    }
+
+    failedSubmit = () => {
+        const submitted = false;
+        let failed = true;
+        this.setState({ submitted, failed });
+        setTimeout(() => {
+            failed = false;
+            this.setState({ failed });
+        }, 5000)
     }
 
     validForm = ({ errors }) => {
@@ -208,11 +243,17 @@ class ViewEmployeeModal extends Component {
         const record = {...this.state.record};
         const errors = {...this.state.errors};
 
+        const { employee } = this.props;
+
         const confirmEmpPassword = '';
         const submitError = false;
         const updated = false;
+        const failed = false;
 
-        const { employee } = this.props;
+        const { passwordState } = this.state;
+
+        passwordState.buttonText = "Show";
+        passwordState.inputType = "password";
         
         record.empLastName = employee.empLastName;
         record.empFirstName = employee.empFirstName;
@@ -227,11 +268,10 @@ class ViewEmployeeModal extends Component {
         errors.empPassword = '';
         errors.confirmEmpPassword = ' ';
 
-        this.setState({ record, confirmEmpPassword, errors, submitError, updated });
+        this.setState({ record, confirmEmpPassword, errors, submitError, updated, failed });
     }
 
-    onTogglePassword = e => {
-        e.preventDefault();
+    onTogglePassword = () => {
         const passwordState = {...this.state.passwordState};
         if(passwordState.inputType === 'password') {
             passwordState.inputType = 'text';
@@ -245,8 +285,8 @@ class ViewEmployeeModal extends Component {
     }
 
     render() {
-        const { record, errors, confirmEmpPassword, updated, empTypes, passwordState, deleteState } = this.state;
-        const { employee, empType, connected, connectionFailed } = this.props;
+        const { record, errors, confirmEmpPassword, empTypes, passwordState, deleteState, submitted, updated, failed } = this.state;
+        const { employee, empType } = this.props;
 
         return (
             <React.Fragment>
@@ -257,24 +297,33 @@ class ViewEmployeeModal extends Component {
                             <div className="modal-header">
                                 <h5 className="modal-title" id={"viewEmployeeModalTitle-" + employee.id}>View Employee</h5>
                                 {
-                                    connected || connectionFailed ?
+                                    !submitted && this.props.connected ?
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
-                                    </button> : null
+                                    </button> :
+                                    <button className="btn btn-light text-danger p-1" disabled>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button>
                                 }
                             </div>
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    updated ? connected ?
-                                    <div className="alert alert-success d-flex align-items-center mb-3">
-                                        <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully updated.</span>
-                                    </div> : 
+                                    submitted ?
                                     <div className="alert alert-primary d-flex align-items-center mb-3">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Updating a record...</span>
+                                    </div> :
+                                    updated ? 
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Record was successfully updated.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mb-3">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -291,9 +340,14 @@ class ViewEmployeeModal extends Component {
                                                 *<span className="small ml-1">Required</span>
                                             </span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.empLastName)}
-                                        type="text" name="empLastName" value={record.empLastName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="empLastName"
+                                            value={record.empLastName} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.empLastName)}
+                                            type="text" name="empLastName" value={record.empLastName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.empLastName) }
                                     </div>
 
@@ -301,17 +355,27 @@ class ViewEmployeeModal extends Component {
                                         <label className="m-0 ml-2">
                                             First Name<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.empFirstName)}
-                                        type="text" name="empFirstName" value={record.empFirstName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="empFirstName"
+                                            value={record.empFirstName} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.empFirstName)}
+                                            type="text" name="empFirstName" value={record.empFirstName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.empFirstName) }
                                     </div>
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">Middle Name</label>
-                                        <input className={this.inputFieldClasses(errors.empMiddleName)}
-                                        type="text" name="empMiddleName" value={record.empMiddleName}
-                                        onChange={this.onChangeRecord} placeholder="(Optional)" noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="empMiddleName"
+                                            value={record.empMiddleName} placeholder="(Optional)" noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.empMiddleName)}
+                                            type="text" name="empMiddleName" value={record.empMiddleName}
+                                            onChange={this.onChangeRecord} placeholder="(Optional)" noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.empMiddleName) }
                                     </div>
 
@@ -324,6 +388,20 @@ class ViewEmployeeModal extends Component {
                                             <input className={this.inputFieldClasses(errors.empType)}
                                             name="empType" value={record.empType} onChange={this.onChangeRecord}
                                             noValidate disabled /> :
+                                            submitted ?
+                                            <select className="form-control" name="empType"
+                                            value={record.empType} noValidate disabled>
+                                                <option value=''>Choose one</option>
+                                                {
+                                                    empTypes.length > 0 ?
+                                                    empTypes.filter( value =>
+                                                        (value !== "Admin" && this.props.empType === "Admin") ||
+                                                        this.props.empType === "Master Admin"
+                                                    ).map(value =>
+                                                        <option key={value} value={value}>{value}</option>
+                                                    ) : null
+                                                }
+                                            </select> :
                                             <select className={this.inputFieldClasses(errors.empType)}
                                             name="empType" value={record.empType} onChange={this.onChangeRecord}
                                             noValidate>
@@ -338,7 +416,6 @@ class ViewEmployeeModal extends Component {
                                                     ) : null
                                                 }
                                             </select>
-
                                         }
                                         { this.renderRecordErrors(errors.empType) }
                                     </div>
@@ -350,15 +427,23 @@ class ViewEmployeeModal extends Component {
                                             Password<span className="text-danger ml-1">*</span>
                                         </label>
                                         <div className="input-group">
-                                            <input className={"zi-10 " + this.inputFieldClasses(errors.empPassword)}
-                                            type={passwordState.inputType} name="empPassword" value={record.empPassword}
-                                            onChange={this.onChangeRecord} noValidate />
-                                            <div className="input-group-append">
-                                                <button type="button" className="btn btn-light input-group-text"
-                                                onClick={this.onTogglePassword}>
-                                                    {passwordState.buttonText}
-                                                </button>
-                                            </div>
+                                            {
+                                                submitted ?
+                                                <input className="form-control" type={passwordState.inputType} name="empPassword"
+                                                value={record.empPassword} noValidate disabled /> :
+                                                <React.Fragment>
+                                                    <input className={"zi-10 " + this.inputFieldClasses(errors.empPassword)}
+                                                        type={passwordState.inputType} name="empPassword" value={record.empPassword}
+                                                        onChange={this.onChangeRecord} noValidate />
+                                                    <div className="input-group-append">
+                                                        <button type="button" className="btn btn-light input-group-text"
+                                                        onClick={this.onTogglePassword}>
+                                                            {passwordState.buttonText}
+                                                        </button>
+                                                    </div>
+                                                </React.Fragment>
+
+                                            }
                                         </div>
                                         { this.renderRecordErrors(errors.empPassword) }
                                     </div>
@@ -367,21 +452,32 @@ class ViewEmployeeModal extends Component {
                                         <label className="m-0 ml-2">
                                             Confirm Password<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.confirmEmpPassword)}
-                                        type="password" name="confirmEmpPassword" value={confirmEmpPassword}
-                                        onChange={this.onChangeState} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="password" name="confirmEmpPassword"
+                                            value={confirmEmpPassword} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.confirmEmpPassword)}
+                                            type="password" name="confirmEmpPassword" value={confirmEmpPassword}
+                                            onChange={this.onChangeState} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.confirmEmpPassword) }
                                     </div>
                                 </form>
                                 {
-                                    updated ? connected ?
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
-                                        <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully updated.</span>
-                                    </div> : 
+                                    submitted ?
                                     <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Updating a record...</span>
+                                    </div> :
+                                    updated ? 
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Record was successfully updated.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                             </div>
@@ -400,24 +496,45 @@ class ViewEmployeeModal extends Component {
     
     defaultButtons = () => {
         return(
-            this.props.connected ?
+            !this.state.submitted ?
             <React.Fragment>
                 <button className="btn btn-primary w-auto mr-1"
                 onClick={this.onSubmit}>
                     <i className="fa fa-pen fa-sm"></i>
                     <span className="ml-1">Update</span>
                 </button>
-                <button className="btn btn-danger w-auto mr-1"
-                onClick={this.onReset}>
-                    <i className="fa fa-eraser"></i>
-                    <span className="ml-1">Reset</span>
-                </button>
+                {
+                    this.props.connected ?
+                    <button className="btn btn-danger w-auto mr-1"
+                    onClick={this.onReset}>
+                        <i className="fa fa-eraser"></i>
+                        <span className="ml-1">Reset</span>
+                    </button> :
+                    <button className="btn btn-danger w-auto mr-1" disabled>
+                        <i className="fa fa-eraser"></i>
+                        <span className="ml-1">Reset</span>
+                    </button>
+                }
                 <button className="btn btn-danger w-auto mr-1"
                 onClick={this.onToggleDelete}>
                     <i className="fa fa-trash"></i>
                     <span className="ml-1">Delete</span>
                 </button>
-            </React.Fragment> : null
+            </React.Fragment> :
+            <React.Fragment>
+                <button className="btn btn-primary w-auto mr-1" disabled>
+                    <i className="fa fa-pen fa-sm"></i>
+                    <span className="ml-1">Update</span>
+                </button>
+                <button className="btn btn-danger w-auto mr-1" disabled>
+                    <i className="fa fa-eraser"></i>
+                    <span className="ml-1">Reset</span>
+                </button>
+                <button className="btn btn-danger w-auto mr-1" disabled>
+                    <i className="fa fa-trash"></i>
+                    <span className="ml-1">Delete</span>
+                </button>
+            </React.Fragment>
         )
     }
 

@@ -57,8 +57,7 @@ class ManagePets extends Component {
                             <PetsTable pets={this.state.pets} ownerId={history.location.state.id}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
-                            connected={this.state.connected} connectionFailed={this.state.connectionFailed}
-                            onSubmitForm={this.onSubmitForm} />
+                            connected={this.state.connected} onSubmitForm={this.onSubmitForm} />
                             <div className="mt-5">
                                 {
                                     this.state.connected ?

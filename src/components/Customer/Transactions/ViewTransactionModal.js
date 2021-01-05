@@ -211,9 +211,13 @@ class ViewTransactionModal extends Component {
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
                                     {
-                                        record.transType === 'C' && this.state.connected ?
+                                        record.transType === 'C' ? this.state.connected ?
                                         <button className="btn btn-success w-auto mr-1" data-dismiss="modal"
                                         onClick={() => this.onViewAdmission("/wiggly-tails/customer/view-admission")}>
+                                            <i className="fa fa-hand-holding-medical fa-sm"></i>
+                                            <span className="ml-1">Admissions</span>
+                                        </button> :
+                                        <button className="btn btn-success w-auto mr-1" disabled>
                                             <i className="fa fa-hand-holding-medical fa-sm"></i>
                                             <span className="ml-1">Admissions</span>
                                         </button> : null

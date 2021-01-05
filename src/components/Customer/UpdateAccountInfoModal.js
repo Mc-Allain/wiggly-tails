@@ -46,21 +46,18 @@ class UpdateAccountInfoModal extends Component {
             userPassword: '',
             confirmUserPassword: ' ',
         },
-        records: [], 
-        connected: false,
-        connectionFailed: false,
-        submitError: false,
-        updated: false,
         passwordState:
         {
             inputType: 'password',
             buttonText: 'Show'
-        }
+        },
+        submitError: false,
+        submitted: false,
+        updated: false,
+        failed: false
     }
 
     componentDidMount() {
-        this.getCustomersData();
-
         const { customer } = this.props;
         const record = {...this.state.record};
         record.id = customer.id;
@@ -161,7 +158,12 @@ class UpdateAccountInfoModal extends Component {
                 break;
             
             case 'email':
-            errors.emailAddress=    this.emailAddressExists() ?
+            errors.emailAddress=    record.emailAddress.length === 0 ? " " :
+                                    record.emailAddress.length < 8 || record.emailAddress.length > 24 ?
+                                    "Must be at between 8 and 24 characters" :
+                                    !this.isValidEmail(record.emailAddress) ?
+                                    "Please input a valid value" :
+                                    this.emailAddressExists() ?
                                     "Already in use" : ""
                 break;
 
@@ -187,12 +189,14 @@ class UpdateAccountInfoModal extends Component {
     }
 
     emailAddressExists = () => {
-        const { record, records } = this.state;
-        const { customer } = this.props;
+        const { record } = this.state;
+        const { customer, records } = this.props;
 
         const result = records.filter(row =>
-            (row.emailAddress + row.email).toLowerCase() === (record.emailAddress + record.email).toLowerCase() &&
-            (row.emailAddress + row.email).toLowerCase() !== (customer.emailAddress + customer.email).toLowerCase()
+            (row.emailAddress + row.email).toLowerCase() ===
+            (record.emailAddress + record.email).toLowerCase() &&
+            (row.emailAddress + row.email).toLowerCase() !==
+            (customer.emailAddress + customer.email).toLowerCase()
         )
 
         if(result.length > 0) return true;
@@ -291,10 +295,6 @@ class UpdateAccountInfoModal extends Component {
             record.homeAddress.barangay = this.removeLastSpace(record.homeAddress.barangay);
             record.homeAddress.municipality = this.removeLastSpace(record.homeAddress.municipality);
             record.homeAddress.province = this.removeLastSpace(record.homeAddress.province);
-
-            record.homeAddress.street += " St.";
-            record.homeAddress.barangay = "Brgy. " + record.homeAddress.barangay;
-            record.homeAddress.municipality += " City";
             
             let mbNo = [];
             mbNo.push("+63" + record.mobileNumber.substring(0, 3));
@@ -302,10 +302,24 @@ class UpdateAccountInfoModal extends Component {
             mbNo.push(record.mobileNumber.substring(6, 10));
             record.mobileNumber = mbNo.join('-');
 
+            if(this.state.passwordState.inputType === "text") {
+                this.onTogglePassword()
+            }
+
             this.props.onSubmitForm();
+            this.submission();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updateCustomer.php', record)
-            .then(onRefresh, this.postSubmit());
+            .then(() => {
+                onRefresh();
+                this.props.retryCustomersData();
+                this.postSubmit();
+            })
+            .catch(error => {
+                console.log(error);
+                onRefresh();
+                this.failedSubmit();
+            });
         }
         else {
             const submitError = true;
@@ -313,19 +327,33 @@ class UpdateAccountInfoModal extends Component {
         }
     }
 
-    postSubmit = () => {
-        const record = {...this.state.record};
-        record.homeAddress.street = record.homeAddress.street.substring(0, record.homeAddress.street.length - 4);
-        record.homeAddress.barangay = record.homeAddress.barangay.substring(6, record.homeAddress.barangay.length);
-        record.homeAddress.municipality =   record.homeAddress.municipality
-                                            .substring(0, record.homeAddress.municipality.length - 5);
-
-        let updated = true;
+    submission = () => {
+        const submitted = true;
         const submitError = false;
+        this.setState({ submitted, submitError });
+    }
+
+    postSubmit = () => {
         const confirmUserPassword = '';
         const errors = {...this.state.errors};
         errors.confirmUserPassword = ' '
-        this.setState({ record, errors, confirmUserPassword, submitError, updated });
+        const submitted = false;
+        let updated = true;
+        this.setState({ errors, confirmUserPassword, submitted, updated });
+        setTimeout(() => {
+            updated = false;
+            this.setState({ updated });
+        }, 5000)
+    }
+
+    failedSubmit = () => {
+        const submitted = false;
+        let failed = true;
+        this.setState({ submitted, failed });
+        setTimeout(() => {
+            failed = false;
+            this.setState({ failed });
+        }, 5000)
     }
 
     validForm = ({ errors }) => {
@@ -430,6 +458,7 @@ class UpdateAccountInfoModal extends Component {
         const confirmUserPassword = '';
         const submitError = false;
         const updated = false;
+        const failed = false;
 
         const { passwordState } = this.state;
 
@@ -474,11 +503,10 @@ class UpdateAccountInfoModal extends Component {
         errors.userPassword = '';
         errors.confirmUserPassword = ' ';
 
-        this.setState({ record, confirmUserPassword, errors, passwordState, submitError, updated });
+        this.setState({ record, confirmUserPassword, errors, passwordState, submitError, updated, failed });
     }
 
-    onTogglePassword = e => {
-        e.preventDefault();
+    onTogglePassword = () => {
         const passwordState = {...this.state.passwordState};
         if(passwordState.inputType === 'password') {
             passwordState.inputType = 'text';
@@ -492,10 +520,9 @@ class UpdateAccountInfoModal extends Component {
     }
 
     render() {
-        const { record, errors, confirmUserPassword, passwordState, updated, deleteState } = this.state;
+        const { record, errors, confirmUserPassword, passwordState, deleteState, submitted, updated, failed } = this.state;
         const { homeAddress } = this.state.record;
         const { homeAddressErrors } = errors;
-        const { connected } = this.props;
 
         return (
             <React.Fragment>
@@ -506,7 +533,7 @@ class UpdateAccountInfoModal extends Component {
                             <div className="modal-header">
                                 <h5 className="modal-title" id="updateAccountInfoModalTitle">View Customer</h5>
                                 {
-                                    connected ?
+                                    !submitted ?
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
@@ -516,14 +543,20 @@ class UpdateAccountInfoModal extends Component {
                             <div className="modal-body">
                                 {/* { this.renderErrors(errors) } */}
                                 {
-                                    updated ? connected ?
-                                    <div className="alert alert-success d-flex align-items-center mb-3">
-                                        <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully updated.</span>
-                                    </div> : 
+                                    submitted ?
                                     <div className="alert alert-primary d-flex align-items-center mb-3">
                                         <i className="fa fa-pen text-primary mr-2"></i>
-                                        <span>Updating a record...</span>
+                                        <span>Updating an Account Info...</span>
+                                    </div> :
+                                    updated ? 
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Account Info was successfully updated.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mb-3">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -540,9 +573,14 @@ class UpdateAccountInfoModal extends Component {
                                                 *<span className="small ml-1">Required</span>
                                             </span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.lastName)}
-                                        type="text" name="lastName" value={record.lastName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="lastName"
+                                            value={record.lastName} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.lastName)}
+                                            type="text" name="lastName" value={record.lastName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.lastName) }
                                     </div>
 
@@ -550,17 +588,27 @@ class UpdateAccountInfoModal extends Component {
                                         <label className="m-0 ml-2">
                                             First Name<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.firstName)}
-                                        type="text" name="firstName" value={record.firstName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="firstName"
+                                            value={record.firstName} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.firstName)}
+                                            type="text" name="firstName" value={record.firstName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.firstName) }
                                     </div>
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">Middle Name</label>
-                                        <input className={this.inputFieldClasses(errors.middleName)}
-                                        type="text" name="middleName" value={record.middleName}
-                                        onChange={this.onChangeRecord} placeholder="(Optional)" noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="middleName"
+                                            value={record.middleName} placeholder="(Optional)" noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.middleName)}
+                                            type="text" name="middleName" value={record.middleName}
+                                            onChange={this.onChangeRecord} placeholder="(Optional)" noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.middleName) }
                                     </div>
 
@@ -570,54 +618,84 @@ class UpdateAccountInfoModal extends Component {
                                         </label>
                                         <div className="row mx-0">
                                             <div className="col-lg-3 col-md-6 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.lotBlock)}
-                                                type="text" name="lotBlock" value={homeAddress.lotBlock}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Lot/Block (Optional)" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="lotBlock"
+                                                    value={homeAddress.lotBlock} placeholder="Lot/Block (Optional)" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.lotBlock)}
+                                                    type="text" name="lotBlock" value={homeAddress.lotBlock}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Lot/Block (Optional)" noValidate />
+                                                }
                                             </div>
 
                                             <div className="col-lg-3 col-md-6 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.street)}
-                                                type="text" name="street" value={homeAddress.street}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Street" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="street"
+                                                    value={homeAddress.street} placeholder="Street" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.street)}
+                                                    type="text" name="street" value={homeAddress.street}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Street" noValidate />
+                                                }
                                                 <div className="input-group-append">
                                                     <span className="input-group-text">St.</span>
                                                 </div>
                                             </div>
 
                                             <div className="col-lg-6 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
-                                                type="text" name="subdivision" value={homeAddress.subdivision}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Subdivision" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="subdivision"
+                                                    value={homeAddress.subdivision} placeholder="Subdivision" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
+                                                    type="text" name="subdivision" value={homeAddress.subdivision}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Subdivision" noValidate />
+                                                }
                                             </div>
 
                                             <div className="col-lg-4 input-group px-0">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">Brgy.</span>
                                                 </div>
-                                                <input className={this.inputFieldClasses(homeAddressErrors.barangay)}
-                                                type="text" name="barangay" value={homeAddress.barangay}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Barangay" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="barangay"
+                                                    value={homeAddress.barangay} placeholder="Barangay" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.barangay)}
+                                                    type="text" name="barangay" value={homeAddress.barangay}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Barangay" noValidate />
+                                                }
                                             </div>
 
                                             <div className="col-lg-4 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.municipality)}
-                                                type="text" name="municipality" value={homeAddress.municipality}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Municipality" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="municipality"
+                                                    value={homeAddress.municipality} placeholder="Municipality" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.municipality)}
+                                                    type="text" name="municipality" value={homeAddress.municipality}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Municipality" noValidate />
+                                                }
                                                 <div className="input-group-append">
                                                     <span className="input-group-text">City</span>
                                                 </div>
                                             </div>
 
                                             <div className="col-lg-4 input-group px-0">
-                                                <input className={this.inputFieldClasses(homeAddressErrors.province)}
-                                                type="text" name="province" value={homeAddress.province}
-                                                onChange={this.onChangeHomeAddress}
-                                                placeholder="Province (Optional)" noValidate />
+                                                {
+                                                    submitted ?
+                                                    <input className="form-control" type="text" name="province"
+                                                    value={homeAddress.province} placeholder="Province (Optional)" noValidate disabled /> :
+                                                    <input className={this.inputFieldClasses(homeAddressErrors.province)}
+                                                    type="text" name="province" value={homeAddress.province}
+                                                    onChange={this.onChangeHomeAddress}
+                                                    placeholder="Province (Optional)" noValidate />
+                                                }
                                             </div>
                                         </div> { this.renderHomeAddressErrors(homeAddressErrors) }
                                     </div>
@@ -626,9 +704,14 @@ class UpdateAccountInfoModal extends Component {
                                         <label className="m-0 ml-2">
                                             Birthdate<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.birthdate)}
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="date" name="birthdate"
+                                            value={record.birthdate} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.birthdate)}
                                             type="date" name="birthdate" value={record.birthdate}
                                             onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.birthdate) }
                                     </div>
 
@@ -638,9 +721,14 @@ class UpdateAccountInfoModal extends Component {
                                         </label>
                                         <div className="input-group px-0">
                                             <span className="input-group-text">+63</span>
-                                            <input className={this.inputFieldClasses(errors.mobileNumber)}
-                                            type="tel" maxLength="10" name="mobileNumber" value={record.mobileNumber}
-                                            onChange={this.onChangeRecord} noValidate />
+                                            {
+                                                submitted ?
+                                                <input className="form-control" type="tel" maxLength="10" name="mobileNumber"
+                                                value={record.mobileNumber} noValidate disabled /> :
+                                                <input className={this.inputFieldClasses(errors.mobileNumber)}
+                                                type="tel" maxLength="10" name="mobileNumber" value={record.mobileNumber}
+                                                onChange={this.onChangeRecord} noValidate />
+                                            }
                                         </div>
                                         { this.renderRecordErrors(errors.mobileNumber) }
                                     </div>
@@ -650,21 +738,35 @@ class UpdateAccountInfoModal extends Component {
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.state.connected ?
+                                            this.props.connected ?
                                             <React.Fragment>
                                                 <div className="input-group d-block d-sm-flex px-0">
-                                                    <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
-                                                    type="text" name="emailAddress"  value={record.emailAddress}
-                                                    onChange={this.onChangeRecord} noValidate />
+                                                    {
+                                                        submitted ?
+                                                        <input className="w-sm-100 form-control" type="text" name="emailAddress"
+                                                        value={record.emailAddress} noValidate disabled /> :
+                                                        <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                                                        type="text" name="emailAddress"  value={record.emailAddress}
+                                                        onChange={this.onChangeRecord} noValidate />
+                                                    }
                                                     <div className="input-group-append justify-content-end">
                                                         <span className="input-group-text">@</span>
-                                                        <select className="input-group-text"
-                                                        name="email" value={record.email}
-                                                        onChange={this.onChangeRecord} noValidate>
-                                                            <option value="@yahoo.com">yahoo.com</option>
-                                                            <option value="@gmail.com">gmail.com</option>
-                                                            <option value="@outlook.com">outlook.com</option>
-                                                        </select>
+                                                        {
+                                                            submitted ?
+                                                            <select className="input-group-text form-control" name="email"
+                                                            value={record.email} noValidate disabled>
+                                                                <option value="@yahoo.com">yahoo.com</option>
+                                                                <option value="@gmail.com">gmail.com</option>
+                                                                <option value="@outlook.com">outlook.com</option>
+                                                            </select> :
+                                                            <select className="input-group-text form-control"
+                                                            name="email" value={record.email}
+                                                            onChange={this.onChangeRecord} noValidate>
+                                                                <option value="@yahoo.com">yahoo.com</option>
+                                                                <option value="@gmail.com">gmail.com</option>
+                                                                <option value="@outlook.com">outlook.com</option>
+                                                            </select>
+                                                        }
                                                     </div>
                                                 </div>
                                                 { this.renderRecordErrors(errors.emailAddress) }
@@ -676,14 +778,14 @@ class UpdateAccountInfoModal extends Component {
                                                     </small>
                                                 </div>
                                             </React.Fragment> :
-                                            this.state.connectionFailed ?
+                                            this.props.connectionFailed ?
                                             <div className="input-group d-block d-sm-flex px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.retryCustomersData}>Retry</button>
+                                                    onClick={this.props.retryCustomersData}>Retry</button>
                                                 </div>
                                             </div> :
                                             <input className="form-control"
@@ -697,15 +799,23 @@ class UpdateAccountInfoModal extends Component {
                                             Password<span className="text-danger ml-1">*</span>
                                         </label>
                                         <div className="input-group">
-                                            <input className={"zi-10 " + this.inputFieldClasses(errors.userPassword)}
-                                            type={passwordState.inputType} name="userPassword" value={record.userPassword}
-                                            onChange={this.onChangeRecord} noValidate />
-                                            <div className="input-group-append">
-                                                <button type="button" className="btn btn-light input-group-text"
-                                                onClick={this.onTogglePassword}>
-                                                    {passwordState.buttonText}
-                                                </button>
-                                            </div>
+                                            {
+                                                submitted ?
+                                                <input className="zi-10 form-control" type={passwordState.inputType} name="userPassword"
+                                                value={record.userPassword} noValidate disabled /> :
+                                                <React.Fragment>
+                                                    <input className={"zi-10 " + this.inputFieldClasses(errors.userPassword)}
+                                                    type={passwordState.inputType} name="userPassword" value={record.userPassword}
+                                                    onChange={this.onChangeRecord} noValidate />
+                                                    <div className="input-group-append">
+                                                        <button type="button" className="btn btn-light input-group-text"
+                                                        onClick={this.onTogglePassword}>
+                                                            {passwordState.buttonText}
+                                                        </button>
+                                                    </div>
+                                                </React.Fragment>
+
+                                            }
                                         </div> { this.renderRecordErrors(errors.userPassword) }
                                     </div>
 
@@ -713,21 +823,32 @@ class UpdateAccountInfoModal extends Component {
                                         <label className="m-0 ml-2">
                                             Confirm Password<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.confirmUserPassword)}
-                                        type="password" name="confirmUserPassword" value={confirmUserPassword}
-                                        onChange={this.onChangeState} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="password" name="confirmUserPassword"
+                                            value={confirmUserPassword} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.confirmUserPassword)}
+                                            type="password" name="confirmUserPassword" value={confirmUserPassword}
+                                            onChange={this.onChangeState} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.confirmUserPassword) }
                                     </div>
                                 </form>
                                 {
-                                    updated ? connected ?
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
-                                        <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully updated.</span>
-                                    </div> : 
+                                    submitted ?
                                     <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-pen text-primary mr-2"></i>
-                                        <span>Updating a record...</span>
+                                        <span>Updating an Account Info...</span>
+                                    </div> :
+                                    updated ? 
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Account Info was successfully updated.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                             </div>
@@ -746,7 +867,7 @@ class UpdateAccountInfoModal extends Component {
 
     defaultButtons = () => {
         return(
-            this.props.connected && this.state.connected ?
+            this.props.connected && !this.state.submitted ?
             <React.Fragment>
                 <button className="btn btn-primary w-auto mr-1"
                 onClick={this.onSubmit}>
@@ -760,27 +881,6 @@ class UpdateAccountInfoModal extends Component {
                 </button>
             </React.Fragment> : null
         )
-    }
-
-    retryCustomersData = () => {
-        this.getCustomersData();
-        const connected = false;
-        const connectionFailed = false;
-        this.setState({ connected, connectionFailed })
-    }
-
-    getCustomersData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
-        .then(res => {
-            const records = res.data;
-            const connected = true;
-            this.setState({ records, connected });
-        })
-        .catch(error => {
-            console.log(error);
-            const connectionFailed = true;
-            this.setState({ connectionFailed });
-        });
     }
 
     inputFieldClasses = errorMsg => {

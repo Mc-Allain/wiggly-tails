@@ -68,7 +68,7 @@ class Navbar extends Component {
                                         {
                                             nav.id === 10 ?
                                             <a className={this.linkItemClasses(nav.id)}
-                                            data-toggle="modal" data-target="#registerModal">
+                                            data-toggle="modal" data-target="#registrationModal">
                                                 {nav.text}
                                             </a> :
                                             <a href={nav.link} className={this.linkItemClasses(nav.id)}>

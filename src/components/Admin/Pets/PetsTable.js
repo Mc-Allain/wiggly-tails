@@ -49,7 +49,7 @@ class PetsTable extends Component {
     }
 
     render() {
-        const { pets, onRefresh, onSearch, searchValue, onClear, connected, connectionFailed, onSubmitForm } = this.props;
+        const { pets, onRefresh, onSearch, searchValue, onClear, connected, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -57,11 +57,11 @@ class PetsTable extends Component {
                     <button className="btn btn-outline-primary mr-auto"
                         data-toggle="modal" data-target="#addPetModal">
                         <i className="fa fa-plus"></i>
-                        <span className="ml-1 d-xl-inline d-lg-none d-sm-inline d-none">New</span>
+                        <span className="ml-1 d-sm-inline d-none">New</span>
                     </button>
                     <button className="btn btn-warning mr-2" onClick={onRefresh}>
                         <i className="fa fa-sync"></i>
-                        <span className="ml-1 d-xl-inline d-lg-none d-sm-inline d-none">Refresh</span>
+                        <span className="ml-1 d-sm-inline d-none">Refresh</span>
                     </button>
                     <input type="text" className="form-control w-25 min-w-175px"
                     placeholder="Search" onChange={onSearch} value={searchValue}></input>
@@ -98,9 +98,11 @@ class PetsTable extends Component {
                     activePage={activePage}
                     totalRecords={pets.length} /> : null
                 }
-                <AddPetModal onRefresh={onRefresh} onSubmitForm={onSubmitForm} />
-                { pets.map(pet => <ViewPetModal key={pet.id} pet={pet} onRefresh={onRefresh}
-                connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> ) }
+                <AddPetModal onRefresh={onRefresh} onSubmitForm={onSubmitForm} records={this.props.customers} retryCustomersData={this.props.retryCustomersData}
+                connected={this.props.customerConnected} connectionFailed={this.props.customerConnectionFailed} />
+                { pets.map(pet => <ViewPetModal key={pet.id} pet={pet} onRefresh={onRefresh} connected={connected}
+                onSubmitForm={onSubmitForm} records={this.props.customers} retryCustomersData={this.props.retryCustomersData}
+                customerConnected={this.props.customerConnected} customerConnectionFailed={this.props.customerConnectionFailed} /> ) }
             </React.Fragment>
         );
     }

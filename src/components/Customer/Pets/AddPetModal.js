@@ -20,13 +20,15 @@ class AddPetModal extends Component {
             petClass: ' ',
             pcciRegNo: ''
         },
-        submitError: false,
         petClasses:
         [ 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
         'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
         'Horse', 'Iguana', 'Jaguar', 'Lizard', 'Mantis', 'Monkey', 'Newt', 'Octopus', 'Pig', 'Panda', 'Quill',
         'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake','Spider', 'Tortoise', 'Turtle', 'Whale'],
-        added: false
+        submitError: false,
+        submitted: false,
+        added: false,
+        failed: false
     }
 
     componentDidMount() {
@@ -111,9 +113,19 @@ class AddPetModal extends Component {
             record.petName = this.removeLastSpace(record.petName);
 
             this.props.onSubmitForm();
+            this.submission();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertPet.php', record)
-            .then(onRefresh, this.postSubmit());
+            .then(() => {
+                onRefresh();
+                this.onReset();
+                this.postSubmit();
+            })
+            .catch(error => {
+                console.log(error);
+                onRefresh();
+                this.failedSubmit();
+            });
         }
         else {
             const submitError = true;
@@ -121,13 +133,30 @@ class AddPetModal extends Component {
         }
     }
     
-    postSubmit = () => {
-        this.onReset();
-        let added = true;
+    submission = () => {
+        const submitted = true;
         const submitError = false;
-        this.setState({ submitError, added });
-        added = false;
-        setTimeout(() => this.setState({ added }), 5000);
+        this.setState({ submitted, submitError });
+    }
+    
+    postSubmit = () => {
+        const submitted = false;
+        let added = true;
+        this.setState({ submitted, added });
+        setTimeout(() => {
+            added = false;
+            this.setState({ added });
+        }, 5000)
+    }
+
+    failedSubmit = () => {
+        const submitted = false;
+        let failed = true;
+        this.setState({ submitted, failed });
+        setTimeout(() => {
+            failed = false;
+            this.setState({ failed });
+        }, 5000)
     }
 
     validForm = ({ errors }) => {
@@ -157,7 +186,10 @@ class AddPetModal extends Component {
         this.onGenerateId();
         const record = {...this.state.record};
         const errors = {...this.state.errors};
+        
         const submitError = false;
+        const added = false;
+        const failed = false;
 
         record.id = this.generateCharacters(6);
         record.petName = '';
@@ -170,11 +202,11 @@ class AddPetModal extends Component {
         errors.petClass = 'Pet Class is required';
         errors.pcciRegNo = '';
 
-        this.setState({ record, errors, submitError});
+        this.setState({ record, errors, submitError, added, failed});
     }
 
     render() {
-        const { record, errors, petClasses, added } = this.state;
+        const { record, errors, petClasses, submitted, added, failed  } = this.state;
 
         return (
             <React.Fragment>
@@ -184,17 +216,33 @@ class AddPetModal extends Component {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="addPetModalTitle">Add Pet</h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
-                                    <i className="fa fa-window-close fa-lg"></i>
-                                </button>
+                                {
+                                    !submitted ?
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
+                                    onClick={this.onReset}>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button> :
+                                    <button className="btn btn-light text-danger p-1" disabled>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button>
+                                }                                
                             </div>
                             <div className="modal-body">
                                 {
-                                    added ?
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
+                                    added ? 
                                     <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mb-3">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -205,12 +253,15 @@ class AddPetModal extends Component {
                                             name="id" value={record.id}
                                             placeholder="Please click 'Generate'"
                                             noValidate disabled />
-                                            <div className="input-group-append">
-                                                <button type="button" className="btn btn-light input-group-text"
-                                                onClick={this.onGenerateId}>
-                                                    Generate
-                                                </button>
-                                            </div>
+                                            {
+                                                !submitted ?
+                                                <div className="input-group-append">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.onGenerateId}>
+                                                        Generate
+                                                    </button>
+                                                </div> : null
+                                            }
                                         </div>
                                     </div>
 
@@ -221,9 +272,14 @@ class AddPetModal extends Component {
                                                 *<span className="small ml-1">Required</span>
                                             </span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.petName)}
-                                        type="text" name="petName" value={record.petName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="petName"
+                                            value={record.petName} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.petName)}
+                                            type="text" name="petName" value={record.petName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.petName) }
                                     </div>
 
@@ -231,9 +287,14 @@ class AddPetModal extends Component {
                                         <label className="m-0 ml-2">
                                             Birthdate<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.birthdate)}
-                                        type="date" name="birthdate" value={record.birthdate}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="date" name="birthdate"
+                                            value={record.birthdate} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.birthdate)}
+                                            type="date" name="birthdate" value={record.birthdate}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.birthdate) }
                                     </div>
 
@@ -250,50 +311,94 @@ class AddPetModal extends Component {
                                         <label className="m-0 ml-2">
                                             Pet Class<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <select className={this.inputFieldClasses(errors.petClass)}
-                                        name="petClass" value={record.petClass} onChange={this.onChangeRecord}
-                                        noValidate>
-                                            <option value=''>Choose one</option>
-                                            {
-                                                petClasses.length > 0 ?
-                                                petClasses.map(value =>
-                                                    <option key={value} value={value}>{value}</option>
-                                                ) : null
-                                            }
-                                        </select>
+                                        {
+                                            submitted ?
+                                            <select className="form-control" name="petClass"
+                                            value={record.petClass} noValidate disabled>
+                                                <option value=''>Choose one</option>
+                                                {
+                                                    petClasses.length > 0 ?
+                                                    petClasses.map(value =>
+                                                        <option key={value} value={value}>{value}</option>
+                                                    ) : null
+                                                }
+                                            </select> :
+                                            <select className={this.inputFieldClasses(errors.petClass)}
+                                            name="petClass" value={record.petClass} onChange={this.onChangeRecord}
+                                            noValidate>
+                                                <option value=''>Choose one</option>
+                                                {
+                                                    petClasses.length > 0 ?
+                                                    petClasses.map(value =>
+                                                        <option key={value} value={value}>{value}</option>
+                                                    ) : null
+                                                }
+                                            </select>
+                                        }
                                         { this.renderRecordErrors(errors.petClass) }
                                     </div>
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">PCCI Reg. No.</label>
-                                        <input className={this.inputFieldClasses(errors.pcciRegNo)}
-                                        type="text" name="pcciRegNo" value={record.pcciRegNo}
-                                        onChange={this.onChangeRecord} maxLength="6"
-                                        placeholder="(Optional)" noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="pcciRegNo"
+                                            value={record.pcciRegNo} maxLength="6"
+                                            placeholder="(Optional)" noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.pcciRegNo)}
+                                            type="text" name="pcciRegNo" value={record.pcciRegNo}
+                                            onChange={this.onChangeRecord} maxLength="6"
+                                            placeholder="(Optional)" noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.pcciRegNo) }
                                     </div>
                                 </form>
                                 {
-                                    added ?
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
+                                    added ? 
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                             </div>
 
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
-                                    <button className="btn btn-primary w-auto mr-1"
-                                    onClick={this.onSubmit}>
-                                        <i className="fa fa-sign-in-alt"></i>
-                                        <span className="ml-1">Submit</span>
-                                    </button>
-                                    <button className="btn btn-danger w-auto"
-                                    onClick={this.onReset}>
-                                        <i className="fa fa-eraser"></i>
-                                        <span className="ml-1">Reset</span>
-                                    </button>
+                                    {
+                                        !submitted ?
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1"
+                                            onClick={this.onSubmit}>
+                                                <i className="fa fa-sign-in-alt"></i>
+                                                <span className="ml-1">Submit</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto"
+                                            onClick={this.onReset}>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment> :
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1" disabled>
+                                                <i className="fa fa-sign-in-alt"></i>
+                                                <span className="ml-1">Submit</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto" disabled>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment>
+                                    }
                                 </div>
                             </div>
                         </div>

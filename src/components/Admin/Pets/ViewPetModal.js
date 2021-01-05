@@ -13,9 +13,6 @@ class ViewPetModal extends Component {
             lastVisit: '',
             pcciRegNo: ''
         },
-        records: [],
-        connected: false,
-        connectionFailed: false,
         errors:
         {
             petName: '',
@@ -24,8 +21,6 @@ class ViewPetModal extends Component {
             petClass: '',
             pcciRegNo: ''
         },
-        submitError: false,
-        updated: false,
         petClasses:
         [ 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
         'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
@@ -33,12 +28,14 @@ class ViewPetModal extends Component {
         'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake','Spider', 'Tortoise', 'Turtle', 'Whale'],
         search: false,
         searchValue: '',
-        deleteState: false
+        deleteState: false,
+        submitError: false,
+        submitted: false,
+        updated: false,
+        failed: false
     }
 
     componentDidMount() {
-        this.getCustomersData();
-
         const { pet } = this.props;
         const record = {...this.state.record};
         
@@ -55,8 +52,17 @@ class ViewPetModal extends Component {
 
     onChangeState = e => {
         const { name, value } = e.target;
+        const record = {...this.state.record};
+        const errors = {...this.state.errors};
+
+        if(name === "searchValue") {
+            record.ownerId = '';
+            errors.ownerId = ' ';
+        }
+
         this.setState(currentState => ({
             ...currentState,
+            record, errors,
             [name]: value
         }))
     }
@@ -124,9 +130,18 @@ class ViewPetModal extends Component {
             record.petName = this.removeLastSpace(record.petName);
 
             this.props.onSubmitForm();
+            this.submission();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updatePet.php', record)
-            .then(onRefresh, this.postSubmit());
+            .then(() => {
+                onRefresh();
+                this.postSubmit();
+            })
+            .catch(error => {
+                console.log(error);
+                onRefresh();
+                this.failedSubmit();
+            });
         }
         else {
             const submitError = true;
@@ -134,10 +149,30 @@ class ViewPetModal extends Component {
         }
     }
     
-    postSubmit = () => {
-        let updated = true;
+    submission = () => {
+        const submitted = true;
         const submitError = false;
-        this.setState({ submitError, updated });
+        this.setState({ submitted, submitError });
+    }
+
+    postSubmit = () => {
+        const submitted = false;
+        let updated = true;
+        this.setState({ submitted, updated });
+        setTimeout(() => {
+            updated = false;
+            this.setState({ updated });
+        }, 5000)
+    }
+
+    failedSubmit = () => {
+        const submitted = false;
+        let failed = true;
+        this.setState({ submitted, failed });
+        setTimeout(() => {
+            failed = false;
+            this.setState({ failed });
+        }, 5000)
     }
 
     validForm = ({ errors }) => {
@@ -166,8 +201,11 @@ class ViewPetModal extends Component {
     onReset = () => {
         const record = {...this.state.record};
         const errors = {...this.state.errors};
+
+        const deleteState = false;
         const submitError = false;
         const updated = false;
+        const failed = false;
 
         const { pet } = this.props;
 
@@ -185,7 +223,7 @@ class ViewPetModal extends Component {
 
         const searchValue = '';
 
-        this.setState({ record, errors, searchValue, submitError, updated });
+        this.setState({ record, errors, searchValue, deleteState, submitError, updated, failed });
     }
 
     onToggleSearch = e => {
@@ -201,8 +239,8 @@ class ViewPetModal extends Component {
     }
 
     render() {
-        const { record, records, errors, petClasses, search, searchValue, updated, deleteState } = this.state;
-        const { pet, connected, connectionFailed } = this.props;
+        const { record, errors, petClasses, search, searchValue, deleteState, submitted, updated, failed } = this.state;
+        const { pet } = this.props;
 
         return (
             <React.Fragment>
@@ -213,23 +251,32 @@ class ViewPetModal extends Component {
                             <div className="modal-header">
                                 <h5 className="modal-title" id={"viewPetModalTitle-" + pet.id}>View Pet</h5>
                                 {
-                                    connected || connectionFailed ?
+                                    !submitted && this.props.connected ?
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
-                                    </button> : null
+                                    </button> :
+                                    <button className="btn btn-light text-danger p-1" disabled>
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button>
                                 }
                             </div>
                             <div className="modal-body">
                                 {
-                                    updated ? connected ?
-                                    <div className="alert alert-success d-flex align-items-center mb-3">
-                                        <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully updated.</span>
-                                    </div> : 
+                                    submitted ?
                                     <div className="alert alert-primary d-flex align-items-center mb-3">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Updating a record...</span>
+                                    </div> :
+                                    updated ? 
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Record was successfully updated.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mb-3">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -248,9 +295,14 @@ class ViewPetModal extends Component {
                                                 *<span className="small ml-1">Required</span>
                                             </span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.petName)}
-                                        type="text" name="petName" value={record.petName}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="petName"
+                                            value={record.petName} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.petName)}
+                                            type="text" name="petName" value={record.petName}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.petName) }
                                     </div>
 
@@ -258,9 +310,14 @@ class ViewPetModal extends Component {
                                         <label className="m-0 ml-2">
                                             Birthdate<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className={this.inputFieldClasses(errors.birthdate)}
-                                        type="date" name="birthdate" value={record.birthdate}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="date" name="birthdate"
+                                            value={record.birthdate} noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.birthdate)}
+                                            type="date" name="birthdate" value={record.birthdate}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.birthdate) }
                                     </div>
 
@@ -269,35 +326,57 @@ class ViewPetModal extends Component {
                                             Owner Id<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.state.connected ?
+                                            this.props.customerConnected ?
                                             <React.Fragment>
                                                 <div className="input-group">
-                                                    <select className={"zi-10 " + this.inputFieldClasses(errors.ownerId)}
-                                                    name="ownerId" value={record.ownerId} onChange={this.onChangeRecord}
-                                                    noValidate>
-                                                        <option value=''>Choose one</option>
-                                                        {
-                                                            records.length > 0 ?
-                                                            records.filter(row =>
-                                                                (row.lastName + ", " + row.firstName + " " + row.middleName)
-                                                                .toLowerCase().match(searchValue.toLowerCase()) ||
-                                                                searchValue === ''
-                                                            ).map(row =>
-                                                                <option key={row.id} value={row.id}>
-                                                                    {row.id + " | " + row.lastName + ", " + row.firstName + " " + row.middleName}
-                                                                </option>
-                                                            ) : null
-                                                        }
-                                                    </select>
-                                                    <div className="input-group-append">
-                                                        <button type="button" className="btn btn-light input-group-text"
-                                                        onClick={this.onToggleSearch}>
-                                                            Search
-                                                        </button>
-                                                    </div>
+                                                    {
+                                                        submitted ?
+                                                        <select className="form-control" name="ownerId"
+                                                        value={record.ownerId} noValidate disabled>
+                                                            <option value=''>Choose one</option>
+                                                            {
+                                                                this.props.records.length > 0 ?
+                                                                this.props.records.filter(row =>
+                                                                    (row.lastName + ", " + row.firstName + " " + row.middleName)
+                                                                    .toLowerCase().match(searchValue.toLowerCase()) ||
+                                                                    searchValue === ''
+                                                                ).map(row =>
+                                                                    <option key={row.id} value={row.id}>
+                                                                        {row.id + " | " + row.lastName + ", " + row.firstName + " " + row.middleName}
+                                                                    </option>
+                                                                ) : null
+                                                            }
+                                                        </select> :
+                                                        <React.Fragment>
+                                                            <select className={"zi-10 " + this.inputFieldClasses(errors.ownerId)}
+                                                            name="ownerId" value={record.ownerId} onChange={this.onChangeRecord}
+                                                            noValidate>
+                                                                <option value=''>Choose one</option>
+                                                                {
+                                                                    this.props.records.length > 0 ?
+                                                                    this.props.records.filter(row =>
+                                                                        (row.lastName + ", " + row.firstName + " " + row.middleName)
+                                                                        .toLowerCase().match(searchValue.toLowerCase()) ||
+                                                                        searchValue === ''
+                                                                    ).map(row =>
+                                                                        <option key={row.id} value={row.id}>
+                                                                            {row.id + " | " + row.lastName + ", " + row.firstName + " " + row.middleName}
+                                                                        </option>
+                                                                    ) : null
+                                                                }
+                                                            </select>
+                                                            <div className="input-group-append">
+                                                                <button type="button" className="btn btn-light input-group-text"
+                                                                onClick={this.onToggleSearch}>
+                                                                    Search
+                                                                </button>
+                                                            </div>
+                                                        </React.Fragment>
+
+                                                    }
                                                 </div>
                                                 {
-                                                    search ?
+                                                    search && !submitted ?
                                                     <div className="input-group">
                                                         <input className="form-control"
                                                         type="text" name="searchValue"
@@ -312,14 +391,14 @@ class ViewPetModal extends Component {
                                                     </div> : null
                                                 } { this.renderRecordErrors(errors.ownerId) }
                                             </React.Fragment> :
-                                            this.state.connectionFailed ?
+                                            this.props.customerConnectionFailed ?
                                             <div className="input-group d-block d-sm-flex px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.retryCustomersData}>Retry</button>
+                                                    onClick={this.props.retryCustomersData}>Retry</button>
                                                 </div>
                                             </div> :
                                             <input className="form-control"
@@ -332,38 +411,62 @@ class ViewPetModal extends Component {
                                         <label className="m-0 ml-2">
                                             Pet Class<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <select className={this.inputFieldClasses(errors.petClass)}
-                                        name="petClass" value={record.petClass} onChange={this.onChangeRecord}
-                                        noValidate>
-                                            <option value=''>Choose one</option>
-                                            {
-                                                petClasses.length > 0 ?
-                                                petClasses.map(value =>
-                                                    <option key={value} value={value}>{value}</option>
-                                                ) : null
-                                            }
-                                        </select>
+                                        {
+                                            submitted ?
+                                            <select className="form-control" name="petClass"
+                                            value={record.petClass} noValidate disabled>
+                                                <option value=''>Choose one</option>
+                                                {
+                                                    petClasses.length > 0 ?
+                                                    petClasses.map(value =>
+                                                        <option key={value} value={value}>{value}</option>
+                                                    ) : null
+                                                }
+                                            </select> :
+                                            <select className={this.inputFieldClasses(errors.petClass)}
+                                            name="petClass" value={record.petClass} onChange={this.onChangeRecord}
+                                            noValidate>
+                                                <option value=''>Choose one</option>
+                                                {
+                                                    petClasses.length > 0 ?
+                                                    petClasses.map(value =>
+                                                        <option key={value} value={value}>{value}</option>
+                                                    ) : null
+                                                }
+                                            </select>
+                                        }
                                         { this.renderRecordErrors(errors.petClass) }
                                     </div>
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">PCCI Reg. No.</label>
-                                        <input className={this.inputFieldClasses(errors.pcciRegNo)}
-                                        type="text" name="pcciRegNo" value={record.pcciRegNo}
-                                        onChange={this.onChangeRecord} maxLength="6"
-                                        placeholder="(Optional)" noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="text" name="pcciRegNo"
+                                            value={record.pcciRegNo} maxLength="6" placeholder="(Optional)" noValidate disabled /> :
+                                            <input className={this.inputFieldClasses(errors.pcciRegNo)}
+                                            type="text" name="pcciRegNo" value={record.pcciRegNo}
+                                            onChange={this.onChangeRecord} maxLength="6"
+                                            placeholder="(Optional)" noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.pcciRegNo) }
                                     </div>
                                 </form>
                                 {
-                                    updated ? connected ?
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
-                                        <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully updated.</span>
-                                    </div> : 
+                                    submitted ?
                                     <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Updating a record...</span>
+                                    </div> :
+                                    updated ? 
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Record was successfully updated.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                             </div>
@@ -382,24 +485,45 @@ class ViewPetModal extends Component {
 
     defaultButtons = () => {
         return(
-            this.props.connected && this.state.connected ?
+            !this.state.submitted && this.props.customerConnected ?
             <React.Fragment>
                 <button className="btn btn-primary w-auto mr-1"
                 onClick={this.onSubmit}>
                     <i className="fa fa-pen fa-sm"></i>
                     <span className="ml-1">Update</span>
                 </button>
-                <button className="btn btn-danger w-auto mr-1"
-                onClick={this.onReset}>
-                    <i className="fa fa-eraser"></i>
-                    <span className="ml-1">Reset</span>
-                </button>
+                {
+                    this.props.connected ?
+                    <button className="btn btn-danger w-auto mr-1"
+                    onClick={this.onReset}>
+                        <i className="fa fa-eraser"></i>
+                        <span className="ml-1">Reset</span>
+                    </button> :
+                    <button className="btn btn-danger w-auto mr-1" disabled>
+                        <i className="fa fa-eraser"></i>
+                        <span className="ml-1">Reset</span>
+                    </button>
+                }
                 <button className="btn btn-danger w-auto mr-1"
                 onClick={this.onToggleDelete}>
                     <i className="fa fa-trash"></i>
                     <span className="ml-1">Delete</span>
                 </button>
-            </React.Fragment> : null
+            </React.Fragment> :
+            <React.Fragment>
+            <button className="btn btn-primary w-auto mr-1" disabled>
+                    <i className="fa fa-pen fa-sm"></i>
+                    <span className="ml-1">Update</span>
+                </button>
+                <button className="btn btn-danger w-auto mr-1" disabled>
+                    <i className="fa fa-eraser"></i>
+                    <span className="ml-1">Reset</span>
+                </button>
+                <button className="btn btn-danger w-auto mr-1" disabled>
+                    <i className="fa fa-trash"></i>
+                    <span className="ml-1">Delete</span>
+                </button>
+            </React.Fragment>
         )
     }
 
@@ -440,27 +564,6 @@ class ViewPetModal extends Component {
         classes+= errorMsg.length > 0 ? 
         this.state.submitError ? "border border-danger" : "" : "border border-success"
         return classes;
-    }
-
-    retryCustomersData = () => {
-        this.getCustomersData();
-        const connected = false;
-        const connectionFailed = false;
-        this.setState({ connected, connectionFailed })
-    }
-
-    getCustomersData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
-        .then(res => {
-            const records = res.data;
-            const connected = true;
-            this.setState({ records, connected });
-        })
-        .catch(error => {
-            console.log(error);
-            const connectionFailed = true;
-            this.setState({ connectionFailed });
-        });
     }
     
     toAbsProperCase = value => {

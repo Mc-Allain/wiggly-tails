@@ -46,13 +46,6 @@ class InitiateTransactionModal extends Component {
                 activity: ' '
             }
         },
-        submitError: false,
-        pets: [],
-        petConnected: false,
-        petConnectionFailed: false,
-        employees: [],
-        employeeConnected: false,
-        employeeConnectionFailed: false,
         pet:
         {
             search: false,
@@ -62,13 +55,15 @@ class InitiateTransactionModal extends Component {
         {
             search: false,
             searchValue: '',
-        }
+        },
+        submitError: false,
+        submitted: false,
+        added: false,
+        failed: false
     }
 
     componentDidMount() {
         this.onGenerateId();
-        this.getPetsData();
-        this.getEmployeesData();
     }
 
     onGenerateId = () => {
@@ -82,19 +77,25 @@ class InitiateTransactionModal extends Component {
         record.customerId = customer.id;
         errors.customerId = '';
 
-        record.transDate = this.getCurrentDate();
+        const currentDate = this.getCurrentDate();
+        record.transDate = currentDate;
+        record.checkUp.admissionDate = currentDate;
+        record.checkUp.releasedDate = currentDate;
+
         this.setState({ record, errors });
     }
 
     getCurrentDate = () => {
         const dateObj = new Date(); 
-        const currentDate = dateObj.getFullYear() + "-" + (dateObj.getMonth()+1) + "-" + dateObj.getDate();
+        const currentMonth = dateObj.getMonth()+1 < 10 ? "0"+(dateObj.getMonth()+1) : dateObj.getMonth()+1
+        const currentDay = dateObj.getDate() < 10 ? "0"+dateObj.getDate() : dateObj.getDate() 
+        const currentDate = dateObj.getFullYear() + "-" + currentMonth + "-" + currentDay;
         return currentDate;
     }
 
     onChangeRecord = e => {
         let { name, value } = e.target;
-
+        
         if(name === "remarks") {
             value = this.toSentenceCase(value);
         }
@@ -113,14 +114,13 @@ class InitiateTransactionModal extends Component {
 
             checkUp.findings = '';
             checkUp.treatment = '';
-            checkUp.admissionDate = '';
-            checkUp.releasedDate = '';
+            const currentDate = this.getCurrentDate();
+            checkUp.admissionDate = currentDate;
+            checkUp.releasedDate = currentDate;
             checkUp.addInfo = ''
 
             checkUpErrors.findings = ' ';
             checkUpErrors.treatment = ' ';
-            checkUpErrors.admissionDate = '';
-            checkUpErrors.releasedDate = '';
             checkUpErrors.addInfo = ''
 
             const groom = {...this.state.record.groom};
@@ -289,7 +289,6 @@ class InitiateTransactionModal extends Component {
         const errors  = {...this.state.errors};
 
         if(this.validForm({ errors })) {
-            const { onRefresh } = this.props;
             const record = {...this.state.record};
 
             record.remarks = this.removeLastSpace(record.remarks);
@@ -298,22 +297,49 @@ class InitiateTransactionModal extends Component {
             record.checkUp.addInfo = this.removeLastSpace(record.checkUp.addInfo);
             record.groom.activity = this.removeLastSpace(record.groom.activity);
 
-            this.props.onSubmitForm(false);
+            this.submission();
 
             axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertTransaction.php', record)
-            .then(onRefresh, this.postSubmit());
+            .then(() => {
+                this.onReset();
+                this.postSubmit();
+            })
+            .catch(error => {
+                console.log(error);
+                this.failedSubmit();
+            });
         }
         else {
             const submitError = true;
             this.setState({ submitError });
         }
     }
+
+    submission = () => {
+        const submitted = true;
+        const submitError = false;
+        this.setState({ submitted, submitError });
+    }
     
     postSubmit = () => {
         this.onReset();
+        const submitted = false;
         let added = true;
-        const submitError = false;
-        this.setState({ submitError, added });
+        this.setState({ submitted, added });
+        setTimeout(() => {
+            added = false;
+            this.setState({ added });
+        }, 5000)
+    }
+
+    failedSubmit = () => {
+        const submitted = false;
+        let failed = true;
+        this.setState({ submitted, failed });
+        setTimeout(() => {
+            failed = false;
+            this.setState({ failed });
+        }, 5000)
     }
 
     validForm = ({ errors }) => {
@@ -358,19 +384,24 @@ class InitiateTransactionModal extends Component {
         const errors = {...this.state.errors};
         const checkUpErrors = {...this.state.errors.checkUp};
         const groomErrors = {...this.state.errors.groom};
+        
         const submitError = false;
+        const added = false;
+        const failed = false;
+
+        const currentDate = this.getCurrentDate();
 
         const id = this.generateCharacters(6);
         groom.activity = '';
         checkUp.findings = '';
         checkUp.treatment = '';
-        checkUp.admissionDate = this.getCurrentDate();
-        checkUp.releasedDate = '';
+        checkUp.admissionDate = currentDate;
+        checkUp.releasedDate = currentDate;
         checkUp.addInfo = '';
 
         record.id = id;
         record.transType = '';
-        record.transDate = this.getCurrentDate();
+        record.transDate = currentDate;
         record.petId = ''
         record.petWeight = '';
         record.remarks = '';
@@ -391,7 +422,7 @@ class InitiateTransactionModal extends Component {
         errors.checkUpErrors = checkUpErrors;
         errors.groomErrors = groomErrors;
 
-        this.setState({ record, errors, submitError});
+        this.setState({ record, errors, submitError, added, failed});
     }
 
     onTogglePetSearch = e => {
@@ -411,8 +442,13 @@ class InitiateTransactionModal extends Component {
 
     onChangePetSearch = e => {
         const { name, value } = e.target;
+        const record = {...this.state.record};
+        const errors = {...this.state.errors};
+        record.petId = '';
+        errors.petId = ' ';
         this.setState(currentState => ({
             ...currentState,
+            record, errors,
             pet: {
                 ...currentState.pet,
                 [name] : value
@@ -437,8 +473,13 @@ class InitiateTransactionModal extends Component {
 
     onChangeEmployeeSearch = e => {
         const { name, value } = e.target;
+        const record = {...this.state.record};
+        const errors = {...this.state.errors};
+        record.empId = '';
+        errors.empId = ' ';
         this.setState(currentState => ({
             ...currentState,
+            record, errors,
             employee: {
                 ...currentState.employee,
                 [name] : value
@@ -447,8 +488,8 @@ class InitiateTransactionModal extends Component {
     }
 
     render() {
-        const { record, errors, pets, pet, employees, employee, added } = this.state;
-        const { customer, connected, connectionFailed } = this.props;
+        const { record, errors, pet, employee, submitted, added, failed } = this.state;
+        const { customer } = this.props;
 
         return (
             <React.Fragment>
@@ -462,7 +503,7 @@ class InitiateTransactionModal extends Component {
                                     + customer.lastName + ", " + customer.firstName + " " + customer.middleName}
                                 </h5>
                                 {
-                                    connected || connectionFailed ?
+                                    !submitted ?
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
@@ -471,14 +512,20 @@ class InitiateTransactionModal extends Component {
                             </div>
                             <div className="modal-body">
                                 {
-                                    added ? connected ?
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
+                                    added ? 
                                     <div className="alert alert-success d-flex align-items-center mb-3">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
-                                    </div> : 
-                                    <div className="alert alert-primary d-flex align-items-center mb-3">
-                                        <i className="fa fa-sign-in-alt text-primary mr-2"></i>
-                                        <span>Adding a record...</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mb-3">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -489,22 +536,36 @@ class InitiateTransactionModal extends Component {
                                                 *<span className="small ml-1">Required</span>
                                             </span>
                                         </label>
-                                        <input className="form-control border border-success"
-                                        type="date" name="transDate" value={record.transDate}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        {
+                                            submitted ?
+                                            <input className="form-control" type="date" name="transDate"
+                                            value={record.transDate} noValidate disabled /> :
+                                            <input className="form-control border border-success"
+                                            type="date" name="transDate" value={record.transDate}
+                                            onChange={this.onChangeRecord} noValidate />
+                                        }
                                     </div>
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">
                                             Transaction Type<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <select className={this.inputFieldClasses(errors.transType)}
-                                        name="transType" value={record.transType} onChange={this.onChangeRecord}
-                                        noValidate>
-                                            <option value=''>Choose one</option>
-                                            <option value='C'>Check-up</option>
-                                            <option value='G'>Groom</option>
-                                        </select>
+                                        {
+                                            submitted ?
+                                            <select className="form-control" name="transType"
+                                            value={record.transType} noValidate disabled>
+                                                <option value=''>Choose one</option>
+                                                <option value='C'>Check-up</option>
+                                                <option value='G'>Groom</option>
+                                            </select> :
+                                            <select className={this.inputFieldClasses(errors.transType)}
+                                            name="transType" value={record.transType} onChange={this.onChangeRecord}
+                                            noValidate>
+                                                <option value=''>Choose one</option>
+                                                <option value='C'>Check-up</option>
+                                                <option value='G'>Groom</option>
+                                            </select>
+                                        }
                                         { this.renderRecordErrors(errors.transType) }
                                     </div>
 
@@ -513,35 +574,56 @@ class InitiateTransactionModal extends Component {
                                             Employee Id<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.state.employeeConnected ?
+                                            this.props.employeeConnected ?
                                             <React.Fragment>
                                                 <div className="input-group">
-                                                    <select className={"zi-10 " + this.inputFieldClasses(errors.empId)}
-                                                    name="empId" value={record.empId} onChange={this.onChangeRecord}
-                                                    noValidate>
-                                                        <option value=''>Choose one</option>
-                                                        {
-                                                            employees.length > 0 ?
-                                                            employees.filter(row =>
-                                                                (row.empLastName + ", " + row.empFirstName + " " + row.empMiddleName)
-                                                                .toLowerCase().match(employee.searchValue.toLowerCase()) ||
-                                                                employee.searchValue === ''
-                                                            ).map(row =>
-                                                                <option key={row.id} value={row.id}>
-                                                                    {row.id + " | " + row.empLastName + ", " + row.empFirstName + " " + row.empMiddleName}
-                                                                </option>
-                                                            ) : null
-                                                        }
-                                                    </select>
-                                                    <div className="input-group-append">
-                                                        <button type="button" className="btn btn-light input-group-text"
-                                                        onClick={this.onToggleEmployeeSearch}>
-                                                            Search
-                                                        </button>
-                                                    </div>
+                                                    {
+                                                        submitted ?
+                                                        <select className="zi-10 form-control" name="empId"
+                                                        value={record.empId} noValidate disabled>
+                                                            <option value=''>Choose one</option>
+                                                            {
+                                                                this.props.employees.length > 0 ?
+                                                                this.props.employees.filter(row =>
+                                                                    (row.empLastName + ", " + row.empFirstName + " " + row.empMiddleName)
+                                                                    .toLowerCase().match(employee.searchValue.toLowerCase()) ||
+                                                                    employee.searchValue === ''
+                                                                ).map(row =>
+                                                                    <option key={row.id} value={row.id}>
+                                                                        {row.id + " | " + row.empLastName + ", " + row.empFirstName + " " + row.empMiddleName}
+                                                                    </option>
+                                                                ) : null
+                                                            }
+                                                        </select> :
+                                                        <React.Fragment>
+                                                            <select className={"zi-10 " + this.inputFieldClasses(errors.empId)}
+                                                            name="empId" value={record.empId} onChange={this.onChangeRecord}
+                                                            noValidate>
+                                                                <option value=''>Choose one</option>
+                                                                {
+                                                                    this.props.employees.length > 0 ?
+                                                                    this.props.employees.filter(row =>
+                                                                        (row.empLastName + ", " + row.empFirstName + " " + row.empMiddleName)
+                                                                        .toLowerCase().match(employee.searchValue.toLowerCase()) ||
+                                                                        employee.searchValue === ''
+                                                                    ).map(row =>
+                                                                        <option key={row.id} value={row.id}>
+                                                                            {row.id + " | " + row.empLastName + ", " + row.empFirstName + " " + row.empMiddleName}
+                                                                        </option>
+                                                                    ) : null
+                                                                }
+                                                            </select>
+                                                            <div className="input-group-append">
+                                                                <button type="button" className="btn btn-light input-group-text"
+                                                                onClick={this.onToggleEmployeeSearch}>
+                                                                    Search
+                                                                </button>
+                                                            </div>
+                                                        </React.Fragment>
+                                                    }
                                                 </div>
                                                 {
-                                                    employee.search ?
+                                                    employee.search && !submitted ?
                                                     <div className="input-group">
                                                         <input className="form-control"
                                                         type="text" name="searchValue"
@@ -556,10 +638,16 @@ class InitiateTransactionModal extends Component {
                                                     </div> : null
                                                 } { this.renderRecordErrors(errors.empId) }
                                             </React.Fragment> :
-                                            this.state.employeeConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            this.props.employeeConnectionFailed ?
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.props.retryEmployeesData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -570,8 +658,8 @@ class InitiateTransactionModal extends Component {
                                         <label className="m-0 ml-2">
                                             Customer Id<span className="text-danger ml-1">*</span>
                                         </label>
-                                        <input className="form-control" name="customerId" value={record.customerId}
-                                        noValidate disabled></input>
+                                        <input className="form-control" name="customerId"
+                                        value={record.customerId} noValidate disabled />
                                     </div>
 
                                     <div className="form-group col-lg-6">
@@ -579,39 +667,66 @@ class InitiateTransactionModal extends Component {
                                             Pet Id<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.state.petConnected ?
+                                            this.props.petConnected ?
                                             <React.Fragment>
                                                 <div className="input-group">
-                                                    <select className={"zi-10 " + this.inputFieldClasses(errors.petId)}
-                                                    name="petId" value={record.petId} onChange={this.onChangeRecord}
-                                                    noValidate>
-                                                        {
-                                                            pets.filter(row =>
-                                                                (row.petName.toLowerCase().match(pet.searchValue.toLowerCase()) && row.ownerId === record.customerId) ||
-                                                                (pet.searchValue === '' && row.ownerId === record.customerId)
-                                                            ).length > 0 || pet.searchValue.length > 0 ?
-                                                            <option value=''>Choose one</option> :
-                                                            record.customerId.length > 0 ?
-                                                            <option value=''>No pet found</option> :
-                                                            <option value=''>Customer Id is required</option>
-                                                        }
-                                                        {
-                                                            pets.length > 0 ?
-                                                            pets.filter(row =>
-                                                                (row.petName.toLowerCase().match(pet.searchValue.toLowerCase()) && row.ownerId === record.customerId) ||
-                                                                (pet.searchValue === '' && row.ownerId === record.customerId)
-                                                            ).map(row =>
-                                                                <option key={row.id} value={row.id}>
-                                                                    {row.id + " | " + row.petName}
-                                                                </option>
-                                                            ) : null
-                                                        }
-                                                    </select>
                                                     {
-                                                        pets.filter(row =>
+                                                        submitted ?
+                                                        <select className="zi-10 form-control" name="petId"
+                                                        value={record.petId} noValidate disabled>
+                                                            {
+                                                                this.props.pets.filter(row =>
+                                                                    (row.petName.toLowerCase().match(pet.searchValue.toLowerCase()) && row.ownerId === record.customerId) ||
+                                                                    (pet.searchValue === '' && row.ownerId === record.customerId)
+                                                                ).length > 0 || pet.searchValue.length > 0 ?
+                                                                <option value=''>Choose one</option> :
+                                                                record.customerId.length > 0 ?
+                                                                <option value=''>No pet found</option> :
+                                                                <option value=''>Customer Id is required</option>
+                                                            }
+                                                            {
+                                                                this.props.pets.length > 0 ?
+                                                                this.props.pets.filter(row =>
+                                                                    (row.petName.toLowerCase().match(pet.searchValue.toLowerCase()) && row.ownerId === record.customerId) ||
+                                                                    (pet.searchValue === '' && row.ownerId === record.customerId)
+                                                                ).map(row =>
+                                                                    <option key={row.id} value={row.id}>
+                                                                        {row.id + " | " + row.petName}
+                                                                    </option>
+                                                                ) : null
+                                                            }
+                                                        </select> :
+                                                        <select className={"zi-10 " + this.inputFieldClasses(errors.petId)}
+                                                        name="petId" value={record.petId} onChange={this.onChangeRecord}
+                                                        noValidate>
+                                                            {
+                                                                this.props.pets.filter(row =>
+                                                                    (row.petName.toLowerCase().match(pet.searchValue.toLowerCase()) && row.ownerId === record.customerId) ||
+                                                                    (pet.searchValue === '' && row.ownerId === record.customerId)
+                                                                ).length > 0 || pet.searchValue.length > 0 ?
+                                                                <option value=''>Choose one</option> :
+                                                                record.customerId.length > 0 ?
+                                                                <option value=''>No pet found</option> :
+                                                                <option value=''>Customer Id is required</option>
+                                                            }
+                                                            {
+                                                                this.props.pets.length > 0 ?
+                                                                this.props.pets.filter(row =>
+                                                                    (row.petName.toLowerCase().match(pet.searchValue.toLowerCase()) && row.ownerId === record.customerId) ||
+                                                                    (pet.searchValue === '' && row.ownerId === record.customerId)
+                                                                ).map(row =>
+                                                                    <option key={row.id} value={row.id}>
+                                                                        {row.id + " | " + row.petName}
+                                                                    </option>
+                                                                ) : null
+                                                            }
+                                                        </select>
+                                                    }
+                                                    {
+                                                        (this.props.pets.filter(row =>
                                                             (row.petName.match(pet.searchValue) && row.ownerId === record.customerId) ||
                                                             (pet.searchValue === '' && row.ownerId === record.customerId)
-                                                        ).length > 0 || pet.searchValue.length > 0 ?
+                                                        ).length > 0 || pet.searchValue.length > 0) && !submitted ?
                                                         <div className="input-group-append">
                                                             <button type="button" className="btn btn-light input-group-text"
                                                             onClick={this.onTogglePetSearch}>
@@ -621,7 +736,7 @@ class InitiateTransactionModal extends Component {
                                                     }
                                                 </div>
                                                 {
-                                                    pet.search ?
+                                                    pet.search && !submitted ?
                                                     <div className="input-group">
                                                         <input className="form-control"
                                                         type="text" name="searchValue"
@@ -636,10 +751,16 @@ class InitiateTransactionModal extends Component {
                                                     </div> : null
                                                 } { this.renderRecordErrors(errors.petId) }
                                             </React.Fragment> :
-                                            this.state.customerConnectionFailed ?
-                                            <input className="form-control border border-danger"
-                                            value="Connection Failed: Please try again later..."
-                                            noValidate disabled /> :
+                                            this.props.customerConnectionFailed ?
+                                            <div className="input-group d-block d-sm-flex px-0">
+                                                <input className="form-control border border-danger zi-10"
+                                                value="Database Connection Failed: Please try again later..."
+                                                noValidate disabled /> 
+                                                <div className="input-group-append justify-content-end">
+                                                    <button type="button" className="btn btn-light input-group-text"
+                                                    onClick={this.props.retryPetsData}>Retry</button>
+                                                </div>
+                                            </div> :
                                             <input className="form-control"
                                             value="Loading Data: Please wait..."
                                             noValidate disabled />
@@ -651,9 +772,14 @@ class InitiateTransactionModal extends Component {
                                             Pet Weight<span className="text-danger ml-1">*</span>
                                         </label>
                                         <div className="input-group">
-                                            <input className={this.inputFieldClasses(errors.petWeight)}
-                                            type="text" name="petWeight" value={record.petWeight}
-                                            onChange={this.onChangeRecord} noValidate />
+                                            {
+                                                submitted ?
+                                                <input className="form-control" type="text" name="petWeight"
+                                                value={record.petWeight} noValidate disabled /> :
+                                                <input className={this.inputFieldClasses(errors.petWeight)}
+                                                type="text" name="petWeight" value={record.petWeight}
+                                                onChange={this.onChangeRecord} noValidate />
+                                            }
                                             <div className="input-group-append">
                                                 <span className="input-group-text">Kilogram</span>
                                             </div>
@@ -664,9 +790,14 @@ class InitiateTransactionModal extends Component {
                                         <label className="m-0 ml-2">
                                             Remarks
                                         </label>
-                                        <textarea className={this.inputFieldClasses(errors.remarks)}
-                                        type="text" name="remarks" value={record.remarks}
-                                        onChange={this.onChangeRecord} rows="2" noValidate />
+                                        {
+                                            submitted ?
+                                            <textarea className="form-control" type="text" name="remarks"
+                                            value={record.remarks} rows="2" noValidate disabled /> :
+                                            <textarea className={this.inputFieldClasses(errors.remarks)}
+                                            type="text" name="remarks" value={record.remarks}
+                                            onChange={this.onChangeRecord} rows="2" noValidate />
+                                        }
                                         { this.renderRecordErrors(errors.remarks) }
                                     </div>
                                     {
@@ -677,14 +808,20 @@ class InitiateTransactionModal extends Component {
                                     }
                                 </form>
                                 {
-                                    added ? connected ?
+                                    submitted ?
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-pen text-primary mr-2"></i>
+                                        <span>Adding a record...</span>
+                                    </div> :
+                                    added ? 
                                     <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
                                         <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record successfully added.</span>
-                                    </div> : 
-                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
-                                        <i className="fa fa-sign-in-alt text-primary mr-2"></i>
-                                        <span>Adding a record...</span>
+                                        <span>Record was successfully added.</span>
+                                    </div> :
+                                    failed ?
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                        <i className="fa fa-exclamation text-danger mr-2"></i>
+                                        <span>Database Connection Failed.</span>
                                     </div> : null
                                 }
                             </div>
@@ -692,7 +829,8 @@ class InitiateTransactionModal extends Component {
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
                                     {
-                                        connected && this.state.petConnected && this.state.employeeConnected ?
+                                        !submitted && this.props.petConnected &&
+                                        this.props.employeeConnected ?
                                         <React.Fragment>
                                             <button className="btn btn-primary w-auto mr-1"
                                             onClick={this.onSubmit}>
@@ -716,6 +854,7 @@ class InitiateTransactionModal extends Component {
     }
 
     checkUpForm = () => {
+        const { submitted } = this.state;
         const { checkUp } = this.state.record;
         const { checkUpErrors } = this.state.errors;
 
@@ -726,9 +865,14 @@ class InitiateTransactionModal extends Component {
                         <label className="m-0 ml-2">
                             Findings<span className="text-danger ml-1">*</span>
                         </label>
-                        <input className={this.inputFieldClasses(checkUpErrors.findings)}
-                        type="text" name="findings" value={checkUp.findings}
-                        onChange={this.onChangeCheckUp} noValidate />
+                        {
+                            submitted ?
+                            <input className="form-control" type="text" name="findings"
+                            value={checkUp.findings} noValidate disabled /> :
+                            <input className={this.inputFieldClasses(checkUpErrors.findings)}
+                            type="text" name="findings" value={checkUp.findings}
+                            onChange={this.onChangeCheckUp} noValidate />
+                        }
                         { this.renderRecordErrors(checkUpErrors.findings) }
                     </div>
 
@@ -736,37 +880,57 @@ class InitiateTransactionModal extends Component {
                         <label className="m-0 ml-2">
                             Treatment<span className="text-danger ml-1">*</span>
                         </label>
-                        <input className={this.inputFieldClasses(checkUpErrors.treatment)}
-                        type="text" name="treatment" value={checkUp.treatment}
-                        onChange={this.onChangeCheckUp} noValidate />
+                        {
+                            submitted ?
+                            <input className="form-control" type="text" name="treatment"
+                            value={checkUp.treatment} noValidate disabled /> :
+                            <input className={this.inputFieldClasses(checkUpErrors.treatment)}
+                            type="text" name="treatment" value={checkUp.treatment}
+                            onChange={this.onChangeCheckUp} noValidate />
+                        }
                         { this.renderRecordErrors(checkUpErrors.treatment) }
                     </div>
 
                     <div className="form-group col-lg-6">
                         <label className="m-0 ml-2">
-                            Admission Date
+                            Admission Date<span className="text-danger ml-1">*</span>
                         </label>
-                        <input className="form-control border border-success"
-                        type="date" name="admissionDate" value={checkUp.admissionDate}
-                        onChange={this.onChangeCheckUp} noValidate />
+                        {
+                            submitted ?
+                            <input className="form-control" type="date" name="admissionDate"
+                            value={checkUp.admissionDate} noValidate disabled /> :
+                            <input className="form-control border border-success"
+                            type="date" name="admissionDate" value={checkUp.admissionDate}
+                            onChange={this.onChangeCheckUp} noValidate />
+                        }
                     </div>
 
                     <div className="form-group col-lg-6">
                         <label className="m-0 ml-2">
-                            Released Date
+                            Released Date<span className="text-danger ml-1">*</span>
                         </label>
-                        <input className="form-control border border-success"
-                        type="date" name="releasedDate" value={checkUp.releasedDate}
-                        onChange={this.onChangeCheckUp} noValidate />
+                        {
+                            submitted ?
+                            <input className="form-control" type="date" name="releasedDate"
+                            value={checkUp.releasedDate} noValidate disabled /> :
+                            <input className="form-control border border-success"
+                            type="date" name="releasedDate" value={checkUp.releasedDate}
+                            onChange={this.onChangeCheckUp} noValidate />
+                        }
                     </div>
 
                     <div className="form-group col">
                         <label className="m-0 ml-2">
                             Additional Information
                         </label>
-                        <textarea className={this.inputFieldClasses(checkUpErrors.addInfo)}
-                        type="text" name="addInfo" value={checkUp.addInfo}
-                        onChange={this.onChangeCheckUp} rows="2" noValidate />
+                        {
+                            submitted ?
+                            <textarea className="form-control" type="text" name="addInfo"
+                            value={checkUp.addInfo} rows="2" noValidate /> :
+                            <textarea className={this.inputFieldClasses(checkUpErrors.addInfo)}
+                            type="text" name="addInfo" value={checkUp.addInfo}
+                            onChange={this.onChangeCheckUp} rows="2" noValidate />
+                        }
                         { this.renderRecordErrors(checkUpErrors.addInfo) }
                     </div>
                 </div>
@@ -775,6 +939,7 @@ class InitiateTransactionModal extends Component {
     }
 
     groomForm = () => {
+        const { submitted } = this.state;
         const { groom } = this.state.record;
         const { groomErrors } = this.state.errors;
         
@@ -785,9 +950,14 @@ class InitiateTransactionModal extends Component {
                         <label className="m-0 ml-2">
                             Activity<span className="text-danger ml-1">*</span>
                         </label>
-                        <input className={this.inputFieldClasses(groomErrors.activity)}
-                        type="text" name="activity" value={groom.activity}
-                        onChange={this.onChangeGroom} noValidate />
+                        {
+                            submitted ?
+                            <input className="form-control" type="text" name="activity"
+                            value={groom.activity} noValidate /> :
+                            <input className={this.inputFieldClasses(groomErrors.activity)}
+                            type="text" name="activity" value={groom.activity}
+                            onChange={this.onChangeGroom} noValidate />
+                        }
                         { this.renderRecordErrors(groomErrors.activity) }
                     </div>
                 </div>
@@ -810,34 +980,6 @@ class InitiateTransactionModal extends Component {
         classes+= errorMsg.length > 0 ? 
         this.state.submitError ? "border border-danger" : "" : "border border-success"
         return classes;
-    }
-
-    getPetsData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewPets.php')
-        .then(res => {
-            const pets = res.data;
-            const petConnected = true
-            this.setState({ pets, petConnected });
-        })
-        .catch(error => {
-            console.log(error);
-            const petConnectionFailed = true;
-            this.setState({ petConnectionFailed });
-        });
-    }
-
-    getEmployeesData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
-        .then(res => {
-            const employees = res.data;
-            const employeeConnected = true
-            this.setState({ employees, employeeConnected });
-        })
-        .catch(error => {
-            console.log(error);
-            const employeeConnectionFailed = true;
-            this.setState({ employeeConnectionFailed });
-        });
     }
 
     removeLastSpace = value => {

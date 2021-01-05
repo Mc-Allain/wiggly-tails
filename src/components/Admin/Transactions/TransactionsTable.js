@@ -46,8 +46,12 @@ class TransactionsTable extends Component {
     }
 
     render() {
-        const { transactions, onRefresh, onSearch, searchValue, onClear, history, connected, connectionFailed, onSubmitForm } = this.props;
+        const { transactions, onRefresh, onSearch, searchValue, onClear, history, connected, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
+        const { customers, retryCustomersData, customerConnected, customerConnectionFailed } = this.props;
+        const { pets, retryPetsData, petConnected, petConnectionFailed } = this.props;
+        const { employees, retryEmployeesData, employeeConnected, employeeConnectionFailed } = this.props;
+        
         return (
             <React.Fragment>
                 <div className="d-flex mb-2">
@@ -95,11 +99,23 @@ class TransactionsTable extends Component {
                     activePage={activePage}
                     totalRecords={transactions.length} /> : null
                 }
-                <AddTransactionModal onRefresh={onRefresh} customerId='' onSubmitForm={onSubmitForm} />
+                <AddTransactionModal onRefresh={onRefresh} customerId='' onSubmitForm={onSubmitForm}
+                customers={customers} retryCustomersData={retryCustomersData}
+                customerConnected={customerConnected} customerConnectionFailed={customerConnectionFailed}
+                pets={pets} retryPetsData={retryPetsData}
+                petConnected={petConnected} petConnectionFailed={petConnectionFailed}
+                employees={employees} retryEmployeesData={retryEmployeesData}
+                employeeConnected={employeeConnected} employeeConnectionFailed={employeeConnectionFailed} />
                 {
                     transactions.map(transaction => <ViewTransactionModal key={transaction.id}
                     transaction={transaction} onRefresh={onRefresh} history={history}
-                    connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> )
+                    connected={connected} onSubmitForm={onSubmitForm}
+                    customers={customers} retryCustomersData={retryCustomersData}
+                    customerConnected={customerConnected} customerConnectionFailed={customerConnectionFailed}
+                    pets={pets} retryPetsData={retryPetsData}
+                    petConnected={petConnected} petConnectionFailed={petConnectionFailed}
+                    employees={employees} retryEmployeesData={retryEmployeesData}
+                    employeeConnected={employeeConnected} employeeConnectionFailed={employeeConnectionFailed} /> )
                 }
             </React.Fragment>
         );

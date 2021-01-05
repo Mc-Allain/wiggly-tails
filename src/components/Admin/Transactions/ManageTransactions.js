@@ -11,11 +11,23 @@ class ManageTransactions extends Component {
         transactions: [],
         connected: false,
         connectionFailed: false,
-        searchValue: ""
+        searchValue: "",
+        customers: [],
+        customerConnected: false,
+        customerConnectionFailed: false,
+        pets: [],
+        petConnected: false,
+        petConnectionFailed: false,
+        employees: [],
+        employeeConnected: false,
+        employeeConnectionFailed: false,
     }
 
     componentDidMount() {
         this.getData();
+        this.getCustomersData();
+        this.getPetsData();
+        this.getEmployeesData();
     }
 
     onSubmitForm = () => {
@@ -57,8 +69,13 @@ class ManageTransactions extends Component {
                             <TransactionsTable transactions={this.state.transactions}
                             onRefresh={this.onRefresh} onSearch={this.onSearch} history={history}
                             searchValue={this.state.searchValue} onClear={this.onClear}
-                            connected={this.state.connected} connectionFailed={this.state.connectionFailed}
-                            onSubmitForm={this.onSubmitForm} />
+                            connected={this.state.connected} onSubmitForm={this.onSubmitForm}
+                            customers={this.state.customers} retryCustomersData={this.retryCustomersData}
+                            customerConnected={this.state.customerConnected} customerConnectionFailed={this.state.customerConnectionFailed}
+                            pets={this.state.pets} retryPetsData={this.retryPetsData}
+                            petConnected={this.state.petConnected} petConnectionFailed={this.state.petConnectionFailed}
+                            employees={this.state.employees} retryEmployeesData={this.retryEmployeesData}
+                            employeeConnected={this.state.employeeConnected} employeeConnectionFailed={this.state.employeeConnectionFailed} />
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
@@ -123,6 +140,69 @@ class ManageTransactions extends Component {
             console.log(error);
             const connectionFailed = true;
             this.setState({ connectionFailed })
+        });
+    }
+
+    retryCustomersData = () => {
+        this.getCustomersData();
+        const customerConnected = false;
+        const customerConnectionFailed = false;
+        this.setState({ customerConnected, customerConnectionFailed })
+    }
+
+    getCustomersData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
+        .then(res => {
+            const customers = res.data;
+            const customerConnected = true
+            this.setState({ customers, customerConnected });
+        })
+        .catch(error => {
+            console.log(error);
+            const customerConnectionFailed = true;
+            this.setState({ customerConnectionFailed });
+        });
+    }
+
+    retryPetsData = () => {
+        this.getPetsData();
+        const petConnected = false;
+        const petConnectionFailed = false;
+        this.setState({ petConnected, petConnectionFailed })
+    }
+
+    getPetsData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewPets.php')
+        .then(res => {
+            const pets = res.data;
+            const petConnected = true
+            this.setState({ pets, petConnected });
+        })
+        .catch(error => {
+            console.log(error);
+            const petConnectionFailed = true;
+            this.setState({ petConnectionFailed });
+        });
+    }
+
+    retryEmployeesData = () => {
+        this.getEmployeesData();
+        const employeeConnected = false;
+        const employeeConnectionFailed = false;
+        this.setState({ employeeConnected, employeeConnectionFailed })
+    }
+
+    getEmployeesData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
+        .then(res => {
+            const employees = res.data;
+            const employeeConnected = true
+            this.setState({ employees, employeeConnected });
+        })
+        .catch(error => {
+            console.log(error);
+            const employeeConnectionFailed = true;
+            this.setState({ employeeConnectionFailed });
         });
     }
 }

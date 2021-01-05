@@ -5,7 +5,7 @@ class Forbidden extends Component {
 
     onBackToLogin = () => {
         const { history } = this.props;
-        const link = "/";
+        const link = "/wiggly-tails";
         history.replace(link, {verified: true});
     }
 

@@ -20,10 +20,9 @@ class PetsTable extends Component {
         for(var i = this.state.recordStartIndex; i < recordStopIndex; i++){
             items.push(
                 <tr key={pets[i].id}>
-                    <td>{pets[i].ownerLastName + ", " + pets[i].ownerFirstName + " " + pets[i].ownerMiddleName}</td>
                     <td>{pets[i].petName}</td>
-                    <td className="d-none d-lg-table-cell">{this.formatDate(pets[i].birthdate)}</td>
-                    <td className="d-none d-md-table-cell">{pets[i].petClass}</td>
+                    <td className="d-none d-md-table-cell">{this.formatDate(pets[i].birthdate)}</td>
+                    <td className="d-none d-lg-table-cell">{pets[i].petClass}</td>
                     <td className="d-none d-sm-table-cell">
                         {
                             pets[i].lastVisit === null ?
@@ -49,7 +48,7 @@ class PetsTable extends Component {
     }
 
     render() {
-        const { pets, ownerId, onRefresh, onSearch, searchValue, onClear, connected, connectionFailed, onSubmitForm } = this.props;
+        const { pets, ownerId, onRefresh, onSearch, searchValue, onClear, connected, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
         return (
             <React.Fragment>
@@ -57,11 +56,11 @@ class PetsTable extends Component {
                     <button className="btn btn-outline-primary mr-auto"
                         data-toggle="modal" data-target="#addPetModal">
                         <i className="fa fa-plus"></i>
-                        <span className="ml-1 d-xl-inline d-lg-none d-sm-inline d-none">New</span>
+                        <span className="ml-1 d-sm-inline d-none">New</span>
                     </button>
                     <button className="btn btn-warning mr-2" onClick={onRefresh}>
                         <i className="fa fa-sync"></i>
-                        <span className="ml-1 d-xl-inline d-lg-none d-sm-inline d-none">Refresh</span>
+                        <span className="ml-1 d-sm-inline d-none">Refresh</span>
                     </button>
                     <input type="text" className="form-control w-25 min-w-175px"
                     placeholder="Search" onChange={onSearch} value={searchValue}></input>
@@ -74,10 +73,9 @@ class PetsTable extends Component {
                 <table className="table table-bordered">
                     <thead className="thead-dark text-light">
                         <tr>
-                            <th>Owner Name</th>
                             <th>Pet Name</th>
-                            <th className="d-none d-lg-table-cell">Birthdate</th>
-                            <th className="d-none d-md-table-cell">Pet Class</th>
+                            <th className="d-none d-md-table-cell">Birthdate</th>
+                            <th className="d-none d-lg-table-cell">Pet Class</th>
                             <th className="d-none d-sm-table-cell">Last Visit</th>
                             <th className="w-100px">Action</th>
                         </tr>
@@ -100,7 +98,7 @@ class PetsTable extends Component {
                 }
                 <AddPetModal onRefresh={onRefresh} ownerId={ownerId} onSubmitForm={onSubmitForm} />
                 { pets.map(pet => <ViewPetModal key={pet.id} pet={pet} onRefresh={onRefresh}
-                connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} /> ) }
+                connected={connected} onSubmitForm={onSubmitForm} /> ) }
             </React.Fragment>
         );
     }

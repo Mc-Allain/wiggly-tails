@@ -11,11 +11,19 @@ class ManageCustomers extends Component {
         customers: [],
         connected: false,
         connectionFailed: false,
-        searchValue: ""
+        searchValue: "",
+        pets: [],
+        petConnected: false,
+        petConnectionFailed: false,
+        employees: [],
+        employeeConnected: false,
+        employeeConnectionFailed: false,
     }
 
     componentDidMount() {
         this.getData();
+        this.getPetsData();
+        this.getEmployeesData();
     }
 
     onSubmitForm = () => {
@@ -57,8 +65,11 @@ class ManageCustomers extends Component {
                             <CustomersTable customers={this.state.customers}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
-                            connected={this.state.connected} connectionFailed={this.state.connectionFailed}
-                            onSubmitForm={this.onSubmitForm} />
+                            connected={this.state.connected} connectionFailed={this.state.connectionFailed} onSubmitForm={this.onSubmitForm}
+                            pets={this.state.pets} retryPetsData={this.retryPetsData}
+                            petConnected={this.state.petConnected} petConnectionFailed={this.state.petConnectionFailed}
+                            employees={this.state.employees} retryEmployeesData={this.retryEmployeesData}
+                            employeeConnected={this.state.employeeConnected} employeeConnectionFailed={this.state.employeeConnectionFailed} />
                             <div className="mt-5">
                                 {
                                     this.state.connected ?
@@ -123,6 +134,48 @@ class ManageCustomers extends Component {
             console.log(error);
             const connectionFailed = true;
             this.setState({ connectionFailed });
+        });
+    }
+
+    retryPetsData = () => {
+        this.getPetsData();
+        const petConnected = false;
+        const petConnectionFailed = false;
+        this.setState({ petConnected, petConnectionFailed })
+    }
+
+    getPetsData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewPets.php')
+        .then(res => {
+            const pets = res.data;
+            const petConnected = true
+            this.setState({ pets, petConnected });
+        })
+        .catch(error => {
+            console.log(error);
+            const petConnectionFailed = true;
+            this.setState({ petConnectionFailed });
+        });
+    }
+
+    retryEmployeesData = () => {
+        this.getEmployeesData();
+        const employeeConnected = false;
+        const employeeConnectionFailed = false;
+        this.setState({ employeeConnected, employeeConnectionFailed })
+    }
+
+    getEmployeesData = () => {
+        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
+        .then(res => {
+            const employees = res.data;
+            const employeeConnected = true
+            this.setState({ employees, employeeConnected });
+        })
+        .catch(error => {
+            console.log(error);
+            const employeeConnectionFailed = true;
+            this.setState({ employeeConnectionFailed });
         });
     }
 }

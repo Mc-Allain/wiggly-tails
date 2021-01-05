@@ -5,7 +5,7 @@ import Navbar from './Navbar.js';
 import IndexCarousel from './IndexCarousel.js';
 import CustomerLoginForm from './Forms/CustomerLoginForm.js';
 import EmployeeLoginForm from './Forms/EmployeeLoginForm.js';
-import RegisterModal from './Forms/RegisterModal.js';
+import RegistrationModal from './Forms/RegistrationModal.js';
 import Footer from '../Footer.js';
 
 class EmployeeLogin extends Component {
@@ -77,7 +77,9 @@ class EmployeeLogin extends Component {
                         </div>
                     </div>
                 </div>
-                <RegisterModal getCustomersData={this.getCustomersData} onRegister={this.onRegister} />
+                <RegistrationModal
+                customers={this.state.customers} onRegister={this.onRegister} getData={this.retryCustomersData}
+                connected={this.state.customerConnected} connectionFailed={this.state.customerConnectionFailed} />
                 <Footer />
             </React.Fragment>
         );

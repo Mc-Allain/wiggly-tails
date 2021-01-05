@@ -44,9 +44,9 @@ class ManageEmployees extends Component {
         this.setState({ connected, connectionFailed, searchValue })
     }
 
-    onBackToHome = () => {
+    onBackToLogin = () => {
         const { history } = this.props;
-        const link = "/admin";
+        const link = "/wiggly-tails";
         history.replace(link, {verified: true});
     }
 
@@ -68,8 +68,8 @@ class ManageEmployees extends Component {
                         </div>
                         <div className="text-center mb-3">
                             <button type="button" className="btn btn-primary btn-lg"
-                                onClick={this.onBackToHome}>
-                                Back to Home
+                                onClick={this.onBackToLogin}>
+                                Back to Login
                             </button>
                         </div>
                     </div>
@@ -92,8 +92,7 @@ class ManageEmployees extends Component {
                             empType={state.empType} id={state.id}
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
-                            connected={this.state.connected} connectionFailed={this.state.connectionFailed}
-                            onSubmitForm={this.onSubmitForm} />
+                            connected={this.state.connected} onSubmitForm={this.onSubmitForm} />
                             <div className="mt-5">
                                 {
                                     this.state.connected ?

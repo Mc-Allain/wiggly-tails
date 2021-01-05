@@ -51,6 +51,8 @@ class CustomersTable extends Component {
     render() {
         const { customers, onRefresh, onSearch, searchValue, onClear, connected, connectionFailed, onSubmitForm } = this.props;
         const { recordsPerPage, recordStartIndex, activePage } = this.state;
+        const { pets, retryPetsData, petConnected, petConnectionFailed } = this.props;
+        const { employees, retryEmployeesData, employeeConnected, employeeConnectionFailed } = this.props;
         return (
             <React.Fragment>
                 <div className="d-flex mb-2">
@@ -97,13 +99,17 @@ class CustomersTable extends Component {
                     activePage={activePage}
                     totalRecords={customers.length} /> : null
                 }
-                <AddCustomerModal onRefresh={onRefresh} onSubmitForm={onSubmitForm} />
+                <AddCustomerModal onRefresh={onRefresh} customers={customers}
+                connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} />
                 { customers.map(customer => 
                     <React.Fragment key={customer.id}>
-                        <ViewCustomerModal customer={customer} onRefresh={onRefresh}
+                        <ViewCustomerModal customer={customer} onRefresh={onRefresh} customers={customers}
                         connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} />
                         <InitiateTransactionModal customer={customer}
-                        connected={connected} connectionFailed={connectionFailed} onSubmitForm={onSubmitForm} />
+                        pets={pets} retryPetsData={retryPetsData}
+                        petConnected={petConnected} petConnectionFailed={petConnectionFailed}
+                        employees={employees} retryEmployeesData={retryEmployeesData}
+                        employeeConnected={employeeConnected} employeeConnectionFailed={employeeConnectionFailed} />
                     </React.Fragment>
                 ) }
             </React.Fragment>

@@ -159,7 +159,7 @@ class CustomerLoginForm extends Component {
                         onChange={this.onChangeRecord} noValidate />
                         <div className="input-group-append justify-content-end">
                             <span className="input-group-text">@</span>
-                            <select className="input-group-text"
+                            <select className="input-group-text form-control"
                             name="email" value={record.email}
                             onChange={this.onChangeRecord} noValidate>
                                 <option value="@yahoo.com">yahoo.com</option>
