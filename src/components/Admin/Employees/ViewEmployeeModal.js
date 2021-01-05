@@ -246,6 +246,7 @@ class ViewEmployeeModal extends Component {
         const { employee } = this.props;
 
         const confirmEmpPassword = '';
+        const deleteState = false;
         const submitError = false;
         const updated = false;
         const failed = false;
@@ -268,7 +269,7 @@ class ViewEmployeeModal extends Component {
         errors.empPassword = '';
         errors.confirmEmpPassword = ' ';
 
-        this.setState({ record, confirmEmpPassword, errors, submitError, updated, failed });
+        this.setState({ record, confirmEmpPassword, errors, passwordState, deleteState, submitError, updated, failed });
     }
 
     onTogglePassword = () => {

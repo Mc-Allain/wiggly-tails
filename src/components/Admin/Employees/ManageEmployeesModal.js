@@ -210,7 +210,17 @@ class ManageEmployeesModal extends Component {
                                             <i className="fa fa-eraser"></i>
                                             <span className="ml-1">Reset</span>
                                         </button>
-                                    </React.Fragment> : null
+                                    </React.Fragment> :
+                                    <React.Fragment>
+                                        <button className="btn btn-primary w-auto mr-1" disabled>
+                                            <i className="fa fa-sign-in-alt"></i>
+                                            <span className="ml-1">Submit</span>
+                                        </button>
+                                        <button className="btn btn-danger w-auto" disabled>
+                                            <i className="fa fa-eraser"></i>
+                                            <span className="ml-1">Reset</span>
+                                        </button>
+                                    </React.Fragment>
                                 }
                             </div>
                         </div>
