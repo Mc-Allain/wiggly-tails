@@ -34,7 +34,7 @@ class AboutUs extends Component {
                                         Aut est maxime quam doloribus!
                                     </h6>
                                     <h6 className="px-3 text-center pb-3 bottom-border-light font-weight-light">
-                                        <b>Open on Monday to Saturday at 8:00am to 5:00pm</b>
+                                        <b>Open from Monday to Saturday at 8:00am to 5:00pm</b>
                                     </h6>
                                 </div>
 

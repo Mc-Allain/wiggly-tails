@@ -245,9 +245,8 @@ class ViewCustomerModal extends Component {
                 break;
 
             case 'subdivision':
-                homeAddressErrors.subdivision=  properLength === 0 ? " " :
-                                                properLength < 2  || value.length > 24 ?
-                                                "Subdivision must be at between 2 and 24 characters" : ""
+                homeAddressErrors.subdivision=  value.length > 24 ?
+                                                "Subdivision must be at maximum of 24 characters" : ""
                 break;
 
             case 'barangay':
@@ -653,11 +652,11 @@ class ViewCustomerModal extends Component {
                                                 {
                                                     submitted ?
                                                     <input className="form-control" type="text" name="subdivision"
-                                                    value={homeAddress.subdivision} placeholder="Subdivision" noValidate disabled /> :
+                                                    value={homeAddress.subdivision} placeholder="Subdivision (Optional)" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
                                                     type="text" name="subdivision" value={homeAddress.subdivision}
                                                     onChange={this.onChangeHomeAddress}
-                                                    placeholder="Subdivision" noValidate />
+                                                    placeholder="Subdivision (Optional)" noValidate />
                                                 }
                                             </div>
 
@@ -786,7 +785,7 @@ class ViewCustomerModal extends Component {
                                                 </div>
                                             </React.Fragment> :
                                             this.props.connectionFailed ?
-                                            <div className="input-group d-block d-sm-flex px-0">
+                                            <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
@@ -842,17 +841,17 @@ class ViewCustomerModal extends Component {
                                 </form>
                                 {
                                     submitted ?
-                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Updating a record...</span>
                                     </div> :
                                     updated ? 
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-check text-success mr-2"></i>
                                         <span>Record was successfully updated.</span>
                                     </div> :
                                     failed ?
-                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-exclamation text-danger mr-2"></i>
                                         <span>Database Connection Failed.</span>
                                     </div> : null

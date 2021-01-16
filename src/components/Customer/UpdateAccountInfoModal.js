@@ -244,9 +244,8 @@ class UpdateAccountInfoModal extends Component {
                 break;
 
             case 'subdivision':
-                homeAddressErrors.subdivision=  properLength === 0 ? " " :
-                                                properLength < 2  || value.length > 24 ?
-                                                "Subdivision must be at between 2 and 24 characters" : ""
+                homeAddressErrors.subdivision=  value.length > 24 ?
+                                                "Subdivision must be at maximum of 24 characters" : ""
                 break;
 
             case 'barangay':
@@ -531,7 +530,7 @@ class UpdateAccountInfoModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="updateAccountInfoModalTitle">View Customer</h5>
+                                <h5 className="modal-title" id="updateAccountInfoModalTitle">Account Info</h5>
                                 {
                                     !submitted ?
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
@@ -648,11 +647,11 @@ class UpdateAccountInfoModal extends Component {
                                                 {
                                                     submitted ?
                                                     <input className="form-control" type="text" name="subdivision"
-                                                    value={homeAddress.subdivision} placeholder="Subdivision" noValidate disabled /> :
+                                                    value={homeAddress.subdivision} placeholder="Subdivision (Optional)" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
                                                     type="text" name="subdivision" value={homeAddress.subdivision}
                                                     onChange={this.onChangeHomeAddress}
-                                                    placeholder="Subdivision" noValidate />
+                                                    placeholder="Subdivision (Optional)" noValidate />
                                                 }
                                             </div>
 

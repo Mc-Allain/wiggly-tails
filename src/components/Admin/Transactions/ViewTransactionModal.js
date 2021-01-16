@@ -135,7 +135,7 @@ class ViewTransactionModal extends Component {
             const currentDate = this.getCurrentDate();
             checkUp.admissionDate = currentDate;
             checkUp.releasedDate = currentDate;
-            checkUp.addInfo = ''
+            checkUp.addInfo = '';
 
             checkUpErrors.findings = ' ';
             checkUpErrors.treatment = ' ';
@@ -641,7 +641,7 @@ class ViewTransactionModal extends Component {
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">
-                                            Employee Id<span className="text-danger ml-1">*</span>
+                                            Served by<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
                                             this.props.employeeConnected ?
@@ -709,7 +709,7 @@ class ViewTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.empId) }
                                             </React.Fragment> :
                                             this.props.employeeConnectionFailed ?
-                                            <div className="input-group d-block d-sm-flex px-0">
+                                            <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
@@ -794,7 +794,7 @@ class ViewTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.customerId) }
                                             </React.Fragment> :
                                             this.props.customerConnectionFailed ?
-                                            <div className="input-group d-block d-sm-flex px-0">
+                                            <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
@@ -899,7 +899,7 @@ class ViewTransactionModal extends Component {
                                                 } { this.renderRecordErrors(errors.petId) }
                                             </React.Fragment> :
                                             this.props.petConnectionFailed ?
-                                            <div className="input-group d-block d-sm-flex px-0">
+                                            <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
@@ -956,17 +956,17 @@ class ViewTransactionModal extends Component {
                                 </form>
                                 {
                                     submitted ?
-                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Updating a record...</span>
                                     </div> :
                                     updated ? 
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-check text-success mr-2"></i>
                                         <span>Record was successfully updated.</span>
                                     </div> :
                                     failed ?
-                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-exclamation text-danger mr-2"></i>
                                         <span>Database Connection Failed.</span>
                                     </div> : null
@@ -1194,7 +1194,7 @@ class ViewTransactionModal extends Component {
     }
 
     retryCheckUpData = () => {
-        this.getCheckUpData();
+        this.getCheckUpData(this.state.record.id);
         const checkUpConnected = false;
         const checkUpConnectionFailed = false;
         const connected = false;
@@ -1224,7 +1224,7 @@ class ViewTransactionModal extends Component {
     }
 
     retryGroomData = () => {
-        this.getGroomData();
+        this.getGroomData(this.state.record.id);
         const groomConnected = false;
         const groomConnectionFailed = false;
         const connected = false;

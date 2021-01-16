@@ -138,16 +138,20 @@
   width: 110px !important;
 }
 
-.min-w-95px {
-  min-width: 95px !important;
-}
-
 .w-100px {
   width: 100px !important;
 }
 
 .min-w-100px {
   min-width: 100px !important;
+}
+
+.w-95px {
+  width: 95px !important;
+}
+
+.min-w-95px {
+  min-width: 95px !important;
 }
 
 .w-30px {

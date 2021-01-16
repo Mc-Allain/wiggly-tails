@@ -5,7 +5,7 @@ class Footer extends Component {
     render() { 
         return (
             <div className="bg-dark text-light w-100 fixed-bottom">
-                <p className="m-0 p-0 text-right small my-1 mr-3">Copyright &copy; 2020</p>
+                <p className="m-0 p-0 text-right small my-1 mr-3">Copyright &copy; 2021</p>
             </div>
         );
     }

@@ -89,10 +89,7 @@ class Customer extends Component {
                                         <div className="col-12 py-3 pl-md-5 pr-1">
                                             <h5 className="font-weight-normal mb-1">Home Address</h5>
                                             <h6 className="pl-3 pb-2 bottom-border-light font-weight-light">
-                                                {
-                                                    record.lotBlock + " " + record.street + ", " + record.subdivision + ", " +
-                                                    record.barangay + ", " + record.municipality + ", " + record.province 
-                                                }
+                                                { this.formatHomeAddress(record) }
                                             </h6>
                                         </div>
 
@@ -228,6 +225,17 @@ class Customer extends Component {
         const year = dateValue.getFullYear();
 
         return year + "-" + month + "-" + day;
+    }
+
+    formatHomeAddress = record => {
+        let homeAddress = '';
+        homeAddress += record.lotBlock.length > 0 ? record.lotBlock + " " : ""
+        homeAddress += record.street.length > 0 ? record.street + ", " : ""
+        homeAddress += record.subdivision.length > 0 ? record.subdivision + ", " : ""
+        homeAddress += record.barangay.length > 0 ? record.barangay + ", " : ""
+        homeAddress += record.municipality.length > 0 ? record.municipality : ""
+        homeAddress += record.province.length > 0 ? ", " + record.province : ""
+        return homeAddress;
     }
 }
 

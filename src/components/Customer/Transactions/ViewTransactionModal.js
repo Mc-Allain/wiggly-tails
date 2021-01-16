@@ -151,7 +151,7 @@ class ViewTransactionModal extends Component {
                                     </div>
 
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">Employee Id</label>
+                                        <label className="m-0 ml-2">Served by</label>
                                         <div className="input-group">
                                             <input className="zi-10 form-control"
                                             name="empId" value={record.empId + " | " +
@@ -334,7 +334,7 @@ class ViewTransactionModal extends Component {
     }
 
     retryCheckUpData = () => {
-        this.getCheckUpData();
+        this.getCheckUpData(this.state.record.id);
         const checkUpConnected = false;
         const checkUpConnectionFailed = false;
         const connected = false;
@@ -364,7 +364,7 @@ class ViewTransactionModal extends Component {
     }
 
     retryGroomData = () => {
-        this.getGroomData();
+        this.getGroomData(this.state.record.id);
         const groomConnected = false;
         const groomConnectionFailed = false;
         const connected = false;

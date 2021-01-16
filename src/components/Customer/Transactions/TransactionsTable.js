@@ -21,12 +21,12 @@ class TransactionsTable extends Component {
             items.push(
                 <tr key={transactions[i].id} className="table-row">
                     <td>{this.formatDate(transactions[i].transDate)}</td>
-                    <td className="d-none d-lg-table-cell">{transactions[i].lastName + ", " + transactions[i].firstName + " " + transactions[i].middleName}</td>
                     <td>{transactions[i].petName}</td>
                     <td className="d-none d-lg-table-cell">{transactions[i].petWeight}</td>
                     <td className="d-none d-md-table-cell">
                         {transactions[i].empLastName + ", " + transactions[i].empFirstName + " " + transactions[i].empMiddleName}
                     </td>
+                    <td className="d-none d-sm-table-cell">{this.formatTransType(transactions[i].transType)}</td>
                     <td>
                         <button className="btn btn-outline-primary btn-sm mr-1"
                         data-toggle="modal" data-target={"#viewTransactionModal-" + transactions[i].id}>
@@ -67,10 +67,10 @@ class TransactionsTable extends Component {
                     <thead className="thead-dark text-light">
                         <tr>
                             <th>Transaction Date</th>
-                            <th className="d-none d-lg-table-cell">Customer Name</th>
                             <th>Pet Name</th>
                             <th className="w-110px d-none d-lg-table-cell">Pet Weight</th>
-                            <th className="w-285px d-none d-md-table-cell">Served by</th>
+                            <th className="d-none d-md-table-cell">Served by</th>
+                            <th className="w-110px d-none d-sm-table-cell">Trans. Type</th>
                             <th className="w-100px">Action</th>
                         </tr>
                     </thead>

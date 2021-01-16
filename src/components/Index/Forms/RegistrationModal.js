@@ -43,7 +43,7 @@ class RegistrationModal extends Component {
             {
                 lotBlock: '',
                 street: ' ',
-                subdivision: ' ',
+                subdivision: '',
                 barangay: ' ',
                 municipality: ' ',
                 province: ''
@@ -62,10 +62,10 @@ class RegistrationModal extends Component {
             }
         },
         petClasses:
-        [ 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
-        'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
-        'Horse', 'Iguana', 'Jaguar', 'Lizard', 'Mantis', 'Monkey', 'Newt', 'Octopus', 'Pig', 'Panda', 'Quill',
-        'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake','Spider', 'Tortoise', 'Turtle', 'Whale'],
+        [ 'Alligator', 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Crab', 'Crocodile', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
+        'Fox', 'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Gorilla', 'Grasshopper', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
+        'Horse', 'Jaguar', 'Lion', 'Lizard', 'Mantis', 'Monkey', 'Mouse', 'Octopus', 'Orangutan', 'Orstrich', 'Pig', 'Panda', 'Quill',
+        'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake', 'Spider', 'Tiger', 'Tortoise', 'Turtle', 'Wolf', 'Whale', 'Zebra' ],
         submitError: false,
         submitted: false,
         registered: false,
@@ -241,9 +241,8 @@ class RegistrationModal extends Component {
                 break;
 
             case 'subdivision':
-                homeAddressErrors.subdivision=  properLength === 0 ? " " :
-                                                properLength < 2  || value.length > 24 ?
-                                                "Subdivision must be at between 2 and 24 characters" : ""
+                homeAddressErrors.subdivision=  value.length > 24 ?
+                                                "Subdivision must be at maximum of 24 characters" : ""
                 break;
 
             case 'barangay':
@@ -539,7 +538,7 @@ class RegistrationModal extends Component {
 
         homeAddressErrors.lotBlock = '';
         homeAddressErrors.street = ' ';
-        homeAddressErrors.subdivision = ' ';
+        homeAddressErrors.subdivision = '';
         homeAddressErrors.barangay = ' ';
         homeAddressErrors.municipality = ' ';
         homeAddressErrors.province = '';
@@ -702,11 +701,11 @@ class RegistrationModal extends Component {
                                                 {
                                                     submitted ?
                                                     <input className="form-control" type="text" name="subdivision"
-                                                    value={homeAddress.subdivision} placeholder="Subdivision" noValidate disabled /> :
+                                                    value={homeAddress.subdivision} placeholder="Subdivision (Optional)" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
                                                     type="text" name="subdivision" value={homeAddress.subdivision}
                                                     onChange={this.onChangeHomeAddress}
-                                                    placeholder="Subdivision" noValidate />
+                                                    placeholder="Subdivision (Optional)" noValidate />
                                                 }
                                             </div>
 
@@ -962,17 +961,17 @@ class RegistrationModal extends Component {
                                 </form>
                                 {
                                     submitted ?
-                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Registering an account...</span>
                                     </div> :
                                     registered ? 
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-check text-success mr-2"></i>
                                         <span>Account was successfully registered.</span>
                                     </div> :
                                     failed ?
-                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-exclamation text-danger mr-2"></i>
                                         <span>Database Connection Failed.</span>
                                     </div> : null

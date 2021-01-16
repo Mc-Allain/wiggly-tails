@@ -22,10 +22,10 @@ class AddPetModal extends Component {
             pcciRegNo: ''
         },
         petClasses:
-        [ 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
-        'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
-        'Horse', 'Iguana', 'Jaguar', 'Lizard', 'Mantis', 'Monkey', 'Newt', 'Octopus', 'Pig', 'Panda', 'Quill',
-        'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake','Spider', 'Tortoise', 'Turtle', 'Whale'],
+        [ 'Alligator', 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Crab', 'Crocodile', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
+        'Fox', 'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Gorilla', 'Grasshopper', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
+        'Horse', 'Jaguar', 'Lion', 'Lizard', 'Mantis', 'Monkey', 'Mouse', 'Octopus', 'Orangutan', 'Orstrich', 'Pig', 'Panda', 'Quill',
+        'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake', 'Spider', 'Tiger', 'Tortoise', 'Turtle', 'Wolf', 'Whale', 'Zebra' ],
         search: false,
         searchValue: '',
         submitError: false,
@@ -393,7 +393,7 @@ class AddPetModal extends Component {
                                                 } { this.renderRecordErrors(errors.ownerId) }
                                             </React.Fragment> :
                                             this.props.connectionFailed ?
-                                            <div className="input-group d-block d-sm-flex px-0">
+                                            <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
                                                 value="Database Connection Failed: Please try again later..."
                                                 noValidate disabled /> 
