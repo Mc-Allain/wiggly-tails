@@ -79,7 +79,11 @@
 }
 
 .min-h-20 {
-  min-height: 20vh;
+  min-height: 20vh !important;
+}
+
+.h-400px {
+  height: 400px !important;
 }
 
 .w-65 {
@@ -273,6 +277,14 @@ textarea {
   width: 7px;
   height: 7px;
   border-radius: 100%;
+}
+
+ul.list-lh-1 {
+  line-height: 1.25rem;
+}
+
+ul.list-lh-2 {
+  line-height: 1.5rem;
 }
 
 @media (max-width: 576px) {
