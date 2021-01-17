@@ -34,7 +34,8 @@ class PetsTable extends Component {
                     <td>
                         <button className="btn btn-outline-primary btn-sm mr-1"
                         data-toggle="modal" data-target={"#viewPetModal-" + pets[i].id}>
-                            <i className="fa fa-eye"></i><span className="ml-1">View</span>
+                            <i className="fa fa-eye"></i>
+                            <span className="d-none d-sm-inline ml-1">View</span>
                         </button>
                     </td>
                 </tr>

@@ -55,7 +55,9 @@ class ViewCustomerModal extends Component {
         submitError: false,
         submitted: false,
         updated: false,
-        failed: false
+        failed: false,
+        deleting: false,
+        deleted: false
     }
 
     componentDidMount() {
@@ -520,23 +522,25 @@ class ViewCustomerModal extends Component {
     }
 
     render() {
-        const { record, errors, confirmUserPassword, passwordState, deleteState, submitted, updated, failed } = this.state;
+        const { record, errors, confirmUserPassword, passwordState, deleteState, submitted, updated, failed, deleting, deleted } = this.state;
         const { homeAddress } = this.state.record;
         const { homeAddressErrors } = errors;
         const { customer } = this.props;
 
         return (
             <React.Fragment>
-                <div className="modal fade" id={"viewCustomerModal-" + customer.id} tabIndex="-1" role="dialog"
+                <div className="modal fade" id={"viewCustomerModal-" + customer.id}
+                    tabIndex="-1" role="dialog" data-backdrop="static"
                     aria-labelledby={"viewCustomerrModalTitle-" + customer.id} aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id={"viewCustomerModalTitle-" + customer.id}>View Customer</h5>
                                 {
-                                    !submitted && this.props.connected ?
-                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                    onClick={this.onReset}>
+                                    (!submitted && this.props.connected) || deleted ?
+                                    <button id={"btnClose-" + customer.id}
+                                    className="btn btn-light text-danger p-1"
+                                    data-dismiss="modal" onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button> :
                                     <button className="btn btn-light text-danger p-1" disabled>
@@ -561,6 +565,16 @@ class ViewCustomerModal extends Component {
                                     <div className="alert alert-danger d-flex align-items-center mb-3">
                                         <i className="fa fa-exclamation text-danger mr-2"></i>
                                         <span>Database Connection Failed.</span>
+                                    </div> :
+                                    deleting ?
+                                    <div className="alert alert-primary d-flex align-items-center mb-3">
+                                        <i className="fa fa-trash text-primary mr-2"></i>
+                                        <span>Deleting a record...</span>
+                                    </div> :
+                                    deleted ? 
+                                    <div className="alert alert-success d-flex align-items-center mb-3">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Record was successfully deleted.</span>
                                     </div> : null
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
@@ -578,7 +592,7 @@ class ViewCustomerModal extends Component {
                                             </span>
                                         </label>
                                         {
-                                            submitted ?
+                                            submitted || deleting || deleted ?
                                             <input className="form-control" type="text" name="lastName"
                                             value={record.lastName} noValidate disabled /> :
                                             <input className={this.inputFieldClasses(errors.lastName)}
@@ -593,7 +607,7 @@ class ViewCustomerModal extends Component {
                                             First Name<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            submitted ?
+                                            submitted || deleting || deleted ?
                                             <input className="form-control" type="text" name="firstName"
                                             value={record.firstName} noValidate disabled /> :
                                             <input className={this.inputFieldClasses(errors.firstName)}
@@ -606,7 +620,7 @@ class ViewCustomerModal extends Component {
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">Middle Name</label>
                                         {
-                                            submitted ?
+                                            submitted || deleting || deleted ?
                                             <input className="form-control" type="text" name="middleName"
                                             value={record.middleName} placeholder="(Optional)" noValidate disabled /> :
                                             <input className={this.inputFieldClasses(errors.middleName)}
@@ -623,7 +637,7 @@ class ViewCustomerModal extends Component {
                                         <div className="row mx-0">
                                             <div className="col-lg-3 col-md-6 input-group px-0">
                                                 {
-                                                    submitted ?
+                                                    submitted || deleting || deleted ?
                                                     <input className="form-control" type="text" name="lotBlock"
                                                     value={homeAddress.lotBlock} placeholder="Lot/Block (Optional)" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.lotBlock)}
@@ -635,7 +649,7 @@ class ViewCustomerModal extends Component {
 
                                             <div className="col-lg-3 col-md-6 input-group px-0">
                                             {
-                                                    submitted ?
+                                                    submitted || deleting || deleted ?
                                                     <input className="form-control" type="text" name="street"
                                                     value={homeAddress.street} placeholder="Street" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.street)}
@@ -650,7 +664,7 @@ class ViewCustomerModal extends Component {
 
                                             <div className="col-lg-6 input-group px-0">
                                                 {
-                                                    submitted ?
+                                                    submitted || deleting || deleted ?
                                                     <input className="form-control" type="text" name="subdivision"
                                                     value={homeAddress.subdivision} placeholder="Subdivision (Optional)" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.subdivision)}
@@ -665,7 +679,7 @@ class ViewCustomerModal extends Component {
                                                     <span className="input-group-text">Brgy.</span>
                                                 </div>
                                                 {
-                                                    submitted ?
+                                                    submitted || deleting || deleted ?
                                                     <input className="form-control" type="text" name="barangay"
                                                     value={homeAddress.barangay} placeholder="Barangay" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.barangay)}
@@ -677,7 +691,7 @@ class ViewCustomerModal extends Component {
 
                                             <div className="col-lg-4 input-group px-0">
                                                 {
-                                                    submitted ?
+                                                    submitted || deleting || deleted ?
                                                     <input className="form-control" type="text" name="municipality"
                                                     value={homeAddress.municipality} placeholder="Municipality" noValidate disabled /> :
                                                     <input className={this.inputFieldClasses(homeAddressErrors.municipality)}
@@ -692,7 +706,7 @@ class ViewCustomerModal extends Component {
 
                                             <div className="col-lg-4 input-group px-0">
                                                 {
-                                                    submitted ?
+                                                    submitted || deleting || deleted ?
                                                     <input className="form-control" type="text" name="province"
                                                     value={homeAddress.province} placeholder="Province (Optional)"
                                                     noValidate disabled /> :
@@ -710,7 +724,7 @@ class ViewCustomerModal extends Component {
                                             Birthdate<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            submitted ?
+                                            submitted || deleting || deleted ?
                                             <input className="form-control" type="date" name="birthdate"
                                             value={record.birthdate}  noValidate disabled /> :
                                             <input className={this.inputFieldClasses(errors.birthdate)}
@@ -727,7 +741,7 @@ class ViewCustomerModal extends Component {
                                         <div className="input-group px-0">
                                             <span className="input-group-text">+63</span>
                                             {
-                                                submitted ?
+                                                submitted || deleting || deleted ?
                                                 <input className="form-control" type="tel" maxLength="10"
                                                 name="mobileNumber" value={record.mobileNumber} onChange={this.onChangeRecord}
                                                 noValidate disabled /> :
@@ -748,7 +762,7 @@ class ViewCustomerModal extends Component {
                                             <React.Fragment>
                                                 <div className="input-group d-block d-sm-flex px-0">
                                                     {
-                                                        submitted ?
+                                                        submitted || deleting || deleted ?
                                                         <input className="w-sm-100 form-control" type="text"
                                                         name="emailAddress" value={record.emailAddress} noValidate disabled /> :
                                                         <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
@@ -758,7 +772,7 @@ class ViewCustomerModal extends Component {
                                                     <div className="input-group-append justify-content-end">
                                                         <span className="input-group-text">@</span>
                                                         {
-                                                            submitted ?
+                                                            submitted || deleting || deleted ?
                                                             <select className="input-group-text form-control"
                                                             name="email" value={record.email} noValidate disabled>
                                                                 <option value="@yahoo.com">yahoo.com</option>
@@ -806,7 +820,7 @@ class ViewCustomerModal extends Component {
                                         </label>
                                         <div className="input-group">
                                             {
-                                                submitted ?
+                                                submitted || deleting || deleted ?
                                                 <input className="zi-10 form-control" type={passwordState.inputType}
                                                 name="userPassword" value={record.userPassword} noValidate disabled /> :
                                                 <React.Fragment>
@@ -829,7 +843,7 @@ class ViewCustomerModal extends Component {
                                             Confirm Password<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            submitted ?
+                                            submitted || deleting || deleted ?
                                             <input className="form-control" type="password" name="confirmUserPassword"
                                             value={confirmUserPassword} noValidate disabled /> :
                                             <input className={this.inputFieldClasses(errors.confirmUserPassword)}
@@ -854,6 +868,16 @@ class ViewCustomerModal extends Component {
                                     <div className="alert alert-danger d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-exclamation text-danger mr-2"></i>
                                         <span>Database Connection Failed.</span>
+                                    </div> :
+                                    deleting ?
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1 d-lg-none">
+                                        <i className="fa fa-trash text-primary mr-2"></i>
+                                        <span>Deleting a record...</span>
+                                    </div> :
+                                    deleted ? 
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1 d-lg-none">
+                                        <i className="fa fa-check text-success mr-2"></i>
+                                        <span>Record was successfully deleted.</span>
                                     </div> : null
                                 }
                             </div>
@@ -872,7 +896,8 @@ class ViewCustomerModal extends Component {
 
     defaultButtons = () => {
         return(
-            this.props.connected && !this.state.submitted ?
+            this.props.connected && !this.state.submitted &&
+            !this.state.deleting && !this.state.deleted ?
             <React.Fragment>
                 <button className="btn btn-primary w-auto mr-1"
                 onClick={this.onSubmit}>
@@ -923,7 +948,7 @@ class ViewCustomerModal extends Component {
         return(
             <React.Fragment>
                 <button className="btn btn-danger w-auto mr-1"
-                data-dismiss="modal" onClick={this.onDelete}>
+                onClick={this.onDelete}>
                     <i className="fa fa-trash"></i>
                     <span className="ml-1">Confirm Delete</span>
                 </button>
@@ -941,31 +966,44 @@ class ViewCustomerModal extends Component {
         const { onRefresh } = this.props;
 
         this.props.onSubmitForm();
+        this.deletion();
 
         axios.post('http://localhost/reactPhpCrud/veterinaryClinic/deleteCustomer.php', record)
-        .then(onRefresh);
+        .then(this.postDelete)
+        .catch(error => {
+            console.log(error);
+            onRefresh();
+            this.failedDelete();
+        });
     }
 
-    // retryCustomersData = () => {
-    //     this.getCustomersData();
-    //     const connected = false;
-    //     const connectionFailed = false;
-    //     this.setState({ connected, connectionFailed })
-    // }
+    deletion = () => {
+        const deleteState = false;
+        const deleting = true;
+        this.setState({ deleteState, deleting });
+    }
 
-    // getCustomersData = () => {
-    //     axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewCustomers.php')
-    //     .then(res => {
-    //         const records = res.data;
-    //         const connected = true;
-    //         this.setState({ records, connected });
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //         const connectionFailed = true;
-    //         this.setState({ connectionFailed });
-    //     });
-    // }
+    postDelete = () => {
+        const deleting = false;
+        const deleted = true;
+        this.setState({ deleting, deleted }, () => {
+            setTimeout(() => {
+                document.getElementById("btnClose-" + this.props.customer.id).click();
+                this.props.onRefresh();
+            }, 5000);
+        });
+    }
+
+    failedDelete = () => {
+        const deleting = false;
+        let failed = true;
+        this.setState({ deleting, failed }, () => {
+            setTimeout(() => {
+                failed = false;
+                this.setState({ failed });
+            }, 5000)
+        });
+    }
 
     inputFieldClasses = errorMsg => {
         let classes = "form-control ";

@@ -120,7 +120,8 @@ class ViewTransactionModal extends Component {
         const { transaction } = this.props;
         return (
             <React.Fragment>
-                <div className="modal fade" id={"viewTransactionModal-" + transaction.id} tabIndex="-1" role="dialog"
+                <div className="modal fade" id={"viewTransactionModal-" + transaction.id}
+                    tabIndex="-1" role="dialog" data-backdrop="static"
                     aria-labelledby={"viewTransactionModalTitle-" + transaction.id} aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
@@ -211,13 +212,9 @@ class ViewTransactionModal extends Component {
                             <div className="modal-footer">
                                 <div className="d-flex justify-content-end w-100">
                                     {
-                                        record.transType === 'C' ? this.state.connected ?
+                                        record.transType === 'C' ?
                                         <button className="btn btn-success w-auto mr-1" data-dismiss="modal"
                                         onClick={() => this.onViewAdmission("/wiggly-tails/customer/view-admission")}>
-                                            <i className="fa fa-hand-holding-medical fa-sm"></i>
-                                            <span className="ml-1">Admissions</span>
-                                        </button> :
-                                        <button className="btn btn-success w-auto mr-1" disabled>
                                             <i className="fa fa-hand-holding-medical fa-sm"></i>
                                             <span className="ml-1">Admissions</span>
                                         </button> : null

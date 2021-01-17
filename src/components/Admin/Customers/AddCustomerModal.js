@@ -330,7 +330,7 @@ class AddCustomerModal extends Component {
                 ...currentState.errors,
                 petErrors
             }
-        }), () => console.log(this.state))
+        }))
     }
 
     onSubmit = () => {
@@ -567,7 +567,8 @@ class AddCustomerModal extends Component {
 
         return (
             <React.Fragment>
-                <div className="modal fade" id="addCustomerModal" tabIndex="-1" role="dialog"
+                <div className="modal fade" id="addCustomerModal"
+                    tabIndex="-1" role="dialog" data-backdrop="static"
                     aria-labelledby="addCustomerModalTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">

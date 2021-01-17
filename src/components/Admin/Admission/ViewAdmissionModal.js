@@ -188,7 +188,8 @@ class ViewAdmissionModal extends Component {
         const { admission } = this.props;
         return (
             <React.Fragment>
-                <div className="modal fade" id={"viewAdmissionModal-" + admission.id} tabIndex="-1" role="dialog"
+                <div className="modal fade" id={"viewAdmissionModal-" + admission.id}
+                    tabIndex="-1" role="dialog" data-backdrop="static"
                     aria-labelledby={"viewAdmissionModalTitle-" + admission.id} aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
@@ -259,23 +260,6 @@ class ViewAdmissionModal extends Component {
                                         { this.renderRecordErrors(errors.content) }
                                     </div>
                                 </form>
-                                {
-                                    // submitted ?
-                                    // <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
-                                    //     <i className="fa fa-pen text-primary mr-2"></i>
-                                    //     <span>Updating a record...</span>
-                                    // </div> :
-                                    // updated ? 
-                                    // <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
-                                    //     <i className="fa fa-check text-success mr-2"></i>
-                                    //     <span>Record was successfully updated.</span>
-                                    // </div> :
-                                    // failed ?
-                                    // <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
-                                    //     <i className="fa fa-exclamation text-danger mr-2"></i>
-                                    //     <span>Database Connection Failed.</span>
-                                    // </div> : null
-                                }
                             </div>
 
                             <div className="modal-footer">

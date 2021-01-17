@@ -561,7 +561,8 @@ class ViewTransactionModal extends Component {
         const { transaction } = this.props;
         return (
             <React.Fragment>
-                <div className="modal fade" id={"viewTransactionModal-" + transaction.id} tabIndex="-1" role="dialog"
+                <div className="modal fade" id={"viewTransactionModal-" + transaction.id}
+                    tabIndex="-1" role="dialog" data-backdrop="static"
                     aria-labelledby={"viewTransactionModalTitle-" + transaction.id} aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">

@@ -567,7 +567,8 @@ class RegistrationModal extends Component {
 
         return (
             <React.Fragment>
-                <div className="modal fade" id="registrationModal" tabIndex="-1" role="dialog"
+                <div className="modal fade" id="registrationModal"
+                    tabIndex="-1" role="dialog" data-backdrop="static"
                     aria-labelledby="registrationModalTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">

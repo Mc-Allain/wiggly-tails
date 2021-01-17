@@ -62,7 +62,7 @@ class AboutUs extends Component {
                                     </h6>
                                     <div className="row justify-content-center align-items-center bottom-border-light mt-3 pb-3">
                                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3845.67146241087!2d120.8062437152265!3d15.44827345988108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3396d98621cad99f%3A0x8fe641df89530131!2sWiggly%20Tails%20Veterinary%20Clinic%20and%20Pet%20Supplies!5e0!3m2!1sen!2sph!4v1610805951302!5m2!1sen!2sph"
-                                        allowfullscreen={""} aria-hidden={"false"} tabindex={"0"} title="clinic-address"
+                                        allowfullscreen="" aria-hidden="false" tabindex="0" title="clinic-address"
                                         className="col-12 border-0 h-400px" />
                                     </div>
                                 </div>

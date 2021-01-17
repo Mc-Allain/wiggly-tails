@@ -86,8 +86,7 @@ class ManageEmployeesModal extends Component {
             )
 
             if(result.length > 0) {
-                const btnClose = document.getElementById("btnClose");
-                btnClose.click();
+                document.getElementById("btnClose").click();
                 
                 const { history } = this.props;
                 history.replace('/wiggly-tails/admin/manage-employees',
@@ -137,7 +136,7 @@ class ManageEmployeesModal extends Component {
     renderLoginError = () => {
         if(this.state.loginError) {
             return(
-                <div className="alert alert-danger d-flex align-items-center my-1 py-0">
+                <div className="alert alert-danger d-flex align-items-center mb-2 py-0">
                     <i className="fa fa-exclamation text-danger mr-2"></i>
                     <span className="lh-0 my-1">Incorrect Admin Id or Admin Password</span>
                 </div>
@@ -148,8 +147,9 @@ class ManageEmployeesModal extends Component {
     renderModal = () => {
         const { record, errors } = this.state;
         return(
-            <div className="modal fade" id="manageEmployeesModal" tabIndex="-1" role="dialog"
-            aria-labelledby="manageEmployeesModalTitle" aria-hidden="true">
+            <div className="modal fade" id="manageEmployeesModal"
+                tabIndex="-1" role="dialog" data-backdrop="static"
+                aria-labelledby="manageEmployeesModalTitle" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
