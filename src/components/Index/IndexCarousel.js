@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
 import noImage from '../../img/no-image.png';
-// import consultation from '../../img/employees.jpg';
+// import consultation from '../../img/consultation.jpg';
 // import treatmentVaccination from '../../img/treatment-vaccination.jpg';
 // import confinement from '../../img/confinement.jpg';
-// import grooming from '../../img/grooming.jpg';
+import grooming from '../../img/grooming.jpg';
 
 class IndexCarousel extends Component {
     state = {  }
@@ -42,7 +42,7 @@ class IndexCarousel extends Component {
                             </div>
                         </div>
                         <div className="carousel-item">
-                            <img className="d-block w-100" src={noImage} alt="grooming" />
+                            <img className="d-block w-100" src={grooming} alt="grooming" />
                             <div className="carousel-caption d-none d-md-block bg-dark-45">
                                 <h5>Grooming</h5>
                                 <p>Please suggest a Caption</p>
