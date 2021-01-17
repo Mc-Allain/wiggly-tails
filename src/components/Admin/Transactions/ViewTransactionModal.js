@@ -1008,7 +1008,8 @@ class ViewTransactionModal extends Component {
                                         <React.Fragment>
                                             {
                                                 record.transType === 'C' ?
-                                                <button className="btn btn-success w-auto mr-1" disabled>
+                                                <button className="btn btn-success w-auto mr-1" data-dismiss="modal"
+                                                onClick={() => this.onViewAdmission("/wiggly-tails/admin/manage-admission")}>
                                                     <i className="fa fa-hand-holding-medical fa-sm"></i>
                                                     <span className="ml-1">Admissions</span>
                                                 </button> : null

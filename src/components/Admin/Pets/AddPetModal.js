@@ -454,21 +454,21 @@ class AddPetModal extends Component {
                                     </div>
                                 </form>
                                 {
-                                    submitted ?
-                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
-                                        <i className="fa fa-pen text-primary mr-2"></i>
-                                        <span>Adding a record...</span>
-                                    </div> :
-                                    added ? 
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
-                                        <i className="fa fa-check text-success mr-2"></i>
-                                        <span>Record was successfully added.</span>
-                                    </div> :
-                                    failed ?
-                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
-                                        <i className="fa fa-exclamation text-danger mr-2"></i>
-                                        <span>Database Connection Failed.</span>
-                                    </div> : null
+                                    // submitted ?
+                                    // <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                    //     <i className="fa fa-pen text-primary mr-2"></i>
+                                    //     <span>Adding a record...</span>
+                                    // </div> :
+                                    // added ? 
+                                    // <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                    //     <i className="fa fa-check text-success mr-2"></i>
+                                    //     <span>Record was successfully added.</span>
+                                    // </div> :
+                                    // failed ?
+                                    // <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                    //     <i className="fa fa-exclamation text-danger mr-2"></i>
+                                    //     <span>Database Connection Failed.</span>
+                                    // </div> : null
                                 }
                             </div>
 
