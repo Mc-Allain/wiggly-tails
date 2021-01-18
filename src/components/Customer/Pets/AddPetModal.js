@@ -24,7 +24,7 @@ class AddPetModal extends Component {
         [ 'Alligator', 'Alpaca', 'Ant', 'Bear', 'Bird', 'Cat', 'Chicken', 'Crab', 'Crocodile', 'Dog', 'Dolphins', 'Duck', 'Elephant', 'Ferret', 'Fish',
         'Fox', 'Frog', 'Gecko', 'Gerbil', 'Giraffe', 'Goat', 'Gorilla', 'Grasshopper', 'Guinea Pig', 'Hamster', 'Hedgehog', 'Hermit Crab', 
         'Horse', 'Jaguar', 'Lion', 'Lizard', 'Mantis', 'Monkey', 'Mouse', 'Octopus', 'Orangutan', 'Orstrich', 'Pig', 'Panda', 'Quill',
-        'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake', 'Spider', 'Tiger', 'Tortoise', 'Turtle', 'Wolf', 'Whale', 'Zebra' ],
+        'Rabbit', 'Rat', 'Salamander', 'Sheep', 'Snake', 'Spider', 'Squirrel', 'Tiger', 'Tortoise', 'Turtle', 'Wolf', 'Whale', 'Zebra' ],
         submitError: false,
         submitted: false,
         added: false,

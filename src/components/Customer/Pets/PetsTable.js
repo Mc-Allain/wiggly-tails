@@ -19,7 +19,7 @@ class PetsTable extends Component {
 
         for(var i = this.state.recordStartIndex; i < recordStopIndex; i++){
             items.push(
-                <tr key={pets[i].id}>
+                <tr key={pets[i].id} className="table-row">
                     <td>{pets[i].petName}</td>
                     <td className="d-none d-md-table-cell">{this.formatDate(pets[i].birthdate)}</td>
                     <td className="d-none d-lg-table-cell">{pets[i].petClass}</td>
