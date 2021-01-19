@@ -32,8 +32,8 @@ class Admin extends Component {
                                         className="card-img d-none d-md-inline my-4" />
                                         
                                         <div className="p-3 mt-2">
-                                            <h5>Please suggest a Header</h5>
-                                            <p>and Description</p>
+                                            <h5>Manage transaction records here</h5>
+                                            <p>This is where all services offered to a customer are recorded.</p>
                                         </div>
 
                                         <button className="btn btn-warning border w-75 mt-3"
@@ -52,8 +52,8 @@ class Admin extends Component {
                                         className="card-img d-none d-md-inline my-4" />
                                         
                                         <div className="p-3 mt-2">
-                                            <h5>Please suggest a Header</h5>
-                                            <p>and Description</p>
+                                            <h5>Manage customer records here</h5>
+                                            <p>This is where all customer informations are recorded.</p>
                                         </div>
 
                                         <button className="btn btn-primary border w-75 mt-3"
@@ -72,8 +72,8 @@ class Admin extends Component {
                                         className="card-img d-none d-md-inline my-4" />
 
                                         <div className="p-3 mt-2">
-                                            <h5>Please suggest a Header</h5>
-                                            <p>and Description</p>
+                                            <h5>Manage customer's pet records here</h5>
+                                            <p>This is where all customer's pet informations are recorded.</p>
                                         </div>
 
                                         <button className="btn btn-secondary border w-75 mt-3"
@@ -92,8 +92,8 @@ class Admin extends Component {
                                         className="card-img d-none d-md-inline my-4" />
 
                                         <div className="p-3 mt-2">
-                                            <h5>Please suggest a Header</h5>
-                                            <p>and Description</p>
+                                            <h5>Manage employee records here</h5>
+                                            <p>This is where all employee informations are recorded.</p>
                                         </div>
 
                                         <button className="btn btn-danger border w-75 mt-3"
