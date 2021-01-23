@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/wiggly-tails/static/css/main.0007db3b.chunk.css",
-    "main.js": "/wiggly-tails/static/js/main.8ce56a9a.chunk.js",
-    "main.js.map": "/wiggly-tails/static/js/main.8ce56a9a.chunk.js.map",
+    "main.css": "/wiggly-tails/static/css/main.b29b32c0.chunk.css",
+    "main.js": "/wiggly-tails/static/js/main.af02c36f.chunk.js",
+    "main.js.map": "/wiggly-tails/static/js/main.af02c36f.chunk.js.map",
     "runtime-main.js": "/wiggly-tails/static/js/runtime-main.5c1c87b5.js",
     "runtime-main.js.map": "/wiggly-tails/static/js/runtime-main.5c1c87b5.js.map",
     "static/css/2.4d01fa9c.chunk.css": "/wiggly-tails/static/css/2.4d01fa9c.chunk.css",
@@ -10,7 +10,7 @@
     "static/js/2.6a030167.chunk.js.map": "/wiggly-tails/static/js/2.6a030167.chunk.js.map",
     "index.html": "/wiggly-tails/index.html",
     "static/css/2.4d01fa9c.chunk.css.map": "/wiggly-tails/static/css/2.4d01fa9c.chunk.css.map",
-    "static/css/main.0007db3b.chunk.css.map": "/wiggly-tails/static/css/main.0007db3b.chunk.css.map",
+    "static/css/main.b29b32c0.chunk.css.map": "/wiggly-tails/static/css/main.b29b32c0.chunk.css.map",
     "static/js/2.6a030167.chunk.js.LICENSE.txt": "/wiggly-tails/static/js/2.6a030167.chunk.js.LICENSE.txt",
     "static/media/all.css": "/wiggly-tails/static/media/fa-solid-900.46fdbd2d.woff",
     "static/media/grooming.a2a278f6.jpg": "/wiggly-tails/static/media/grooming.a2a278f6.jpg"
@@ -19,7 +19,7 @@
     "static/js/runtime-main.5c1c87b5.js",
     "static/css/2.4d01fa9c.chunk.css",
     "static/js/2.6a030167.chunk.js",
-    "static/css/main.0007db3b.chunk.css",
-    "static/js/main.8ce56a9a.chunk.js"
+    "static/css/main.b29b32c0.chunk.css",
+    "static/js/main.af02c36f.chunk.js"
   ]
 }
