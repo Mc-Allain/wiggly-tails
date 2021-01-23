@@ -13,3 +13,7 @@
 ### Note
 
 Github doesn't support multi-route dynamic pages, so please do not refresh the page after the login
+
+### Copyright © 2021: Some rights reserved
+
+This Website was developed for the purpose of University Project. Most of the content and data that has been put in this website are not originally ours but from the owner of the clinic. Owner was interviewed as a reference and source to meet the expectation of the project's actual function.
