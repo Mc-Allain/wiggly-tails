@@ -36,7 +36,7 @@ class TablePagination extends Component {
         }
 
         return(
-            <div className="btn-toolbar justify-content-end mb-4" role="toolbar">
+            <div className="btn-toolbar justify-content-end" role="toolbar">
                 <div className="btn-group" role="group">
                     <button className={this.getPrevPageClasses()}
                     onClick={() => this.onClickPagePrev()}>

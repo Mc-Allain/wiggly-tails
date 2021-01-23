@@ -51,7 +51,7 @@ class ManagePets extends Component {
             <React.Fragment>
                 <CustomerNavbar activeId={2} history={history} />
                 <div className="container-fluid">
-                    <div className="min-h-full row bg-light justify-content-center text-dark py-4">
+                    <div className="min-h-full row bg-light justify-content-center text-dark pt-4">
                         <div className="col-12 mt-5 table-responsive">
                             <h3>Manage Pets</h3>
                             <PetsTable pets={this.state.pets} ownerId={history.location.state.id}

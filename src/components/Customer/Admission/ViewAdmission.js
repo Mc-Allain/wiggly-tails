@@ -51,7 +51,7 @@ class ViewAdmission extends Component {
             <React.Fragment>
                 <CustomerNavbar activeId={1} history={history} />
                 <div className="container-fluid">
-                    <div className="min-h-full row bg-light justify-content-center text-dark py-4">
+                    <div className="min-h-full row bg-light justify-content-center text-dark pt-4">
                         <div className="col-12 mt-5 table-responsive">
                             <h3>View Admission</h3>
                             <AdmissionTable admission={this.state.admission} history={history}

@@ -63,7 +63,7 @@ class ManageTransactions extends Component {
             <React.Fragment>
                 <AdminNavbar sourceId={3} activeId={4} history={history} />
                 <div className="container-fluid">
-                    <div className="min-h-full row bg-light justify-content-center text-dark py-4">
+                    <div className="min-h-full row bg-light justify-content-center text-dark pt-4">
                         <div className="col-12 mt-5 table-responsive">
                             <h3>Manage Transactions</h3>
                             <TransactionsTable transactions={this.state.transactions}
