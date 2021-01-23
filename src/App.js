@@ -17,6 +17,7 @@ import ManageAdmission from './components/Admin/Admission/ManageAdmission.js';
 import ManageCustomers from './components/Admin/Customers/ManageCustomers';
 import ManagePets from './components/Admin/Pets/ManagePets';
 import ManageEmployees from './components/Admin/Employees/ManageEmployees.js';
+import AdminAboutUs from './components/Admin/AboutUs.js';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/wiggly-tails/admin/manage-customers" component={ManageCustomers} />
         <Route path="/wiggly-tails/admin/manage-pets" component={ManagePets} />
         <Route path="/wiggly-tails/admin/manage-employees" component={ManageEmployees} />
+        <Route path="/wiggly-tails/admin/about-us" component={AdminAboutUs} />
       </Switch>
     </Router>
   );

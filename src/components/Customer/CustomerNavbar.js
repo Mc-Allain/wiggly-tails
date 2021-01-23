@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+
 import wiggy_tails_icon from '../../img/wiggly-tails-icon.png';
+import AboutUsModal from '../AboutUsModal.js';
 
 class CustomerNavbar extends Component {
     state = {
@@ -26,7 +28,7 @@ class CustomerNavbar extends Component {
             {
                 id: 3,
                 text: "About us",
-                link: "/wiggly-tails/customer/about-us",
+                link: null,
                 items: [],
             },
             {
@@ -98,6 +100,11 @@ class CustomerNavbar extends Component {
                                             <a onClick={() => this.onClickSignOut(nav)} className={this.linkItemClasses(nav.id)}>
                                                 {nav.text}
                                             </a> :
+                                            nav.id === 3 ?
+                                            <a key={nav.id} className={this.linkItemClasses(nav.id)}
+                                            data-toggle="modal" data-target="#aboutUsModal">
+                                                {nav.text}
+                                            </a> :
                                             <a onClick={() => this.onClickLink(nav)} className={this.linkItemClasses(nav.id)}>
                                                 {nav.text}
                                             </a>
@@ -108,6 +115,8 @@ class CustomerNavbar extends Component {
                         </ul>
                     </div>
                 </nav>
+
+                <AboutUsModal />
             </React.Fragment>
         );
     }

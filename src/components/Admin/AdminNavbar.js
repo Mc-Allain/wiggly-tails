@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import wiggy_tails_icon from '../../img/wiggly-tails-icon.png';
 import ManageEmployeesModal from './Employees/ManageEmployeesModal.js';
+import AboutUsModal from '../AboutUsModal.js';
 
 class AdminNavbar extends Component {
     state = {
@@ -14,32 +15,38 @@ class AdminNavbar extends Component {
                 items: []
             },
             {
-                id: 3,
+                id: 1,
                 text: "Manage",
                 link: null,
                 items:
                 [
                     {
-                        id: 4,
+                        id: 2,
                         text: "Transactions",
                         link: "/wiggly-tails/admin/manage-transactions"
                     },
                     {
-                        id: 5,
+                        id: 3,
                         text: "Customers",
                         link: "/wiggly-tails/admin/manage-customers"
                     },
                     {
-                        id: 6,
+                        id: 4,
                         text: "Pets",
                         link: "/wiggly-tails/admin/manage-pets"
                     },
                     {
-                        id: 7,
+                        id: 5,
                         text: "Employees",
                         link: "/wiggly-tails/admin/manage-employees"
                     }
                 ]
+            },
+            {
+                id: 6,
+                text: "About us",
+                link: null,
+                items: []
             },
             {
                 id: 10,
@@ -93,7 +100,7 @@ class AdminNavbar extends Component {
                                         <div className="dropdown-menu" aria-labelledby={"dropdown" + nav.id}>
                                             {
                                                 nav.items.map(item =>
-                                                    item.id === 7 && item.id !== activeId ?
+                                                    item.id === 5 && item.id !== activeId ?
                                                     <a key={item.id} className={this.dropdownItemClasses(item.id)}
                                                     data-toggle="modal" data-target="#manageEmployeesModal">
                                                         {item.text}</a> :
@@ -110,6 +117,11 @@ class AdminNavbar extends Component {
                                             <a onClick={() => this.onClickSignOut(nav)} className={this.linkItemClasses(nav.id)}>
                                                 {nav.text}
                                             </a> :
+                                            nav.id === 6 ?
+                                            <a key={nav.id} className={this.linkItemClasses(nav.id)}
+                                            data-toggle="modal" data-target="#aboutUsModal">
+                                                {nav.text}
+                                            </a> :
                                             <a onClick={() => this.onClickLink(nav)} className={this.linkItemClasses(nav.id)}>
                                                 {nav.text}
                                             </a>
@@ -122,6 +134,7 @@ class AdminNavbar extends Component {
                 </nav>
 
                 <ManageEmployeesModal history={history} />
+                <AboutUsModal />
             </React.Fragment>
         );
     }
@@ -140,7 +153,7 @@ class AdminNavbar extends Component {
         const { activeId } = this.props;
 
         let classes = "dropdown-item "
-        classes+= id === 7 ? "text-danger " : "text-dark "
+        classes+= id === 5 ? "text-danger " : "text-dark "
         classes+= id === activeId ? "active-dropdown" : "inactive-dropdown"
 
         return classes;

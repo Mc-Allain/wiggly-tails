@@ -119,12 +119,9 @@ class ViewAdmissionModal extends Component {
     }
 
     postSubmit = () => {
-        const confirmUserPassword = '';
-        const errors = {...this.state.errors};
-        errors.confirmUserPassword = ' '
         const submitted = false;
         let updated = true;
-        this.setState({ errors, confirmUserPassword, submitted, updated });
+        this.setState({ submitted, updated });
         setTimeout(() => {
             updated = false;
             this.setState({ updated });

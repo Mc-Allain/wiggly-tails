@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import CustomerNavbar from './CustomerNavbar.js';
+import AdminNavbar from './AdminNavbar.js';
 import Footer from '../Footer.js';
 import Forbidden from './Forbidden.js';
 
@@ -15,7 +15,7 @@ class AboutUs extends Component {
         const { history } = this.props;
         return(
             <React.Fragment>
-                <CustomerNavbar activeId={3} history={history} />
+                <AdminNavbar activeId={6} history={history} />
                 <div className="container-fluid">
                     <div className="row min-h-full justify-content-center align-items-center pt-5 pt-md-3 mt-md-3">
                         <div className="col-11 col-sm-10 col-md-8 col-lg-6 form-light my-5 my-md-5">

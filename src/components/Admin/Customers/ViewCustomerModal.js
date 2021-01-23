@@ -172,16 +172,19 @@ class ViewCustomerModal extends Component {
 
             case 'userPassword':
                 errors.userPassword=        value.length === 0 ? " " :
+                                            this.spaceFound(value) ? "Password must not have spacing" :
                                             value.length < 12 || value.length > 24 ? 
                                             "Password must be at between 12 and 24 characters" : ""
                 errors.confirmUserPassword= value === confirmUserPassword ? 
-                                            confirmUserPassword.length < 12 ? " " : "" : "Passwords do not match"
+                                            confirmUserPassword.length < 12 || this.spaceFound(value) ? " " :
+                                            "" : "Passwords do not match"
                 break;
 
             case 'confirmUserPassword':
                 errors.confirmUserPassword= value.length === 0 ? " " :
                                             value === record.userPassword ?
-                                            value.length < 12 ? " " : "" : "Passwords do not match"
+                                            value.length < 12 || this.spaceFound(value) ? " " :
+                                            "" : "Passwords do not match"
                 break;
 
             default:
@@ -1090,6 +1093,11 @@ class ViewCustomerModal extends Component {
         }
         
         return result;
+    }
+
+    spaceFound = value => {
+        if(value.match(' ')) return true;
+        return false;
     }
 }
  

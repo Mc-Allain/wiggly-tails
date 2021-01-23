@@ -57,7 +57,7 @@ class ManageCustomers extends Component {
         const { history } = this.props;
         return (
             <React.Fragment>
-                <AdminNavbar sourceId={3} activeId={5} history={history} />
+                <AdminNavbar sourceId={1} activeId={3} history={history} />
                 <div className="container-fluid">
                     <div className="min-h-full row bg-light justify-content-center text-dark pt-4">
                         <div className="col-12 mt-5">

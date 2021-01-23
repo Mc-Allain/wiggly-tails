@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
+
 import wiggy_tails_icon from '../../img/wiggly-tails-icon.png';
+import AboutUsModal from '../AboutUsModal.js';
 
 class Navbar extends Component {
     state = {
         navs:
         [
+            {
+                id: 0,
+                text: "About us",
+                link: null,
+                items: []
+            },
             {
                 id: 1,
                 text: "Login",
@@ -71,6 +79,11 @@ class Navbar extends Component {
                                             data-toggle="modal" data-target="#registrationModal">
                                                 {nav.text}
                                             </a> :
+                                            nav.id === 0 ?
+                                            <a key={nav.id} className={this.linkItemClasses(nav.id)}
+                                            data-toggle="modal" data-target="#aboutUsModal">
+                                                {nav.text}
+                                            </a> :
                                             <a href={nav.link} className={this.linkItemClasses(nav.id)}>
                                                 {nav.text}
                                             </a>
@@ -81,6 +94,8 @@ class Navbar extends Component {
                         </ul>
                     </div>
                 </nav>
+
+                <AboutUsModal />
             </React.Fragment>
         );
     }
@@ -90,7 +105,7 @@ class Navbar extends Component {
 
         let classes = "nav-link ";
         classes+= id === activeId ? "active" :
-        id === sourceId ? "active" : 
+        id === sourceId ? "active" :
         id === 10 ?  "text-warning" : "inactive"
         return classes;
     }
