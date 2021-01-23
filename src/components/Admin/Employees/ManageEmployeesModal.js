@@ -133,6 +133,12 @@ class ManageEmployeesModal extends Component {
         this.setState({ record, errors, submitError, loginError});
     }
 
+    handleKeyPress = e => {
+        if(e.which === 13) {
+            document.getElementById("btnSubmit").click();
+        }
+    }
+
     renderLoginError = () => {
         if(this.state.loginError) {
             return(
@@ -169,7 +175,8 @@ class ManageEmployeesModal extends Component {
                                         <label className="m-0 ml-2">Admin Id</label>
                                         <input className="form-control" type="text"
                                         name="adminId" value={record.adminId} maxLength="6"
-                                        onChange={this.onChangeRecord} noValidate />
+                                        onChange={this.onChangeRecord} onKeyPress={this.handleKeyPress}
+                                        noValidate />
                                         { this.renderRecordErrors(errors.adminId) }
                                     </div>
 
@@ -177,7 +184,8 @@ class ManageEmployeesModal extends Component {
                                         <label className="m-0 ml-2">Admin Password</label>
                                         <input className="form-control" type="password"
                                         name="adminPassword" value={record.adminPassword}
-                                        onChange={this.onChangeRecord} noValidate />
+                                        onChange={this.onChangeRecord} onKeyPress={this.handleKeyPress}
+                                        noValidate />
                                         { this.renderRecordErrors(errors.adminPassword) }
                                     </div>
                                 </form> :
@@ -201,7 +209,7 @@ class ManageEmployeesModal extends Component {
                                     this.state.connected ?
                                     <React.Fragment>
                                         <button className="btn btn-primary w-auto mr-1"
-                                        onClick={this.onSubmit}>
+                                        id="btnSubmit" onClick={this.onSubmit}>
                                             <i className="fa fa-sign-in-alt"></i>
                                             <span className="ml-1">Submit</span>
                                         </button>
