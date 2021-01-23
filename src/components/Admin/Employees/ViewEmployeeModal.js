@@ -399,9 +399,8 @@ class ViewEmployeeModal extends Component {
                                         </label>
                                         {
                                             record.empType === empType ?
-                                            <input className={this.inputFieldClasses(errors.empType)}
-                                            name="empType" value={record.empType} onChange={this.onChangeRecord}
-                                            noValidate disabled /> :
+                                            <input className="form-control" name="empType" value={record.empType}
+                                            onChange={this.onChangeRecord} noValidate disabled /> :
                                             submitted || deleting || deleted ?
                                             <select className="form-control" name="empType"
                                             value={record.empType} noValidate disabled>
