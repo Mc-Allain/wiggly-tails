@@ -154,7 +154,7 @@ class CustomerLoginForm extends Component {
                 <div className="form-group">
                     <label className="m-0 ml-2">Email Address</label>
                     <div className="input-group d-block d-sm-flex px-0">
-                        <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                        <input className={"w-xs-100 " + this.inputFieldClasses(errors.emailAddress)}
                         type="text" name="emailAddress"  value={record.emailAddress}
                         onChange={this.onChangeRecord} noValidate />
                         <div className="input-group-append justify-content-end">

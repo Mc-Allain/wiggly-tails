@@ -167,16 +167,16 @@ class ManageEmployeesModal extends Component {
                                 <form className="row form-light mx-2 p-4" noValidate>
                                     <div className="form-group col-12">
                                         <label className="m-0 ml-2">Admin Id</label>
-                                        <input className={this.inputFieldClasses(errors.adminId)}
-                                        type="text" name="adminId" value={record.adminId} maxLength="6"
+                                        <input className="form-control" type="text"
+                                        name="adminId" value={record.adminId} maxLength="6"
                                         onChange={this.onChangeRecord} noValidate />
                                         { this.renderRecordErrors(errors.adminId) }
                                     </div>
 
                                     <div className="form-group col-12">
                                         <label className="m-0 ml-2">Admin Password</label>
-                                        <input className={this.inputFieldClasses(errors.adminPassword)}
-                                        type="password" name="adminPassword" value={record.adminPassword}
+                                        <input className="form-control" type="password"
+                                        name="adminPassword" value={record.adminPassword}
                                         onChange={this.onChangeRecord} noValidate />
                                         { this.renderRecordErrors(errors.adminPassword) }
                                     </div>
@@ -261,13 +261,6 @@ class ManageEmployeesModal extends Component {
             const connectionFailed = true;
             this.setState({ connectionFailed })
         });
-    }
-
-    inputFieldClasses = errorMsg => {
-        let classes = "form-control ";
-        classes+= errorMsg.length > 0 ? 
-        this.state.submitError ? "border border-danger" : "" : "border border-success"
-        return classes;
     }
 }
  

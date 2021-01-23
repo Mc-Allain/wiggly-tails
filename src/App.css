@@ -62,16 +62,12 @@
   height: 70vh !important;
 }
 
-.h-35 {
-  height: 35vh !important;
-}
-
-.h-70 {
-  height: 70vh !important;
-}
-
 .h-45 {
   height: 45vh !important;
+}
+
+.h-35 {
+  height: 35vh !important;
 }
 
 .min-h-24 {
@@ -205,6 +201,10 @@ tbody .table-row:hover {
   border: rgb(202, 202, 202) 1px solid;
 }
 
+.custom-card-light .admin-card-content-height {
+  height: auto;
+}
+
 .bg-dark-45 {
   background-color: rgba(0, 0, 0, 0.45);
 }
@@ -288,12 +288,14 @@ ul.list-lh-2 {
 }
 
 @media (max-width: 576px) {
-  .w-sm-100 {
+  .w-xs-100 {
     width: 100% !important;
   }
+}
 
-  .w-sm-auto {
-    width: auto !important;
+@media (min-width: 576px) {
+  .h-sm-150px {
+    height: 150px !important;
   }
 }
 
@@ -304,5 +306,21 @@ ul.list-lh-2 {
 
   .w-md-75 {
     width: 75% !important;
+  }
+
+  .h-md-130px {
+    height: 130px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .h-lg-200px {
+    height: 200px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .h-xl-160px {
+    height: 160px !important;
   }
 }

@@ -31,7 +31,7 @@ class Admin extends Component {
                                         <img src={noImage} alt="transactions"
                                         className="card-img d-none d-md-inline my-4" />
                                         
-                                        <div className="p-3 mt-2">
+                                        <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
                                             <h5>Manage transaction records here</h5>
                                             <p>This is where all services offered to a customer are recorded.</p>
                                         </div>
@@ -51,7 +51,7 @@ class Admin extends Component {
                                         <img src={noImage} alt="customers"
                                         className="card-img d-none d-md-inline my-4" />
                                         
-                                        <div className="p-3 mt-2">
+                                        <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
                                             <h5>Manage customer records here</h5>
                                             <p>This is where all customer informations are recorded.</p>
                                         </div>
@@ -71,8 +71,8 @@ class Admin extends Component {
                                         <img src={noImage} alt="pets"
                                         className="card-img d-none d-md-inline my-4" />
 
-                                        <div className="p-3 mt-2">
-                                            <h5>Manage customer's pet records here</h5>
+                                        <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
+                                            <h5>Manage pet records here</h5>
                                             <p>This is where all customer's pet informations are recorded.</p>
                                         </div>
 
@@ -91,7 +91,7 @@ class Admin extends Component {
                                         <img src={noImage} alt="employees"
                                         className="card-img d-none d-md-inline my-4" />
 
-                                        <div className="p-3 mt-2">
+                                        <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
                                             <h5>Manage employee records here</h5>
                                             <p>This is where all employee informations are recorded.</p>
                                         </div>

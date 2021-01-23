@@ -796,9 +796,9 @@ class AddCustomerModal extends Component {
                                                 <div className="input-group d-block d-sm-flex px-0">
                                                     {
                                                         submitted ?
-                                                        <input className="w-sm-100 form-control" type="text"
+                                                        <input className="w-xs-100 form-control" type="text"
                                                         name="emailAddress" value={record.emailAddress} noValidate disabled /> :
-                                                        <input className={"w-sm-100 " + this.inputFieldClasses(errors.emailAddress)}
+                                                        <input className={"w-xs-100 " + this.inputFieldClasses(errors.emailAddress)}
                                                         type="text" name="emailAddress"  value={record.emailAddress}
                                                         onChange={this.onChangeRecord} noValidate />
                                                     }
