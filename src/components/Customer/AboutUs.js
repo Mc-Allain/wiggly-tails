@@ -27,7 +27,7 @@ class AboutUs extends Component {
                             <div className="row mx-2 mt-4">
                                 <div className="col-12 pr-1">
                                     <h2 className="mb-3">About us</h2>
-                                    <h5 className="px-2 text-center font-weight-light">
+                                    <h5 className="px-2 text-center font-weight-normal">
                                         Roma Ador Dionisio-Pajarillo's (DVM)
                                         <br />Veterinary Clinic - Wiggly Tails
                                     </h5>
@@ -83,7 +83,7 @@ class AboutUs extends Component {
 
                                 <div className="col-12 pb-3 pl-md-3 pr-1">
                                     <h5 className="font-weight-normal mb-3">Developers</h5>
-                                    <h6 className="pl-3 font-weight-light">
+                                    <h6 className="pl-3 bottom-border-light font-weight-light">
                                         <ul className="list-unstyled list-lh-1">
                                             <li><b>Main Developer: </b>Casindad, Mc Allain Sanchez (BSIT Student)</li>
                                             <li><b>Database Source: </b>Dr. Roma's Veterinary Clinic (Owner)</li>
@@ -97,6 +97,35 @@ class AboutUs extends Component {
                                                 </ul>
                                             </li>
                                         </ul>
+                                    </h6>
+                                </div>
+
+                                <div className="col-12 pb-3 pl-md-3 pr-1">
+                                    <h5 className="font-weight-normal mb-3">Libraries and Frameworks</h5>
+                                    <h6 className="pl-3 bottom-border-light font-weight-light">
+                                        <ul className="list-unstyled list-lh-1">
+                                            <li><b>Main Language: </b>ReactJS (Javascript Framework)</li>
+                                            <li><b>CSS Library: </b>Bootstrap</li>
+                                            <li><b>Database: </b>PhpMyAdmin (PHP)</li>
+                                            <li className="d-block d-md-flex">
+                                                <b className="mr-2">Others: </b>
+                                                <ul className="list-unstyled list-lh-1">
+                                                    <li>Font Awesome (Font Icons)</li>
+                                                    <li>Axios (API Connector)</li>
+                                                    <li>NodeJS (Javascript Library)</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </h6>
+                                </div>
+
+                                <div className="col-12 pb-3 pl-md-3 pr-1 mb-4">
+                                    <h5 className="font-weight-normal mb-3">Copyright &copy; 2021: Some rights reserved</h5>
+                                    <h6 className="pl-3 font-weight-light">
+                                        This Website was developed for the purpose of University Project.
+                                        Most of the content and data that has been put in this website are not originally ours
+                                        but from the owner of the clinic. Owner was interviewed as a reference and source to
+                                        meet the expectation of the project's actual function. 
                                     </h6>
                                 </div>
                             </div>
