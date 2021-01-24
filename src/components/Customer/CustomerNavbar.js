@@ -125,9 +125,14 @@ class CustomerNavbar extends Component {
         const { activeId, sourceId } = this.props;
 
         let classes = "nav-link ";
+        classes+= id === 10 || id === 3 ?
+        "btn rounded-pill text-center text-light py-1 my-1 px-3 " : ""
+
         classes+= id === activeId ? "active" :
         id === sourceId ? "active" : 
-        id === 10  ? "text-danger" : "inactive"
+        id === 10 ? "btn-danger" :
+        id === 3 ? "btn-primary" : "inactive"
+
         return classes;
     }
 

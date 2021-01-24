@@ -8,12 +8,6 @@ class Navbar extends Component {
         navs:
         [
             {
-                id: 0,
-                text: "About us",
-                link: null,
-                items: []
-            },
-            {
                 id: 1,
                 text: "Login",
                 link: null,
@@ -34,6 +28,13 @@ class Navbar extends Component {
             {
                 id: 10,
                 text: "Register",
+                link: null,
+                items: []
+            },
+            
+            {
+                id: 11,
+                text: "About us",
                 link: null,
                 items: []
             }
@@ -79,7 +80,7 @@ class Navbar extends Component {
                                             data-toggle="modal" data-target="#registrationModal">
                                                 {nav.text}
                                             </a> :
-                                            nav.id === 0 ?
+                                            nav.id === 11 ?
                                             <a key={nav.id} className={this.linkItemClasses(nav.id)}
                                             data-toggle="modal" data-target="#aboutUsModal">
                                                 {nav.text}
@@ -104,9 +105,14 @@ class Navbar extends Component {
         const { activeId, sourceId } = this.props;
 
         let classes = "nav-link ";
+        classes+= id === 10 || id === 11 ?
+        "btn rounded-pill text-center py-1 my-1 px-3 " : ""
+
         classes+= id === activeId ? "active" :
-        id === sourceId ? "active" :
-        id === 10 ?  "text-warning" : "inactive"
+        id === sourceId ? "active" : 
+        id === 10 ? "btn-warning text-dark" :
+        id === 11 ? "btn-primary text-light" : "inactive"
+
         return classes;
     }
 

@@ -106,7 +106,8 @@ class AboutUsModal extends Component {
                                                     <ul className="list-unstyled list-lh-1">
                                                         <li>Font Awesome (Font Icons)</li>
                                                         <li>Axios (API Connector)</li>
-                                                        <li>NodeJS (Javascript Library)</li>
+                                                        <li>JQuery (Javascript Library)</li>
+                                                        <li>Developers' Customized CSS</li>
                                                     </ul>
                                                 </li>
                                             </ul>
@@ -126,7 +127,7 @@ class AboutUsModal extends Component {
                             </div>
 
                             <div className="modal-footer">
-                                <button className="btn btn-danger w-auto p-1" data-dismiss="modal">
+                                <button className="btn btn-danger w-auto" data-dismiss="modal">
                                     <i className="fa fa-window-close"></i>
                                     <span className="ml-1">Close</span>
                                 </button>
