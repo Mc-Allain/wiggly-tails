@@ -294,7 +294,7 @@ class ViewPetModal extends Component {
                                 }
                                 <form className="row form-light mx-2 p-4" noValidate>
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">Id</label>
+                                        <label className="m-0 ml-2">ID</label>
                                         <input className="form-control zi-10" type="text"
                                             name="id" value={record.id}
                                             placeholder="Please click 'Generate'"
@@ -336,7 +336,7 @@ class ViewPetModal extends Component {
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">
-                                            Owner Id<span className="text-danger ml-1">*</span>
+                                            Owner ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
                                             this.props.customerConnected ?

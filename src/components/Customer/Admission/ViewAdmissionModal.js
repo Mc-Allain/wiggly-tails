@@ -45,14 +45,14 @@ class ViewAdmissionModal extends Component {
                             <div className="modal-body">
                                 <form className="row form-light mx-2 p-4" noValidate>
                                     <div className="form-group col-12">
-                                        <label className="m-0 ml-2">Id</label>
+                                        <label className="m-0 ml-2">ID</label>
                                         <input className="form-control zi-10" type="text"
                                             name="title" value={record.title}
                                             noValidate disabled />
                                     </div>
 
                                     <div className="form-group col-12">
-                                        <label className="m-0 ml-2">Id</label>
+                                        <label className="m-0 ml-2">ID</label>
                                         <textarea className="form-control zi-10" type="text"
                                             name="content" value={record.content} rows="7"
                                             noValidate disabled />

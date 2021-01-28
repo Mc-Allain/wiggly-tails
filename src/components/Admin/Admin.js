@@ -26,7 +26,7 @@ class Admin extends Component {
                             <div className="row mt-5 mb-3">
                                 <div className="col-lg-3 col-sm-6 text-center p-2">
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
-                                        <h3 className="font-weight-normal mt-3">
+                                        <h3 className="mt-3">
                                             Transactions</h3>
                                         <img src={noImage} alt="transactions"
                                         className="card-img d-none d-md-inline my-4" />
@@ -46,7 +46,7 @@ class Admin extends Component {
 
                                 <div className="col-lg-3 col-sm-6 text-center p-2">
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
-                                        <h3 className="font-weight-normal mt-3">
+                                        <h3 className="mt-3">
                                             Customers</h3>
                                         <img src={noImage} alt="customers"
                                         className="card-img d-none d-md-inline my-4" />
@@ -66,7 +66,7 @@ class Admin extends Component {
 
                                 <div className="col-lg-3 col-sm-6 text-center p-2">
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
-                                        <h3 className="font-weight-normal mt-3">
+                                        <h3 className="mt-3">
                                             Pets</h3>
                                         <img src={noImage} alt="pets"
                                         className="card-img d-none d-md-inline my-4" />
@@ -86,7 +86,7 @@ class Admin extends Component {
 
                                 <div className="col-lg-3 col-sm-6 text-center p-2">
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
-                                        <h3 className="font-weight-normal mt-3">
+                                        <h3 className="mt-3">
                                             Employees</h3>
                                         <img src={noImage} alt="employees"
                                         className="card-img d-none d-md-inline my-4" />

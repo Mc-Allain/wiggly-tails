@@ -3,6 +3,10 @@ import React, { Component } from 'react';
 class AboutUsModal extends Component {
     state = { }
 
+    onVisitFBPage = () => {
+        window.open("https://www.facebook.com/wigglytailsvetclinic/");
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -11,9 +15,7 @@ class AboutUsModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h2 className="modal-title" id="aboutUsModalTitle">
-                                    About us
-                                </h2>
+                                <h5 className="modal-title" id="aboutUsModalTitle">About us</h5>
                                 <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                     <i className="fa fa-window-close fa-lg"></i>
                                 </button>
@@ -21,24 +23,25 @@ class AboutUsModal extends Component {
                             <div className="modal-body">
                                 <div className="row mx-2 mt-4">
                                     <div className="col-12 pr-1">
-                                        <h5 className="px-2 text-center font-weight-normal">
+                                        <h5 className="px-2 text-center">
                                             Dr. Roma Ador Dionisio-Pajarillo's (DVM)
                                             <br />Veterinary Clinic - Wiggly Tails
                                         </h5>
-                                        <h6 className="px-3 font-weight-light">
-                                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                            Quo qui quaerat maxime, dolores nemo soluta reiciendis deleniti
-                                            possimus illum temporibus, odio maiores velit inventore architecto!
-                                            Aut est maxime quam doloribus!
+                                        <h6 className="px-3 font-weight-normal">
+                                            <span className="ml-4">Here</span> at Wiggly Tails Veterinary Clinic,
+                                            we understand the special role of your pet as another part of your family member
+                                            and it is our commitment to provide quality care to make them comfortable
+                                            and healthy for a lifetime. Our services and facilities are designed for routine preventive care,
+                                            early detection and treatment of diseases, emergency and surgical care.
                                         </h6>
-                                        <h6 className="px-3 text-center pb-3 bottom-border-light font-weight-light">
+                                        <h6 className="px-3 text-center pb-3 bottom-border-light">
                                             <b>Open from Monday to Saturday at 9:00am to 5:00pm</b>
                                         </h6>
                                     </div>
 
                                     <div className="col-12 pb-3 pl-md-3 pr-1">
-                                        <h5 className="font-weight-normal mb-3">Offers</h5>
-                                        <h6 className="pl-3 bottom-border-light font-weight-light">
+                                        <h5 className="mb-3">Offers</h5>
+                                        <h6 className="pl-3 bottom-border-light font-weight-normal">
                                             <ul className="row">
                                                 <li className="col-sm-4 px-0">Consultation</li>
                                                 <li className="col-sm-4 px-0">Treatment</li>
@@ -50,8 +53,8 @@ class AboutUsModal extends Component {
                                     </div>
 
                                     <div className="col-12 pb-3 pl-md-3 pr-1">
-                                        <h5 className="font-weight-normal mb-3">Clinic Address</h5>
-                                        <h6 className="pl-3 font-weight-light">
+                                        <h5 className="mb-3">Clinic Address</h5>
+                                        <h6 className="pl-3 font-weight-normal">
                                             Santa Rosa - Tarlac Road, Brgy. Sta Cruz, Zaragoza, Nueva Ecija
                                         </h6>
                                         <div className="row justify-content-center align-items-center bottom-border-light mt-3 pb-3">
@@ -62,8 +65,8 @@ class AboutUsModal extends Component {
                                     </div>
 
                                     <div className="col-12 pb-3 pl-md-3 pr-1">
-                                        <h5 className="font-weight-normal mb-3">Contact Information</h5>
-                                        <h6 className="pl-3 bottom-border-light font-weight-light">
+                                        <h5 className="mb-3">Contact Information</h5>
+                                        <h6 className="pl-3 bottom-border-light font-weight-normal">
                                             <ul className="list-unstyled list-lh-2">
                                                 <li><b>Mobile Number: </b>+63923-119-0591</li>
                                                 <li><b>Gmail: </b>wigglytailsvetclinic@gmail.com</li>
@@ -76,8 +79,8 @@ class AboutUsModal extends Component {
                                     </div>
 
                                     <div className="col-12 pb-3 pl-md-3 pr-1">
-                                        <h5 className="font-weight-normal mb-3">Developers</h5>
-                                        <h6 className="pl-3 bottom-border-light font-weight-light">
+                                        <h5 className="mb-3">Developers</h5>
+                                        <h6 className="pl-3 bottom-border-light font-weight-normal">
                                             <ul className="list-unstyled list-lh-1">
                                                 <li><b>Main Developer: </b>Casindad, Mc Allain Sanchez (BSIT Student)</li>
                                                 <li><b>Database Source: </b>Dr. Roma Ador Dionisio-Pajarillo (Veterinary Clinic Owner)</li>
@@ -95,8 +98,8 @@ class AboutUsModal extends Component {
                                     </div>
 
                                     <div className="col-12 pb-3 pl-md-3 pr-1">
-                                        <h5 className="font-weight-normal mb-3">Libraries and Frameworks</h5>
-                                        <h6 className="pl-3 bottom-border-light font-weight-light">
+                                        <h5 className="mb-3">Libraries and Frameworks</h5>
+                                        <h6 className="pl-3 bottom-border-light font-weight-normal">
                                             <ul className="list-unstyled list-lh-1">
                                                 <li><b>Main Language: </b>ReactJS (Javascript Framework)</li>
                                                 <li><b>CSS Library: </b>Bootstrap</li>
@@ -115,9 +118,9 @@ class AboutUsModal extends Component {
                                     </div>
 
                                     <div className="col-12 pb-3 pl-md-3 pr-1">
-                                        <h5 className="font-weight-normal mb-3">Copyright &copy; 2021: Some rights reserved</h5>
-                                        <h6 className="pl-3 font-weight-light">
-                                            This Website was developed for the purpose of University Project.
+                                        <h5 className="mb-3">Copyright &copy; 2021: Some rights reserved</h5>
+                                        <h6 className="px-3 font-weight-normal">
+                                            <span className="ml-4">This</span> Website was developed for the purpose of University Project.
                                             Most of the content and data that has been put in this website are not originally ours
                                             but from the owner of the clinic. Owner was interviewed as a reference and source to
                                             meet the expectation of the project's actual function. 

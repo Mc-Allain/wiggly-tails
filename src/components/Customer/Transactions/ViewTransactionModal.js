@@ -163,7 +163,7 @@ class ViewTransactionModal extends Component {
                                     </div>
 
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">Customer Id</label>
+                                        <label className="m-0 ml-2">Customer ID</label>
                                         <div className="input-group">
                                             <input className="zi-10 form-control"
                                                 name="customerId" value={record.customerId + " | " +
@@ -174,7 +174,7 @@ class ViewTransactionModal extends Component {
                                     </div>
 
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">Pet Id</label>
+                                        <label className="m-0 ml-2">Pet ID</label>
                                         <div className="input-group">
                                             <input className="zi-10 form-control"
                                                     name="petId" value={record.petId + " | " + record.petName}

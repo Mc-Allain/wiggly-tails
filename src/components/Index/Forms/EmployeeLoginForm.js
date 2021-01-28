@@ -10,7 +10,7 @@ class EmployeeLoginForm extends Component {
         },
         errors:
         {
-            id: 'Please input your Id',
+            id: 'Please input your ID',
             empLastName: 'Please input your Last Name',
             empPassword: 'Please input your Password'
         },
@@ -44,7 +44,7 @@ class EmployeeLoginForm extends Component {
 
         switch (name) {
             case 'id':
-                errors.id = value.length === 0 ? "Please input your Id" :
+                errors.id = value.length === 0 ? "Please input your ID" :
                     value.length !== 6 ? "Must be at exact 6 characters" : ""
                 break;
 
@@ -128,7 +128,7 @@ class EmployeeLoginForm extends Component {
             return (
                 <div className="alert alert-danger d-flex align-items-center my-1 py-0">
                     <i className="fa fa-exclamation text-danger mr-2"></i>
-                    <span className="lh-0 my-1">Incorrect Id, Last Name or Password</span>
+                    <span className="lh-0 my-1">Incorrect ID, Last Name or Password</span>
                 </div>
             )
         }
@@ -142,7 +142,7 @@ class EmployeeLoginForm extends Component {
         record.empPassword = '';
 
         const errors = { ...this.state.errors };
-        errors.id = 'Please input your Id';
+        errors.id = 'Please input your ID';
         errors.empLastName = 'Please input your Last Name';
         errors.empPassword = 'Please input your Password';
 
@@ -158,13 +158,13 @@ class EmployeeLoginForm extends Component {
             this.props.connected ?
             <form className="form-light p-5 mt-4" noValidate
                 onSubmit={this.onSubmit} onReset={this.onReset}>
-                <h2 className="font-weight-normal text-center">Employee Login</h2>
-                <h5 className="font-weight-light text-center mb-4">
+                <h2 className="text-center">Employee Login</h2>
+                <h5 className="font-weight-normal text-center mb-4">
                     Please input your credentials.
                 </h5> { this.renderLoginError()}
 
                 <div className="form-group">
-                    <label className="m-0 ml-2">Id</label>
+                    <label className="m-0 ml-2">ID</label>
                     <input className={this.inputFieldClasses(errors.id)}
                         type="text" name="id" value={record.id} maxLength="6"
                         onChange={this.onChangeRecord} noValidate />

@@ -146,8 +146,8 @@ class CustomerLoginForm extends Component {
             this.props.connected ?
             <form className="form-light p-5 mt-4" noValidate
             onSubmit={this.onSubmit} onReset={this.onReset}>
-                <h2 className="font-weight-normal text-center">Customer Login</h2>
-                <h5 className="font-weight-light text-center mb-4">
+                <h2 className="text-center">Customer Login</h2>
+                <h5 className="font-weight-normal text-center mb-4">
                     Please input your credentials.
                 </h5> { this.renderLoginError() }
 

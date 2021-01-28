@@ -10,7 +10,7 @@ class ManageEmployeesModal extends Component {
         },
         errors:
         {
-            adminId: 'Please input your Admin Id',
+            adminId: 'Please input your Admin ID',
             adminPassword: 'Please input your Admin Password'
         },
         records: [],
@@ -42,7 +42,7 @@ class ManageEmployeesModal extends Component {
 
         switch(name){
             case 'adminId':
-                errors.adminId=    value.length === 0 ? "Please input your Admin Id" :
+                errors.adminId=    value.length === 0 ? "Please input your Admin ID" :
                                     value.length !== 6 ? "Must be at exact 6 characters" : ""
                 break;
 
@@ -127,7 +127,7 @@ class ManageEmployeesModal extends Component {
         record.adminId = '';
         record.adminPassword = '';
 
-        errors.adminId = 'Please input your Admin Id';
+        errors.adminId = 'Please input your Admin ID';
         errors.adminPassword = 'Please input your Admin Password';
 
         this.setState({ record, errors, submitError, loginError});
@@ -144,7 +144,7 @@ class ManageEmployeesModal extends Component {
             return(
                 <div className="alert alert-danger d-flex align-items-center mb-2 py-0">
                     <i className="fa fa-exclamation text-danger mr-2"></i>
-                    <span className="lh-0 my-1">Incorrect Admin Id or Admin Password</span>
+                    <span className="lh-0 my-1">Incorrect Admin ID or Admin Password</span>
                 </div>
             )
         }
@@ -172,7 +172,7 @@ class ManageEmployeesModal extends Component {
                                 this.state.connected ?
                                 <form className="row form-light mx-2 p-4" noValidate>
                                     <div className="form-group col-12">
-                                        <label className="m-0 ml-2">Admin Id</label>
+                                        <label className="m-0 ml-2">Admin ID</label>
                                         <input className="form-control" type="text"
                                         name="adminId" value={record.adminId} maxLength="6"
                                         onChange={this.onChangeRecord} onKeyPress={this.handleKeyPress}

@@ -74,42 +74,41 @@ class Customer extends Component {
                                     connected ?
                                     <React.Fragment>
                                         <div className="col-4 col-sm-3 d-flex justify-content-center align-items-center p-0">
-                                            <div className="square-100px bg-warning
-                                            d-flex justify-content-center align-items-center">
+                                            <div className="square-100px bg-warning d-flex justify-content-center align-items-center">
                                                 <h4 className="m-0">{record.id}</h4>
                                             </div>
                                         </div>
 
                                         <div className="col-8 col-sm-9 py-3 pr-1">
                                             <h2 className="mb-0">{record.lastName}</h2>
-                                            <h5 className="pl-3 pb-2 bottom-border-light font-weight-light">
+                                            <h5 className="pl-3 pb-2 bottom-border-light font-weight-normal">
                                                 {record.firstName + " " + record.middleName}</h5>
                                         </div>
 
                                         <div className="col-12 py-3 pl-md-5 pr-1">
-                                            <h5 className="font-weight-normal mb-1">Home Address</h5>
-                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-light">
+                                            <h5 className="mb-1">Home Address</h5>
+                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-normal">
                                                 { this.formatHomeAddress(record) }
                                             </h6>
                                         </div>
 
                                         <div className="col-12 py-3 pl-md-5 pr-1">
-                                            <h5 className="font-weight-normal mb-1">Birthdate</h5>
-                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-light">
+                                            <h5 className="mb-1">Birthdate</h5>
+                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-normal">
                                                 {this.formatDate(record.birthdate)}
                                             </h6>
                                         </div>
 
                                         <div className="col-12 col-md-5 col-lg-6 col-xl-5 py-3 pl-md-5 pr-1">
-                                            <h5 className="font-weight-normal mb-1">Mobile Number</h5>
-                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-light">
+                                            <h5 className="mb-1">Mobile Number</h5>
+                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-normal">
                                                 {record.mobileNumber}
                                             </h6>
                                         </div>
 
                                         <div className="col-12 col-md-7 col-lg-6 col-xl-7 py-3 pr-1">
-                                            <h5 className="font-weight-normal mb-1">Email Address</h5>
-                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-light">
+                                            <h5 className="mb-1">Email Address</h5>
+                                            <h6 className="pl-3 pb-2 bottom-border-light font-weight-normal">
                                                 {record.emailAddress  + "" + record.email}
                                             </h6>
                                         </div>
@@ -117,7 +116,7 @@ class Customer extends Component {
                                     connectionFailed ?
                                     <div className="col-12 text-center mt-3">
                                         <h3 className="text-danger mb-0">Database Connection Failed</h3>
-                                        <h5 className="font-weight-normal text-danger mb-3">Please try again later.</h5>
+                                        <h5 className="text-danger mb-3">Please try again later.</h5>
                                         <button type="button" className="btn btn-primary" onClick={this.onRefresh}>Retry</button>
                                     </div> :
                                     <div className="col-12 text-center mt-3">

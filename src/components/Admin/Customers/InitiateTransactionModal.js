@@ -571,7 +571,7 @@ class InitiateTransactionModal extends Component {
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">
-                                            Employee Id<span className="text-danger ml-1">*</span>
+                                            Employee ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
                                             this.props.employeeConnected ?
@@ -656,7 +656,7 @@ class InitiateTransactionModal extends Component {
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">
-                                            Customer Id<span className="text-danger ml-1">*</span>
+                                            Customer ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         <input className="form-control" name="customerId"
                                         value={record.customerId} noValidate disabled />
@@ -664,7 +664,7 @@ class InitiateTransactionModal extends Component {
 
                                     <div className="form-group col-lg-6">
                                         <label className="m-0 ml-2">
-                                            Pet Id<span className="text-danger ml-1">*</span>
+                                            Pet ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
                                             this.props.petConnected ?
@@ -682,7 +682,7 @@ class InitiateTransactionModal extends Component {
                                                                 <option value=''>Choose one</option> :
                                                                 record.customerId.length > 0 ?
                                                                 <option value=''>No pet found</option> :
-                                                                <option value=''>Customer Id is required</option>
+                                                                <option value=''>Customer ID is required</option>
                                                             }
                                                             {
                                                                 this.props.pets.length > 0 ?
@@ -707,7 +707,7 @@ class InitiateTransactionModal extends Component {
                                                                 <option value=''>Choose one</option> :
                                                                 record.customerId.length > 0 ?
                                                                 <option value=''>No pet found</option> :
-                                                                <option value=''>Customer Id is required</option>
+                                                                <option value=''>Customer ID is required</option>
                                                             }
                                                             {
                                                                 this.props.pets.length > 0 ?
