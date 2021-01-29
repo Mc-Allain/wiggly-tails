@@ -28,7 +28,9 @@ class ViewTransactionModal extends Component {
             groom:
             {
                 activity: ''
-            }
+            },
+            lastVisit: '',
+            prevVisit: ''
         },
         errors:
         {
@@ -330,6 +332,25 @@ class ViewTransactionModal extends Component {
             record.checkUp.treatment = this.removeLastSpace(record.checkUp.treatment);
             record.checkUp.addInfo = this.removeLastSpace(record.checkUp.addInfo);
             record.groom.activity = this.removeLastSpace(record.groom.activity);
+
+            const petRecord = this.props.pets.filter(row =>
+                record.petId === row.id);
+
+            if(petRecord[0].lastVisit === null || petRecord[0].lastVisit === '') {
+                record.lastVisit = record.id;
+            }
+            else {
+                const lastVisit = this.props.transactions.filter(row =>
+                    petRecord[0].lastVisit === row.transDate);
+
+                record.lastVisit = petRecord[0].lastVisit > record.transDate ?
+                lastVisit[0].id : record.id
+            }
+
+            const transactions = this.props.transactions.filter(row =>
+                this.props.transaction.petId === row.petId);
+
+            record.prevVisit = transactions.length > 1 ? transactions[1].id : ''
 
             this.props.onSubmitForm();
             this.submission();

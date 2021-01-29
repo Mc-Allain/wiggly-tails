@@ -110,7 +110,7 @@ class TransactionsTable extends Component {
                 employeeConnected={employeeConnected} employeeConnectionFailed={employeeConnectionFailed} />
                 {
                     transactions.map(transaction => <ViewTransactionModal key={transaction.id}
-                    transaction={transaction} onRefresh={onRefresh} history={history}
+                    transaction={transaction} transactions={transactions} onRefresh={onRefresh} history={history}
                     connected={connected} onSubmitForm={onSubmitForm}
                     customers={customers} retryCustomersData={retryCustomersData}
                     customerConnected={customerConnected} customerConnectionFailed={customerConnectionFailed}
