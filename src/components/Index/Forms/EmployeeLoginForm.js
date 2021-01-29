@@ -199,16 +199,16 @@ class EmployeeLoginForm extends Component {
                 </div>
             </form> :
             this.props.connectionFailed ?
-            <div className="text-center">
-                <h1 className="display-5 text-danger">Database Connection Failed</h1>
-                <h3 className="font-weight-normal text-danger mb-3">Please try again later.</h3>
+            <div className="text-center text-danger">
+                <h1 className="mb-1">Database Connection Failed</h1>
+                <h3 className="mb-3">Please try again later.</h3>
                 <button type="button" className="btn btn-primary btn-lg"
                 onClick={this.props.getData}>Retry</button>
             </div> :
-            <React.Fragment>
-                <h1 className="display-5 text-center">Loading Records</h1>
-                <h3 className="font-weight-normal text-center">Please wait...</h3>
-            </React.Fragment>
+            <div className="text-center">
+                <h1 className="mb-1">Loading Data</h1>
+                <h3>Please wait...</h3>
+            </div>
         );
     }
 

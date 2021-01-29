@@ -58,21 +58,21 @@ class ManagePets extends Component {
                             onRefresh={this.onRefresh} onSearch={this.onSearch}
                             searchValue={this.state.searchValue} onClear={this.onClear}
                             connected={this.state.connected} onSubmitForm={this.onSubmitForm} />
-                            <div className="mt-5">
+                            <div className="text-center mt-5">
                                 {
                                     this.state.connected ?
                                     this.state.pets.length === 0 ?
-                                    <h1 className="display-5 text-center mb-5">No Record Found</h1> : null :
+                                    <h1>No Record Found</h1> : null :
                                     this.state.connectionFailed ?
-                                    <div className="text-center">
-                                        <h1 className="display-5 text-danger">Database Connection Failed</h1>
-                                        <h3 className="font-weight-normal text-danger mb-3">Please try again later.</h3>
+                                    <div className="text-danger">
+                                        <h1 className="mb-1">Database Connection Failed</h1>
+                                        <h3 className="mb-3">Please try again later.</h3>
                                         <button type="button" className="btn btn-primary btn-lg"
                                         onClick={this.onRefresh}>Retry</button>
                                     </div> :
                                     <React.Fragment>
-                                        <h1 className="display-5 text-center">Loading Records</h1>
-                                        <h3 className="font-weight-normal text-center">Please wait...</h3>
+                                        <h1 className="mb-1">Loading Data</h1>
+                                        <h3>Please wait...</h3>
                                     </React.Fragment>
                                 }
                             </div>

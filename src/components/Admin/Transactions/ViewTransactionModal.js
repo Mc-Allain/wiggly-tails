@@ -16,6 +16,7 @@ class ViewTransactionModal extends Component {
             petWeight: '',
             remarks: '',
             empId: '',
+            empName: '',
             checkUp:
             {
                 findings: '',
@@ -97,6 +98,7 @@ class ViewTransactionModal extends Component {
         record.petWeight = transaction.petWeight;
         record.remarks = transaction.remarks;
         record.empId = transaction.empId;
+        record.empName = transaction.empLastName + ", " + transaction.empFirstName + " " + transaction.empMiddleName;
         record.checkUp = checkUp;
         record.groom = groom;
 
@@ -498,6 +500,14 @@ class ViewTransactionModal extends Component {
         })
     }
 
+    onClearRecordCustomerId = () => {
+        const record = {...this.state.record};
+        const errors = {...this.state.errors};
+        record.customerId = '';
+        errors.customerId = ' ';
+        this.setState({ record, errors });
+    }
+
     onTogglePetSearch = () => {
         const pet = {...this.state.pet};
         pet.search = !pet.search;
@@ -525,6 +535,18 @@ class ViewTransactionModal extends Component {
                 [name] : value
             }
         }))
+    }
+
+    onClearRecordPetId = () => {
+        const record = {...this.state.record};
+        const errors = {...this.state.errors};
+        record.petId = '';
+        errors.petId = ' ';
+        if(!this.customerIdExists()) {
+            record.customerId = '';
+            errors.customerId = ' ';
+        }
+        this.setState({ record, errors });
     }
 
     onToggleEmployeeSearch = () => {
@@ -556,6 +578,14 @@ class ViewTransactionModal extends Component {
         }))
     }
 
+    onClearRecordEmpId = () => {
+        const record = {...this.state.record};
+        const errors = {...this.state.errors};
+        record.empId = '';
+        errors.empId = ' ';
+        this.setState({ record, errors });
+    }
+
     render() {
         const { record, errors, customer, employee, pet, connected, submitted, updated, failed } = this.state;
         const { transaction } = this.props;
@@ -567,16 +597,14 @@ class ViewTransactionModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id={"viewTransactionModalTitle-" + transaction.id}>
-                                    View Transaction
-                                </h5>
+                                <h5 className="modal-title" id={"viewTransactionModalTitle-" + transaction.id}>Transaction Info</h5>
                                 {
                                     !submitted && this.props.connected ?
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button> :
-                                    <button className="btn btn-light text-danger p-1" disabled>
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button>
                                 }
@@ -645,7 +673,7 @@ class ViewTransactionModal extends Component {
                                             Served by<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.employeeConnected ?
+                                            this.props.employeeConnected || submitted ?
                                                 <React.Fragment>
                                                 <div className="input-group">
                                                     {
@@ -666,6 +694,7 @@ class ViewTransactionModal extends Component {
                                                                 ) : null
                                                             }
                                                         </select> :
+                                                        this.empIdExists() || this.state.record.empId === '' ?
                                                         <React.Fragment>
                                                             <select className={"zi-10 " + this.inputFieldClasses(errors.empId)}
                                                             name="empId" value={record.empId} onChange={this.onChangeRecord}
@@ -690,7 +719,18 @@ class ViewTransactionModal extends Component {
                                                                     Search
                                                                 </button>
                                                             </div>
-                                                        </React.Fragment>
+                                                        </React.Fragment> :
+                                                        <div className="input-group">
+                                                            <input className="form-control zi-10"
+                                                            value={"Deleted Record: " + record.empId + " | " + record.empName}
+                                                            noValidate disabled />
+                                                            <div className="input-group-append">
+                                                                <button type="button" className="btn btn-light input-group-text"
+                                                                onClick={this.onClearRecordEmpId}>
+                                                                    Change
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     }
                                                     </div>
                                                 {
@@ -712,7 +752,7 @@ class ViewTransactionModal extends Component {
                                             this.props.employeeConnectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
@@ -730,7 +770,7 @@ class ViewTransactionModal extends Component {
                                             Customer ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.customerConnected ?
+                                            this.props.customerConnected || submitted ?
                                             <React.Fragment>
                                                 <div className="input-group">
                                                     {
@@ -751,6 +791,7 @@ class ViewTransactionModal extends Component {
                                                                 ) : null
                                                             }
                                                         </select> :
+                                                        this.customerIdExists() || this.state.record.customerId === '' ?
                                                         <React.Fragment>
                                                             <select className={"zi-10 " + this.inputFieldClasses(errors.customerId)}
                                                             name="customerId" value={record.customerId} onChange={this.onChangeRecord}
@@ -775,7 +816,18 @@ class ViewTransactionModal extends Component {
                                                                     Search
                                                                 </button>
                                                             </div>
-                                                        </React.Fragment>
+                                                        </React.Fragment> :
+                                                        <div className="input-group">
+                                                            <input className="form-control zi-10"
+                                                            value={"Deleted Record: " + record.customerId + " | " + record.customerName}
+                                                            noValidate disabled />
+                                                            <div className="input-group-append">
+                                                                <button type="button" className="btn btn-light input-group-text"
+                                                                onClick={this.onClearRecordCustomerId}>
+                                                                    Change
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     }
                                                 </div>
                                                 {
@@ -797,7 +849,7 @@ class ViewTransactionModal extends Component {
                                             this.props.customerConnectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
@@ -815,7 +867,7 @@ class ViewTransactionModal extends Component {
                                             Pet ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.petConnected ?
+                                            this.props.petConnected || submitted ?
                                             <React.Fragment>
                                                 <div className="input-group">
                                                     {
@@ -844,6 +896,7 @@ class ViewTransactionModal extends Component {
                                                                 ) : null
                                                             }
                                                         </select> :
+                                                        this.petIdExists() || this.state.record.petId === '' ?
                                                         <select className={"zi-10 " + this.inputFieldClasses(errors.petId)}
                                                         name="petId" value={record.petId} onChange={this.onChangeRecord}
                                                         noValidate>
@@ -868,13 +921,25 @@ class ViewTransactionModal extends Component {
                                                                     </option>
                                                                 ) : null
                                                             }
-                                                        </select>
+                                                        </select> :
+                                                        <div className="input-group">
+                                                            <input className="form-control zi-10"
+                                                            value={"Deleted Record: " + record.petId + " | " + record.petName}
+                                                            noValidate disabled />
+                                                            <div className="input-group-append">
+                                                                <button type="button" className="btn btn-light input-group-text"
+                                                                onClick={this.onClearRecordPetId}>
+                                                                    Change
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     }
                                                     {
                                                         (this.props.pets.filter(row =>
                                                             (row.petName.match(pet.searchValue) && row.ownerId === record.customerId) ||
                                                             (pet.searchValue === '' && row.ownerId === record.customerId)
-                                                        ).length > 0 || pet.searchValue.length > 0) && !submitted ?
+                                                        ).length > 0 || pet.searchValue.length > 0) && !submitted &&
+                                                        (this.petIdExists() || record.petId === '') ?
                                                         <div className="input-group-append">
                                                             <button type="button" className="btn btn-light input-group-text"
                                                             onClick={this.onTogglePetSearch}>
@@ -902,7 +967,7 @@ class ViewTransactionModal extends Component {
                                             this.props.petConnectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
@@ -941,10 +1006,10 @@ class ViewTransactionModal extends Component {
                                         {
                                             submitted ?
                                             <textarea className="form-control" type="text" name="remarks"
-                                            value={record.remarks} rows="2" noValidate disabled /> :
+                                            value={record.remarks} rows="2" placeholder="(Optional)" noValidate disabled /> :
                                             <textarea className={this.inputFieldClasses(errors.remarks)}
                                             type="text" name="remarks" value={record.remarks}
-                                            onChange={this.onChangeRecord} rows="2" noValidate />
+                                            onChange={this.onChangeRecord} rows="2" placeholder="(Optional)" noValidate />
                                         }
                                         { this.renderRecordErrors(errors.remarks) }
                                     </div>
@@ -1032,6 +1097,18 @@ class ViewTransactionModal extends Component {
                 </div>
             </React.Fragment>
         );
+    }
+
+    empIdExists = () => {
+        return this.props.employees.filter(row => this.state.record.empId === row.id).length === 1
+    }
+
+    customerIdExists = () => {
+        return this.props.customers.filter(row => this.state.record.customerId === row.id).length === 1
+    }
+
+    petIdExists = () => {
+        return this.props.pets.filter(row => this.state.record.petId === row.id).length === 1
     }
 
     onViewAdmission = link => {
@@ -1122,23 +1199,23 @@ class ViewTransactionModal extends Component {
                                 {
                                     submitted ?
                                     <textarea className="form-control" type="text" name="addInfo"
-                                    value={checkUp.addInfo} rows="2" noValidate disabled /> :
+                                    value={checkUp.addInfo} rows="2" placeholder="(Optional)" noValidate disabled /> :
                                     <textarea className={this.inputFieldClasses(checkUpErrors.addInfo)}
                                     type="text" name="addInfo" value={checkUp.addInfo}
-                                    onChange={this.onChangeCheckUp} rows="2" noValidate />
+                                    onChange={this.onChangeCheckUp} rows="2" placeholder="(Optional)" noValidate />
                                 }
                                 { this.renderRecordErrors(checkUpErrors.addInfo) }
                             </div>
                         </React.Fragment> : 
                         this.state.checkUpConnectionFailed ?
-                        <div className="col-12 text-center">
-                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
-                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                        <div className="col-12 text-center text-danger">
+                            <h3 className="mb-1">Database Connection Failed</h3>
+                            <h5 className="mb-3">Please try again later.</h5>
                             <button type="button" className="btn btn-primary" onClick={this.retryCheckUpData}>Retry</button>
                         </div> :
                         <div className="col-12 text-center">
-                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal">Please wait...</h5>
+                            <h3 className="mb-1">Loading Data</h3>
+                            <h5>Please wait...</h5>
                         </div>
                     }
                 </div>
@@ -1173,14 +1250,14 @@ class ViewTransactionModal extends Component {
                             </div>
                         </React.Fragment> :
                         this.state.groomConnectionFailed ?
-                        <div className="col-12 text-center">
-                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
-                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                        <div className="col-12 text-center text-danger">
+                            <h3 className="mb-1">Database Connection Failed</h3>
+                            <h5 className="mb-3">Please try again later.</h5>
                             <button type="button" className="btn btn-primary" onClick={this.retryGroomData}>Retry</button>
                         </div> :
                         <div className="col-12 text-center">
-                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal">Please wait...</h5>
+                            <h3 className="mb-1">Loading Data</h3>
+                            <h5>Please wait...</h5>
                         </div>
                     }
                 </div>

@@ -194,7 +194,10 @@ class ViewAdmissionModal extends Component {
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
-                                    </button> : null
+                                    </button> :
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button>
                                 }
                             </div>
                             <div className="modal-body">
@@ -266,7 +269,17 @@ class ViewAdmissionModal extends Component {
                                                 <i className="fa fa-eraser"></i>
                                                 <span className="ml-1">Reset</span>
                                             </button>
-                                        </React.Fragment> : null
+                                        </React.Fragment> :
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1" disabled>
+                                                <i className="fa fa-pen fa-sm"></i>
+                                                <span className="ml-1">Submit</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto mr-1" disabled>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment>
                                     }
                                 </div>
                             </div>

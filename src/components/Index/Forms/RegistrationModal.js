@@ -583,7 +583,7 @@ class RegistrationModal extends Component {
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button> :
-                                    <button className="btn btn-light text-danger p-1" disabled>
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button>
                                 }
@@ -840,7 +840,7 @@ class RegistrationModal extends Component {
                                             this.props.connectionFailed ?
                                             <div className="input-group d-block d-sm-flex px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"

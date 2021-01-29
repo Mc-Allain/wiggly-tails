@@ -209,8 +209,20 @@ tbody .table-row:hover {
   background-color: rgba(0, 0, 0, 0.45);
 }
 
+.bg-dark-40 {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.bg-dark-35 {
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.bg-dark-30 {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .bg-dark-20 {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 textarea {
@@ -274,8 +286,8 @@ textarea {
 }
 
 .carousel .carousel-indicators li {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 100%;
 }
 

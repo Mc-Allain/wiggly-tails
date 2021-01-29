@@ -252,14 +252,14 @@ class ViewPetModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id={"viewPetModalTitle-" + pet.id}>View Pet</h5>
+                                <h5 className="modal-title" id={"viewPetModalTitle-" + pet.id}>Pet Info</h5>
                                 {
                                     (!submitted && this.props.connected) || deleted ?
                                     <button id={"btnClose-" + pet.id} className="btn btn-light text-danger p-1"
                                     data-dismiss="modal" onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button> :
-                                    <button className="btn btn-light text-danger p-1" disabled>
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button>
                                 }
@@ -339,7 +339,7 @@ class ViewPetModal extends Component {
                                             Owner ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.customerConnected ?
+                                            this.props.customerConnected || submitted ?
                                             <React.Fragment>
                                                 <div className="input-group">
                                                     {
@@ -407,7 +407,7 @@ class ViewPetModal extends Component {
                                             this.props.customerConnectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"

@@ -191,16 +191,14 @@ class ViewAdmissionModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id={"viewAdmissionModalTitle-" + admission.id}>
-                                    View Admission
-                                </h5>
+                                <h5 className="modal-title" id={"viewAdmissionModalTitle-" + admission.id}>Admission Info</h5>
                                 {
                                     !submitted && this.props.connected ?
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button> :
-                                    <button className="btn btn-light text-danger p-1" disabled>
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button>
                                 }

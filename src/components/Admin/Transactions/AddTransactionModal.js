@@ -546,7 +546,10 @@ class AddTransactionModal extends Component {
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
-                                    </button> : null
+                                    </button> :
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button>
                                 }
                             </div>
                             <div className="modal-body">
@@ -613,7 +616,7 @@ class AddTransactionModal extends Component {
                                             Served by<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.employeeConnected ?
+                                            this.props.employeeConnected || submitted ?
                                                 <React.Fragment>
                                                 <div className="input-group">
                                                     {
@@ -680,11 +683,11 @@ class AddTransactionModal extends Component {
                                             this.props.employeeConnectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.retryEmployeesData}>Retry</button>
+                                                    onClick={this.props.retryEmployeesData}>Retry</button>
                                                 </div>
                                             </div> :
                                             <input className="form-control"
@@ -698,7 +701,7 @@ class AddTransactionModal extends Component {
                                             Customer ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.customerConnected ?
+                                            this.props.customerConnected || submitted ?
                                             <React.Fragment>
                                                 <div className="input-group">
                                                     {
@@ -765,11 +768,11 @@ class AddTransactionModal extends Component {
                                             this.props.customerConnectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.retryCustomersData}>Retry</button>
+                                                    onClick={this.props.retryCustomersData}>Retry</button>
                                                 </div>
                                             </div> :
                                             <input className="form-control"
@@ -783,7 +786,7 @@ class AddTransactionModal extends Component {
                                             Pet ID<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.petConnected ?
+                                            this.props.petConnected || submitted ?
                                             <React.Fragment>
                                                 <div className="input-group">
                                                     {
@@ -870,11 +873,11 @@ class AddTransactionModal extends Component {
                                             this.props.petConnectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
-                                                    onClick={this.retryPetsData}>Retry</button>
+                                                    onClick={this.props.retryPetsData}>Retry</button>
                                                 </div>
                                             </div> :
                                             <input className="form-control"
@@ -909,10 +912,10 @@ class AddTransactionModal extends Component {
                                         {
                                             submitted ?
                                             <textarea className="form-control" type="text" name="remarks"
-                                            value={record.remarks} rows="2" noValidate disabled /> :
+                                            value={record.remarks} rows="2" placeholder="(Optional)" noValidate disabled /> :
                                             <textarea className={this.inputFieldClasses(errors.remarks)}
                                             type="text" name="remarks" value={record.remarks}
-                                            onChange={this.onChangeRecord} rows="2" noValidate />
+                                            onChange={this.onChangeRecord} rows="2" placeholder="(Optional)" noValidate />
                                         }
                                         { this.renderRecordErrors(errors.remarks) }
                                     </div>
@@ -958,7 +961,17 @@ class AddTransactionModal extends Component {
                                                 <i className="fa fa-eraser"></i>
                                                 <span className="ml-1">Reset</span>
                                             </button>
-                                        </React.Fragment> : null
+                                        </React.Fragment> :
+                                        <React.Fragment>
+                                        <button className="btn btn-primary w-auto mr-1" disabled>
+                                            <i className="fa fa-sign-in-alt"></i>
+                                            <span className="ml-1">Submit</span>
+                                        </button>
+                                        <button className="btn btn-danger w-auto" disabled>
+                                            <i className="fa fa-eraser"></i>
+                                            <span className="ml-1">Reset</span>
+                                        </button>
+                                    </React.Fragment>
                                     }
                                 </div>
                             </div>
@@ -1042,10 +1055,10 @@ class AddTransactionModal extends Component {
                         {
                             submitted ?
                             <textarea className="form-control" type="text" name="addInfo"
-                            value={checkUp.addInfo} rows="2" noValidate disabled /> : 
+                            value={checkUp.addInfo} rows="2" placeholder="(Optional)" noValidate disabled /> : 
                             <textarea className={this.inputFieldClasses(checkUpErrors.addInfo)}
                             type="text" name="addInfo" value={checkUp.addInfo}
-                            onChange={this.onChangeCheckUp} rows="2" noValidate />
+                            onChange={this.onChangeCheckUp} rows="2" placeholder="(Optional)" noValidate />
                         }
                         { this.renderRecordErrors(checkUpErrors.addInfo) }
                     </div>

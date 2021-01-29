@@ -582,7 +582,10 @@ class AddCustomerModal extends Component {
                                     <button className="btn btn-light text-danger p-1" data-dismiss="modal"
                                     onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
-                                    </button> : null
+                                    </button> :
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
+                                        <i className="fa fa-window-close fa-lg"></i>
+                                    </button>
                                 }
                             </div>
                             <div className="modal-body">
@@ -794,7 +797,7 @@ class AddCustomerModal extends Component {
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.connected ?
+                                            this.props.connected || submitted ?
                                             <React.Fragment>
                                                 <div className="input-group d-block d-sm-flex px-0">
                                                     {
@@ -837,7 +840,7 @@ class AddCustomerModal extends Component {
                                             this.props.connectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
@@ -994,7 +997,17 @@ class AddCustomerModal extends Component {
                                                 <i className="fa fa-eraser"></i>
                                                 <span className="ml-1">Reset</span>
                                             </button>
-                                        </React.Fragment> : null
+                                        </React.Fragment> :
+                                        <React.Fragment>
+                                            <button className="btn btn-primary w-auto mr-1" disabled>
+                                                <i className="fa fa-sign-in-alt"></i>
+                                                <span className="ml-1">Submit</span>
+                                            </button>
+                                            <button className="btn btn-danger w-auto" disabled>
+                                                <i className="fa fa-eraser"></i>
+                                                <span className="ml-1">Reset</span>
+                                            </button>
+                                        </React.Fragment> 
                                     }
                                 </div>
                             </div>

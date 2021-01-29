@@ -118,7 +118,7 @@ class AboutUsModal extends Component {
                                     </div>
 
                                     <div className="col-12 pb-3 pl-md-3 pr-1">
-                                        <h5 className="mb-3">Copyright &copy; 2021: Some rights reserved</h5>
+                                        <h5 className="mb-3">Copyright &copy; 2021: Some Rights Reserved</h5>
                                         <h6 className="px-3 font-weight-normal">
                                             <span className="ml-4">This</span> Website was developed for the purpose of University Project.
                                             Most of the content and data that has been put in this website are not originally ours

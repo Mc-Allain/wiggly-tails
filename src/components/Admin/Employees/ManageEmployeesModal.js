@@ -190,15 +190,15 @@ class ManageEmployeesModal extends Component {
                                     </div>
                                 </form> :
                                 this.state.connectionFailed ?
-                                <div className="text-center">
-                                    <h3 className="text-danger mb-0">Database Connection Failed</h3>
-                                    <h5 className="font-weight-normal text-danger mb-3">Please try again later.</h5>
+                                <div className="col-12 text-center text-danger">
+                                    <h3 className="mb-1">Database Connection Failed</h3>
+                                    <h5 className="mb-3">Please try again later</h5>
                                     <button type="button" className="btn btn-primary" onClick={this.onRefresh}>Retry</button>
                                 </div> :
-                                <React.Fragment>
-                                    <h3 className="text-center mb-0">Loading Records</h3>
-                                    <h5 className="font-weight-normal text-center">Please wait...</h5>
-                                </React.Fragment>
+                                <div className="col-12 text-center">
+                                    <h3 className="mb-1">Loading Data</h3>
+                                    <h5>Please wait...</h5>
+                                </div>
                                 
                             }
                         </div>

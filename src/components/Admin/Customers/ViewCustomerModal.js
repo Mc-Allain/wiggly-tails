@@ -538,15 +538,14 @@ class ViewCustomerModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id={"viewCustomerModalTitle-" + customer.id}>View Customer</h5>
+                                <h5 className="modal-title" id={"viewCustomerModalTitle-" + customer.id}>Customer Info</h5>
                                 {
                                     (!submitted && this.props.connected) || deleted ?
-                                    <button id={"btnClose-" + customer.id}
-                                    className="btn btn-light text-danger p-1"
+                                    <button id={"btnClose-" + customer.id} className="btn btn-light text-danger p-1"
                                     data-dismiss="modal" onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button> :
-                                    <button className="btn btn-light text-danger p-1" disabled>
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button>
                                 }
@@ -761,7 +760,7 @@ class ViewCustomerModal extends Component {
                                             Email Address<span className="text-danger ml-1">*</span>
                                         </label>
                                         {
-                                            this.props.connected ?
+                                            this.props.connected || submitted || deleting || deleted ?
                                             <React.Fragment>
                                                 <div className="input-group d-block d-sm-flex px-0">
                                                     {
@@ -804,7 +803,7 @@ class ViewCustomerModal extends Component {
                                             this.props.connectionFailed ?
                                             <div className="input-group px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"

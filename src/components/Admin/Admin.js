@@ -5,8 +5,6 @@ import ManageEmployeesModal from './Employees/ManageEmployeesModal.js';
 import Footer from '../Footer.js';
 import Forbidden from './Forbidden.js';
 
-import noImage from '../../img/no-image.png';
-
 class Admin extends Component {
     state = { }
 
@@ -28,18 +26,18 @@ class Admin extends Component {
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
                                         <h3 className="mt-3">
                                             Transactions</h3>
-                                        <img src={noImage} alt="transactions"
-                                        className="card-img d-none d-md-inline my-4" />
+                                        <h1 className="display-1 text-primary">
+                                            <i className="fa fa-exchange-alt"></i>
+                                        </h1>
                                         
                                         <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
                                             <h5>Manage transaction records here</h5>
                                             <p>This is where all services offered to a customer are recorded.</p>
                                         </div>
 
-                                        <button className="btn btn-warning border w-75 mt-3"
+                                        <button className="btn btn-primary border w-75 mt-3"
                                         onClick={() => this.onClickLink("/wiggly-tails/admin/manage-transactions")}>
-                                            <i className="fa fa-exchange-alt"></i>
-                                            <span className="ml-1">Manage</span>
+                                            Manage
                                         </button>
                                     </div>
                                 </div>
@@ -48,18 +46,18 @@ class Admin extends Component {
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
                                         <h3 className="mt-3">
                                             Customers</h3>
-                                        <img src={noImage} alt="customers"
-                                        className="card-img d-none d-md-inline my-4" />
+                                        <h1 className="display-1 text-secondary">
+                                            <i className="fa fa-users"></i>
+                                        </h1>
                                         
                                         <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
                                             <h5>Manage customer records here</h5>
                                             <p>This is where all customer informations are recorded.</p>
                                         </div>
 
-                                        <button className="btn btn-primary border w-75 mt-3"
+                                        <button className="btn btn-secondary border w-75 mt-3"
                                         onClick={() => this.onClickLink("/wiggly-tails/admin/manage-customers")}>
-                                            <i className="fa fa-users"></i>
-                                            <span className="ml-1">Manage</span>
+                                            Manage
                                         </button>
                                     </div>
                                 </div>
@@ -68,18 +66,18 @@ class Admin extends Component {
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
                                         <h3 className="mt-3">
                                             Pets</h3>
-                                        <img src={noImage} alt="pets"
-                                        className="card-img d-none d-md-inline my-4" />
+                                        <h1 className="display-1 text-warning">
+                                            <i className="fa fa-cat"></i>
+                                        </h1>
 
                                         <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
                                             <h5>Manage pet records here</h5>
                                             <p>This is where all customer's pet informations are recorded.</p>
                                         </div>
 
-                                        <button className="btn btn-secondary border w-75 mt-3"
+                                        <button className="btn btn-warning border w-75 mt-3"
                                         onClick={() => this.onClickLink("/wiggly-tails/admin/manage-pets")}>
-                                            <i className="fa fa-cat"></i>
-                                            <span className="ml-1">Manage</span>
+                                            Manage
                                         </button>
                                     </div>
                                 </div>
@@ -88,8 +86,9 @@ class Admin extends Component {
                                     <div className="custom-card-light max-h-90 min-h-24 p-3">
                                         <h3 className="mt-3">
                                             Employees</h3>
-                                        <img src={noImage} alt="employees"
-                                        className="card-img d-none d-md-inline my-4" />
+                                        <h1 className="display-1 text-danger">
+                                            <i className="fa fa-user-md"></i>
+                                        </h1>
 
                                         <div className="p-3 mt-2 admin-card-content-height h-md-130px h-sm-150px h-lg-200px h-xl-160px">
                                             <h5>Manage employee records here</h5>
@@ -98,8 +97,7 @@ class Admin extends Component {
 
                                         <button className="btn btn-danger border w-75 mt-3"
                                         data-toggle="modal" data-target="#manageEmployeesModal">
-                                            <i className="fa fa-user-md"></i>
-                                            <span className="ml-1">Manage</span>
+                                            Manage
                                         </button>
                                     </div>
                                 </div>

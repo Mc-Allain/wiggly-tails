@@ -223,14 +223,14 @@ class ViewPetModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id={"viewPetModalTitle" + pet.id}>View Pet</h5>
+                                <h5 className="modal-title" id={"viewPetModalTitle" + pet.id}>Pet Info</h5>
                                 {
                                     (!submitted && this.props.connected) || deleted ?
                                     <button id={"btnClose-" + pet.id} className="btn btn-light text-danger p-1"
                                     data-dismiss="modal" onClick={this.onReset}>
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button> :
-                                    <button className="btn btn-light text-danger p-1" disabled>
+                                    <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                         <i className="fa fa-window-close fa-lg"></i>
                                     </button>
                                 }

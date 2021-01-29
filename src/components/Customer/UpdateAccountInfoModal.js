@@ -783,7 +783,7 @@ class UpdateAccountInfoModal extends Component {
                                             this.props.connectionFailed ?
                                             <div className="input-group d-block d-sm-flex px-0">
                                                 <input className="form-control border border-danger zi-10"
-                                                value="Database Connection Failed: Please try again later..."
+                                                value="Database Connection Failed: Please try again later."
                                                 noValidate disabled /> 
                                                 <div className="input-group-append justify-content-end">
                                                     <button type="button" className="btn btn-light input-group-text"
@@ -838,17 +838,17 @@ class UpdateAccountInfoModal extends Component {
                                 </form>
                                 {
                                     submitted ?
-                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-primary d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-pen text-primary mr-2"></i>
                                         <span>Updating an Account Info...</span>
                                     </div> :
                                     updated ? 
-                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-success d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-check text-success mr-2"></i>
                                         <span>Account Info was successfully updated.</span>
                                     </div> :
                                     failed ?
-                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1">
+                                    <div className="alert alert-danger d-flex align-items-center mt-3 mb-1 d-lg-none">
                                         <i className="fa fa-exclamation text-danger mr-2"></i>
                                         <span>Database Connection Failed.</span>
                                     </div> : null

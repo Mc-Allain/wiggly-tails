@@ -76,45 +76,6 @@ class ViewTransactionModal extends Component {
         this.setState({ record });
     }
 
-    onChangeRecord = e => {
-        const { name, value } = e.target;
-        this.setState(currentState => ({
-            ...currentState,
-            record: {
-                ...currentState.record,
-                [name]: value
-            }
-        }))
-    }
-
-    onChangeCheckUp = e => {
-        const { name, value } = e.target;
-        this.setState(currentState => ({
-            ...currentState,
-            record: {
-                ...currentState.record,
-                checkUp : {
-                    ...currentState.record.checkUp,
-                    [name] : value
-                }
-            }
-        }))
-    }
-
-    onChangeGroom = e => {
-        const { name, value } = e.target;
-        this.setState(currentState => ({
-            ...currentState,
-            record: {
-                ...currentState.record,
-                groom : {
-                    ...currentState.record.groom,
-                    [name] : value
-                }
-            }
-        }))
-    }
-
     render() {
         const { record } = this.state;
         const { transaction } = this.props;
@@ -126,11 +87,8 @@ class ViewTransactionModal extends Component {
                     <div className="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id={"viewTransactionModalTitle-" + transaction.id}>
-                                    View Transaction
-                                </h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
+                                <h5 className="modal-title" id={"viewTransactionModalTitle-" + transaction.id}>Transaction Info</h5>
+                                <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                     <i className="fa fa-window-close fa-lg"></i>
                                 </button>
                             </div>
@@ -155,29 +113,26 @@ class ViewTransactionModal extends Component {
                                         <label className="m-0 ml-2">Served by</label>
                                         <div className="input-group">
                                             <input className="zi-10 form-control"
-                                            name="empId" value={record.empId + " | " +
-                                            record.empLastName + ", " + record.empFirstName + " " +
-                                            record.empMiddleName}
+                                            name="empId" value={record.empFirstName}
                                             noValidate disabled />
                                         </div>
                                     </div>
 
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">Customer ID</label>
+                                        <label className="m-0 ml-2">Customer Name</label>
                                         <div className="input-group">
                                             <input className="zi-10 form-control"
-                                                name="customerId" value={record.customerId + " | " +
-                                                record.customerLastName + ", " + record.customerFirstName + " " +
-                                                record.customerMiddleName}
+                                                name="customerId" value={record.customerLastName + ", " +
+                                                record.customerFirstName + " " + record.customerMiddleName}
                                                 noValidate disabled />
                                         </div>
                                     </div>
 
                                     <div className="form-group col-lg-6">
-                                        <label className="m-0 ml-2">Pet ID</label>
+                                        <label className="m-0 ml-2">Pet Name</label>
                                         <div className="input-group">
                                             <input className="zi-10 form-control"
-                                                    name="petId" value={record.petId + " | " + record.petName}
+                                                    name="petId" value={record.petName}
                                                     noValidate disabled />
                                         </div>
                                     </div>
@@ -284,14 +239,14 @@ class ViewTransactionModal extends Component {
                             </div>
                         </React.Fragment> :
                         this.state.checkUpConnectionFailed ?
-                        <div className="col-12 text-center">
-                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
-                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                        <div className="col-12 text-center text-danger">
+                            <h3 className="mb-1">Database Connection Failed</h3>
+                            <h5 className="mb-3">Please try again later.</h5>
                             <button type="button" className="btn btn-primary" onClick={this.retryCheckUpData}>Retry</button>
                         </div> :
                         <div className="col-12 text-center">
-                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal">Please wait...</h5>
+                            <h3 className="mb-1">Loading Data</h3>
+                            <h5>Please wait...</h5>
                         </div>
                     }
                 </div>
@@ -315,14 +270,14 @@ class ViewTransactionModal extends Component {
                             </div>
                         </React.Fragment> :
                         this.state.groomConnectionFailed ?
-                        <div className="col-12 text-center">
-                            <h3 className="font-weight-normal text-danger mb-0">Database Connection Failed</h3>
-                            <h5 className="font-weight-normal text-danger mb-3">Please try again later...</h5>
+                        <div className="col-12 text-center text-danger">
+                            <h3 className="mb-1">Database Connection Failed</h3>
+                            <h5 className="mb-3">Please try again later.</h5>
                             <button type="button" className="btn btn-primary" onClick={this.retryGroomData}>Retry</button>
                         </div> :
                         <div className="col-12 text-center">
-                            <h3 className="font-weight-normal mb-0">Loading Data</h3>
-                            <h5 className="font-weight-normal">Please wait...</h5>
+                            <h3 className="mb-1">Loading Data</h3>
+                            <h5>Please wait...</h5>
                         </div>
                     }
                 </div>
