@@ -89,7 +89,7 @@ class AboutUsModal extends Component {
                                                     <b className="mr-2">Others: </b>
                                                     <ul className="list-unstyled list-lh-1">
                                                         <li>Enriquez, Ryan Tonido (BSIT Student)</li>
-                                                        <li>Flores, Jaizen Ann Noble (BSIT Student)</li>
+                                                        <li>Flores, Jaizel Ann Noble (BSIT Student)</li>
                                                         <li>Ruiz, Jehiele Jeff (BSIT Student)</li>
                                                     </ul>
                                                 </li>
