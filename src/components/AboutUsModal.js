@@ -88,7 +88,7 @@ class AboutUsModal extends Component {
                                                 <li className="d-block d-md-flex">
                                                     <b className="mr-2">Others: </b>
                                                     <ul className="list-unstyled list-lh-1">
-                                                        <li>Enriquez, Ryan Tonido (BSIT Student)</li>
+                                                        <li>Enriquez, Ryan Andrew Tonido (BSIT Student)</li>
                                                         <li>Flores, Jaizel Ann Noble (BSIT Student)</li>
                                                         <li>Ruiz, Jehiele Jeff (BSIT Student)</li>
                                                     </ul>
