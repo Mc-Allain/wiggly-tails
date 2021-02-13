@@ -99,7 +99,7 @@ class ViewTransactions extends Component {
 
     getData = () => {
         const { history } = this.props;
-        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewAccountTransactions.php?id='+
+        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewAccountTransactions.php?id='+
         history.location.state.id)
         .then(res => {
             const transactions = res.data;
@@ -115,7 +115,7 @@ class ViewTransactions extends Component {
 
     searchData = searchValue => {
         const { history } = this.props;
-        axios.get('https://princemc.heliohost.us/veterinaryClinic/searchAccountTransaction.php?id='+
+        axios.get('http://princemc.heliohost.us/veterinaryClinic/searchAccountTransaction.php?id='+
         history.location.state.id+"&search="+searchValue)
         .then(res => {
             const transactions = res.data;

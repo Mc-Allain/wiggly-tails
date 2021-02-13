@@ -294,7 +294,7 @@ class ViewTransactionModal extends Component {
     }
 
     getCheckUpData = id => {
-        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewTransactionCheckUp.php?id='+id)
+        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewTransactionCheckUp.php?id='+id)
         .then(res => {
             let checkUp = res.data;
             const checkUpConnected = true;
@@ -324,7 +324,7 @@ class ViewTransactionModal extends Component {
     }
 
     getGroomData = id => {
-        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewTransactionGroom.php?id='+id)
+        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewTransactionGroom.php?id='+id)
         .then(res => {
             let groom = res.data;
             const groomConnected = true;

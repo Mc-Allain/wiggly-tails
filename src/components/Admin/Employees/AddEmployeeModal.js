@@ -133,7 +133,7 @@ class AddEmployeeModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('https://princemc.heliohost.us/veterinaryClinic/insertEmployee.php', record)
+            axios.post('http://princemc.heliohost.us/veterinaryClinic/insertEmployee.php', record)
             .then(() => {
                 onRefresh();
                 this.onReset();

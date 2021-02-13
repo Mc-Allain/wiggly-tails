@@ -367,7 +367,7 @@ class RegistrationModal extends Component {
             this.props.onRegister();
             this.submission();
 
-            axios.post('https://princemc.heliohost.us/veterinaryClinic/insertCustomerPet.php', record)
+            axios.post('http://princemc.heliohost.us/veterinaryClinic/insertCustomerPet.php', record)
             .then(() => {
                 getData();
                 this.onReset();

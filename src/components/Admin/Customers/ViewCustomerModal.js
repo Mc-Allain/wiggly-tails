@@ -314,7 +314,7 @@ class ViewCustomerModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('https://princemc.heliohost.us/veterinaryClinic/updateCustomer.php', record)
+            axios.post('http://princemc.heliohost.us/veterinaryClinic/updateCustomer.php', record)
             .then(() => {
                 onRefresh();
                 this.postSubmit();
@@ -970,7 +970,7 @@ class ViewCustomerModal extends Component {
         this.props.onSubmitForm();
         this.deletion();
 
-        axios.post('https://princemc.heliohost.us/veterinaryClinic/deleteCustomer.php', record)
+        axios.post('http://princemc.heliohost.us/veterinaryClinic/deleteCustomer.php', record)
         .then(this.postDelete)
         .catch(error => {
             console.log(error);

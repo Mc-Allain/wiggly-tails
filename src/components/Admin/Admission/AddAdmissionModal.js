@@ -88,7 +88,7 @@ class ViewAdmissionModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('https://princemc.heliohost.us/veterinaryClinic/insertAdmission.php', record)
+            axios.post('http://princemc.heliohost.us/veterinaryClinic/insertAdmission.php', record)
             .then(() => {
                 onRefresh();
                 this.onReset();
