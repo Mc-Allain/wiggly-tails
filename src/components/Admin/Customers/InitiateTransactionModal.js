@@ -299,7 +299,7 @@ class InitiateTransactionModal extends Component {
 
             this.submission();
 
-            axios.post('http://localhost/reactPhpCrud/veterinaryClinic/insertTransaction.php', record)
+            axios.post('http://princemc.heliohost.us/veterinaryClinic/insertTransaction.php', record)
             .then(() => {
                 this.onReset();
                 this.postSubmit();

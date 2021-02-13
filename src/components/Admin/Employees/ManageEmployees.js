@@ -133,7 +133,7 @@ class ManageEmployees extends Component {
     }
 
     getData = () => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/viewEmployees.php')
+        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewEmployees.php')
         .then(res => {
             const employees = res.data;
             const connected = true;
@@ -147,7 +147,7 @@ class ManageEmployees extends Component {
     }
 
     searchData = searchValue => {
-        axios.get('http://localhost/reactPhpCrud/veterinaryClinic/searchEmployee.php?search='+searchValue)
+        axios.get('http://princemc.heliohost.us/veterinaryClinic/searchEmployee.php?search='+searchValue)
         .then(res => {
             const employees = res.data;
             const connected = true;

@@ -121,7 +121,7 @@ class ViewPetModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('http://localhost/reactPhpCrud/veterinaryClinic/updatePet.php', record)
+            axios.post('http://princemc.heliohost.us/veterinaryClinic/updatePet.php', record)
             .then(() => {
                 onRefresh();
                 this.postSubmit();
@@ -446,7 +446,7 @@ class ViewPetModal extends Component {
         this.props.onSubmitForm();
         this.deletion();
 
-        axios.post('http://localhost/reactPhpCrud/veterinaryClinic/deletePet.php', record)
+        axios.post('http://princemc.heliohost.us/veterinaryClinic/deletePet.php', record)
         .then(this.postDelete)
         .catch(error => {
             console.log(error);
