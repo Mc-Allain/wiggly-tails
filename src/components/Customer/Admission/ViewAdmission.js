@@ -99,7 +99,7 @@ class ViewAdmission extends Component {
 
     getData = () => {
         const { history } = this.props;
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewTransactionAdmission.php?id='+
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewTransactionAdmission.php?id='+
         history.location.state.transId)
         .then(res => {
             const admission = res.data;
@@ -115,7 +115,7 @@ class ViewAdmission extends Component {
 
     searchData = searchValue => {
         const { history } = this.props;
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/searchTransactionAdmission.php?id='+
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/searchTransactionAdmission.php?id='+
         history.location.state.admissionId+"&search="+searchValue)
         .then(res => {
             const admission = res.data;

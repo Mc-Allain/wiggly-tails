@@ -311,7 +311,7 @@ class UpdateAccountInfoModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('http://princemc.heliohost.us/veterinaryClinic/updateCustomer.php', record)
+            axios.post('https://princemc.heliohost.us/veterinaryClinic/updateCustomer.php', record)
             .then(() => {
                 onRefresh();
                 this.props.retryCustomersData();

@@ -127,7 +127,7 @@ class AddPetModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('http://princemc.heliohost.us/veterinaryClinic/insertPet.php', record)
+            axios.post('https://princemc.heliohost.us/veterinaryClinic/insertPet.php', record)
             .then(() => {
                 onRefresh();
                 this.onReset();
@@ -520,7 +520,7 @@ class AddPetModal extends Component {
     }
 
     getCustomersData = () => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewCustomers.php')
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const records = res.data;
             const connected = true;

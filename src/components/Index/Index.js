@@ -86,7 +86,7 @@ class EmployeeLogin extends Component {
     }
 
     getCustomersData = () => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewCustomers.php')
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const customers = res.data;
             const customerConnected = true;
@@ -100,7 +100,7 @@ class EmployeeLogin extends Component {
     }
 
     getEmployeesData = () => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewEmployees.php')
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewEmployees.php')
             .then(res => {
                 const employees = res.data;
                 const employeeConnected = true;

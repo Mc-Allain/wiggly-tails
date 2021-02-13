@@ -367,7 +367,7 @@ class AddCustomerModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('http://princemc.heliohost.us/veterinaryClinic/insertCustomerPet.php', record)
+            axios.post('https://princemc.heliohost.us/veterinaryClinic/insertCustomerPet.php', record)
             .then(() => {
                 onRefresh();
                 this.onReset();

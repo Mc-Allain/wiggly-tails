@@ -148,7 +148,7 @@ class ViewEmployeeModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('http://princemc.heliohost.us/veterinaryClinic/updateEmployee.php', record)
+            axios.post('https://princemc.heliohost.us/veterinaryClinic/updateEmployee.php', record)
             .then(() => {
                 onRefresh();
                 this.postSubmit();
@@ -561,7 +561,7 @@ class ViewEmployeeModal extends Component {
         this.props.onSubmitForm();
         this.deletion();
 
-        axios.post('http://princemc.heliohost.us/veterinaryClinic/deleteEmployee.php', record)
+        axios.post('https://princemc.heliohost.us/veterinaryClinic/deleteEmployee.php', record)
         .then(this.postDelete)
         .catch(error => {
             console.log(error);

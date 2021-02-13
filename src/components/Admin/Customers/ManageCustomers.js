@@ -110,7 +110,7 @@ class ManageCustomers extends Component {
     }
 
     getData = () => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewCustomers.php')
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewCustomers.php')
         .then(res => {
             const customers = res.data;
             const connected = true;
@@ -124,7 +124,7 @@ class ManageCustomers extends Component {
     }
 
     searchData = searchValue => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/searchCustomer.php?search='+searchValue)
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/searchCustomer.php?search='+searchValue)
         .then(res => {
             const customers = res.data;
             const connected = true;
@@ -145,7 +145,7 @@ class ManageCustomers extends Component {
     }
 
     getPetsData = () => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewPets.php')
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewPets.php')
         .then(res => {
             const pets = res.data;
             const petConnected = true
@@ -166,7 +166,7 @@ class ManageCustomers extends Component {
     }
 
     getEmployeesData = () => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewEmployees.php')
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewEmployees.php')
         .then(res => {
             const employees = res.data;
             const employeeConnected = true

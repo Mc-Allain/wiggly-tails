@@ -258,7 +258,7 @@ class ManageEmployeesModal extends Component {
     }
 
     getData = () => {
-        axios.get('http://princemc.heliohost.us/veterinaryClinic/viewAdmins.php')
+        axios.get('https://princemc.heliohost.us/veterinaryClinic/viewAdmins.php')
         .then(res => {
             const records = res.data;
             const connected = true;

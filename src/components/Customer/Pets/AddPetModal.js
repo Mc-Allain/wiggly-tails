@@ -115,7 +115,7 @@ class AddPetModal extends Component {
             this.props.onSubmitForm();
             this.submission();
 
-            axios.post('http://princemc.heliohost.us/veterinaryClinic/insertPet.php', record)
+            axios.post('https://princemc.heliohost.us/veterinaryClinic/insertPet.php', record)
             .then(() => {
                 onRefresh();
                 this.onReset();
