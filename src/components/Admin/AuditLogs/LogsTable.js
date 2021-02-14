@@ -129,23 +129,11 @@ class LogsTable extends Component {
     );
   }
 
-  formatDate = (dateValue) => {
-    const MMM = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    dateValue = new Date(dateValue);
+  formatDate = dateValue => {
+    const MMM = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+    
+    dateValue = new Date(dateValue+"+00:00");
     const day = dateValue.getDate();
     const month = MMM[dateValue.getMonth()];
     const year = dateValue.getFullYear();
