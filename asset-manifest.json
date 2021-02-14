@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/wiggly-tails/static/css/main.d47ff05c.chunk.css",
-    "main.js": "/wiggly-tails/static/js/main.075b9172.chunk.js",
-    "main.js.map": "/wiggly-tails/static/js/main.075b9172.chunk.js.map",
+    "main.js": "/wiggly-tails/static/js/main.0880ad63.chunk.js",
+    "main.js.map": "/wiggly-tails/static/js/main.0880ad63.chunk.js.map",
     "runtime-main.js": "/wiggly-tails/static/js/runtime-main.5c1c87b5.js",
     "runtime-main.js.map": "/wiggly-tails/static/js/runtime-main.5c1c87b5.js.map",
     "static/css/2.4d01fa9c.chunk.css": "/wiggly-tails/static/css/2.4d01fa9c.chunk.css",
-    "static/js/2.6a030167.chunk.js": "/wiggly-tails/static/js/2.6a030167.chunk.js",
-    "static/js/2.6a030167.chunk.js.map": "/wiggly-tails/static/js/2.6a030167.chunk.js.map",
+    "static/js/2.aec0df92.chunk.js": "/wiggly-tails/static/js/2.aec0df92.chunk.js",
+    "static/js/2.aec0df92.chunk.js.map": "/wiggly-tails/static/js/2.aec0df92.chunk.js.map",
     "index.html": "/wiggly-tails/index.html",
     "static/css/2.4d01fa9c.chunk.css.map": "/wiggly-tails/static/css/2.4d01fa9c.chunk.css.map",
     "static/css/main.d47ff05c.chunk.css.map": "/wiggly-tails/static/css/main.d47ff05c.chunk.css.map",
-    "static/js/2.6a030167.chunk.js.LICENSE.txt": "/wiggly-tails/static/js/2.6a030167.chunk.js.LICENSE.txt",
+    "static/js/2.aec0df92.chunk.js.LICENSE.txt": "/wiggly-tails/static/js/2.aec0df92.chunk.js.LICENSE.txt",
     "static/media/confinement.4f112f92.png": "/wiggly-tails/static/media/confinement.4f112f92.png",
     "static/media/consultation.8360a131.png": "/wiggly-tails/static/media/consultation.8360a131.png",
     "static/media/all.css": "/wiggly-tails/static/media/fa-solid-900.46fdbd2d.woff",
@@ -21,8 +21,8 @@
   "entrypoints": [
     "static/js/runtime-main.5c1c87b5.js",
     "static/css/2.4d01fa9c.chunk.css",
-    "static/js/2.6a030167.chunk.js",
+    "static/js/2.aec0df92.chunk.js",
     "static/css/main.d47ff05c.chunk.css",
-    "static/js/main.075b9172.chunk.js"
+    "static/js/main.0880ad63.chunk.js"
   ]
 }
