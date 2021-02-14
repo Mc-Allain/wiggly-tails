@@ -6,11 +6,17 @@ import Footer from '../Footer.js';
 import Forbidden from './Forbidden.js';
 
 class Admin extends Component {
-    state = { }
+    state = {
+        record:
+        {
+            id: '',
+            fullName: ''
+        }
+    }
 
     onClickLink = link => {
         const { history } = this.props;
-        history.replace(link, {verified: true});
+        history.replace(link, { ...history.location.state });
     }
 
     renderContent = () => {
@@ -109,6 +115,14 @@ class Admin extends Component {
                 <Footer />
             </React.Fragment>
         )
+    }
+
+    componentDidMount = () => {
+        const { history } = this.props;
+        const record = this.state;
+        record.id = history.location.state.id;
+        record.fullName = history.location.state.fullName;
+        this.setState({ record });
     }
 
     render() {

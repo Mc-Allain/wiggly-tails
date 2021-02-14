@@ -2,28 +2,20 @@ import axios from "axios";
 import React, { Component } from "react";
 
 import AdminNavbar from "../AdminNavbar.js";
-import CustomersTable from "./CustomersTable.js";
+import LogsTable from "./LogsTable.js";
 import Footer from "../../Footer.js";
 import Forbidden from "../Forbidden.js";
 
-class ManageCustomers extends Component {
+class ViewLogs extends Component {
   state = {
-    customers: [],
+    logs: [],
     connected: false,
     connectionFailed: false,
     searchValue: "",
-    pets: [],
-    petConnected: false,
-    petConnectionFailed: false,
-    employees: [],
-    employeeConnected: false,
-    employeeConnectionFailed: false,
   };
 
   componentDidMount() {
     this.getData();
-    this.getPetsData();
-    this.getEmployeesData();
   }
 
   onSubmitForm = () => {
@@ -57,33 +49,23 @@ class ManageCustomers extends Component {
     const { history } = this.props;
     return (
       <React.Fragment>
-        <AdminNavbar sourceId={1} activeId={3} history={history} />
+        <AdminNavbar activeId={6} history={history} />
         <div className="container-fluid">
           <div className="min-h-full row bg-light justify-content-center text-dark pt-4">
-            <div className="col-12 mt-5">
-              <h3>Manage Customers</h3>
-              <CustomersTable
-                customers={this.state.customers}
+            <div className="col-12 mt-5 table-responsive">
+              <h3>View Audit Logs</h3>
+              <LogsTable
+                logs={this.state.logs}
+                history={history}
                 onRefresh={this.onRefresh}
                 onSearch={this.onSearch}
                 searchValue={this.state.searchValue}
                 onClear={this.onClear}
-                history={history}
                 connected={this.state.connected}
-                connectionFailed={this.state.connectionFailed}
-                onSubmitForm={this.onSubmitForm}
-                pets={this.state.pets}
-                retryPetsData={this.retryPetsData}
-                petConnected={this.state.petConnected}
-                petConnectionFailed={this.state.petConnectionFailed}
-                employees={this.state.employees}
-                retryEmployeesData={this.retryEmployeesData}
-                employeeConnected={this.state.employeeConnected}
-                employeeConnectionFailed={this.state.employeeConnectionFailed}
               />
               <div className="text-center mt-5">
                 {this.state.connected ? (
-                  this.state.customers.length === 0 ? (
+                  this.state.logs.length === 0 ? (
                     <h1>No Record Found</h1>
                   ) : null
                 ) : this.state.connectionFailed ? (
@@ -131,11 +113,11 @@ class ManageCustomers extends Component {
 
   getData = () => {
     axios
-      .get("https://princemc.heliohost.us/veterinaryClinic/viewCustomers.php")
+      .get("https://princemc.heliohost.us/veterinaryClinic/viewAuditLogs.php")
       .then((res) => {
-        const customers = res.data;
+        const logs = res.data;
         const connected = true;
-        this.setState({ customers, connected });
+        this.setState({ logs, connected });
       })
       .catch((error) => {
         console.log(error);
@@ -147,13 +129,13 @@ class ManageCustomers extends Component {
   searchData = (searchValue) => {
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/searchCustomer.php?search=" +
+        "https://princemc.heliohost.us/veterinaryClinic/searchAuditLogs.php?search=" +
           searchValue
       )
       .then((res) => {
-        const customers = res.data;
+        const logs = res.data;
         const connected = true;
-        this.setState({ customers, connected });
+        this.setState({ logs, connected });
       })
       .catch((error) => {
         console.log(error);
@@ -162,49 +144,29 @@ class ManageCustomers extends Component {
       });
   };
 
-  retryPetsData = () => {
-    this.getPetsData();
-    const petConnected = false;
-    const petConnectionFailed = false;
-    this.setState({ petConnected, petConnectionFailed });
-  };
+  formatDate = (dateValue) => {
+    const MMM = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
 
-  getPetsData = () => {
-    axios
-      .get("https://princemc.heliohost.us/veterinaryClinic/viewPets.php")
-      .then((res) => {
-        const pets = res.data;
-        const petConnected = true;
-        this.setState({ pets, petConnected });
-      })
-      .catch((error) => {
-        console.log(error);
-        const petConnectionFailed = true;
-        this.setState({ petConnectionFailed });
-      });
-  };
+    dateValue = new Date(dateValue);
+    const day = dateValue.getDate();
+    const month = MMM[dateValue.getMonth()];
+    const year = dateValue.getFullYear();
 
-  retryEmployeesData = () => {
-    this.getEmployeesData();
-    const employeeConnected = false;
-    const employeeConnectionFailed = false;
-    this.setState({ employeeConnected, employeeConnectionFailed });
-  };
-
-  getEmployeesData = () => {
-    axios
-      .get("https://princemc.heliohost.us/veterinaryClinic/viewEmployees.php")
-      .then((res) => {
-        const employees = res.data;
-        const employeeConnected = true;
-        this.setState({ employees, employeeConnected });
-      })
-      .catch((error) => {
-        console.log(error);
-        const employeeConnectionFailed = true;
-        this.setState({ employeeConnectionFailed });
-      });
+    return year + "-" + month + "-" + day;
   };
 }
 
-export default ManageCustomers;
+export default ViewLogs;

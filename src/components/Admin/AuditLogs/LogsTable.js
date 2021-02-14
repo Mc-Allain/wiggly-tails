@@ -1,54 +1,41 @@
 import axios from "axios";
 import React, { Component } from "react";
 
-import ViewTransactionModal from "./ViewTransactionModal.js";
+import ViewLogModal from "./ViewLogModal.js";
 import TablePagination from "../../TablePagination";
 
-class TransactionsTable extends Component {
+class LogsTable extends Component {
   state = {
     recordsPerPage: 10,
     recordStartIndex: 0,
     activePage: 1,
-    customer: {
+    employee: {
       id: "",
-      customerId: "",
-      fullName: "",
+      empId: "",
+      empName: "",
     },
   };
 
-  renderItems = (transactions) => {
+  renderItems = (logs) => {
     const { recordsPerPage, recordStartIndex } = this.state;
     let items = [];
     const recordStopIndex =
-      transactions.length <= recordStartIndex + recordsPerPage
-        ? transactions.length
+      logs.length <= recordStartIndex + recordsPerPage
+        ? logs.length
         : recordStartIndex + recordsPerPage;
 
     for (var i = this.state.recordStartIndex; i < recordStopIndex; i++) {
       let index = i;
       items.push(
-        <tr key={transactions[i].id} className="table-row">
-          <td>{this.formatDate(transactions[i].transDate)}</td>
-          <td>{transactions[i].petName}</td>
-          <td className="d-none d-lg-table-cell">
-            {transactions[i].petWeight}
-          </td>
-          <td className="d-none d-md-table-cell">
-            {transactions[i].empLastName +
-              ", " +
-              transactions[i].empFirstName +
-              " " +
-              transactions[i].empMiddleName}
-          </td>
-          <td className="d-none d-sm-table-cell">
-            {this.formatTransType(transactions[i].transType)}
-          </td>
-          <td>
+        <tr key={logs[i].id} className="table-row">
+          <td>{this.formatDate(logs[i].timestamp)}</td>
+          <td className="d-none d-sm-table-cell">{logs[i].activity}</td>
+          <td className="d-table-cell">
             <button
               className="btn btn-outline-primary btn-sm mr-1"
               data-toggle="modal"
-              data-target={"#viewTransactionModal-" + transactions[i].id}
-              onClick={() => this.logTransactionView(transactions[index].id)}
+              data-target={"#viewLogModal-" + logs[i].id}
+              onClick={() => this.logLogView(logs[index].id)}
             >
               <i className="fa fa-eye"></i>
               <span className="ml-1">View</span>
@@ -61,13 +48,13 @@ class TransactionsTable extends Component {
     return [items];
   };
 
-  logTransactionView = (id) => {
-    const customer = { ...this.state.customer };
-    customer.id = id;
-    this.setState({ customer }, () => {
+  logLogView = (id) => {
+    const employee = { ...this.state.employee };
+    employee.id = id;
+    this.setState({ employee }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logTransactionView.php",
-        customer
+        "https://princemc.heliohost.us/veterinaryClinic/logLogView.php",
+        employee
       );
     });
   };
@@ -78,20 +65,19 @@ class TransactionsTable extends Component {
 
   componentDidMount = () => {
     const { history } = this.props;
-    const customer = { ...this.state.customer };
-    customer.customerId = history.location.state.id;
-    customer.fullName = history.location.state.fullName;
-    this.setState({ customer });
+    const employee = { ...this.state.employee };
+    employee.empId = history.location.state.id;
+    employee.empName = history.location.state.fullName;
+    this.setState({ employee });
   };
 
   render() {
     const {
-      transactions,
+      logs,
       onRefresh,
       onSearch,
       searchValue,
       onClear,
-      history,
       connected,
     } = this.props;
     const { recordsPerPage, recordStartIndex, activePage } = this.state;
@@ -118,36 +104,26 @@ class TransactionsTable extends Component {
         <table className="table table-bordered">
           <thead className="thead-dark text-light">
             <tr>
-              <th>Transaction Date</th>
-              <th>Pet Name</th>
-              <th className="w-110px d-none d-lg-table-cell">Pet Weight</th>
-              <th className="d-none d-md-table-cell">Served by</th>
-              <th className="w-110px d-none d-sm-table-cell">Trans. Type</th>
-              <th className="w-100px">Action</th>
+              <th>Timestamp</th>
+              <th className="d-none d-sm-table-cell">Activity</th>
+              <th className="d-table-cell w-100px">Action</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.length > 0 && connected
-              ? this.renderItems(transactions)
-              : null}
+            {logs.length > 0 && connected ? this.renderItems(logs) : null}
           </tbody>
         </table>
-        {transactions.length > 0 && connected ? (
+        {logs.length > 0 && connected ? (
           <TablePagination
             setPage={this.setPage}
             recordsPerPage={recordsPerPage}
             recordStartIndex={recordStartIndex}
             activePage={activePage}
-            totalRecords={transactions.length}
+            totalRecords={logs.length}
           />
         ) : null}
-        {transactions.map((transaction) => (
-          <ViewTransactionModal
-            key={transaction.id}
-            transaction={transaction}
-            onRefresh={onRefresh}
-            history={history}
-          />
+        {logs.map((log) => (
+          <ViewLogModal key={log.id} log={log} onRefresh={onRefresh} />
         ))}
       </React.Fragment>
     );
@@ -174,12 +150,40 @@ class TransactionsTable extends Component {
     const month = MMM[dateValue.getMonth()];
     const year = dateValue.getFullYear();
 
-    return year + "-" + month + "-" + day;
-  };
+    let time = "AM";
+    let hour = dateValue.getHours();
+    if (hour > 12) {
+      hour -= 12;
+      time = "PM";
+    }
+    if (hour < 10) hour = "0" + hour;
 
-  formatTransType = (transType) => {
-    return transType === "C" ? "Check-up" : "Groom";
+    let minute = dateValue.getMinutes();
+    if (minute < 10) {
+      minute = "0" + minute;
+    }
+
+    let second = dateValue.getSeconds();
+    if (second < 10) {
+      second = "0" + second;
+    }
+
+    return (
+      year +
+      "-" +
+      month +
+      "-" +
+      day +
+      " | " +
+      hour +
+      ":" +
+      minute +
+      ":" +
+      second +
+      " " +
+      time
+    );
   };
 }
 
-export default TransactionsTable;
+export default LogsTable;

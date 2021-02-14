@@ -35,22 +35,21 @@ class ViewAdmissionModal extends Component {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title" id={"viewAdmissionModalTitle-" + admission.id}>Admission Info</h5>
-                                <button className="btn btn-light text-danger p-1" data-dismiss="modal"
-                                onClick={this.onReset}>
+                                <button className="btn btn-light text-danger p-1" data-dismiss="modal">
                                     <i className="fa fa-window-close fa-lg"></i>
                                 </button>
                             </div>
                             <div className="modal-body">
                                 <form className="row form-light mx-2 p-4" noValidate>
                                     <div className="form-group col-12">
-                                        <label className="m-0 ml-2">ID</label>
+                                        <label className="m-0 ml-2">Title</label>
                                         <input className="form-control zi-10" type="text"
                                             name="title" value={record.title}
                                             noValidate disabled />
                                     </div>
 
                                     <div className="form-group col-12">
-                                        <label className="m-0 ml-2">ID</label>
+                                        <label className="m-0 ml-2">Content</label>
                                         <textarea className="form-control zi-10" type="text"
                                             name="content" value={record.content} rows="7"
                                             noValidate disabled />
