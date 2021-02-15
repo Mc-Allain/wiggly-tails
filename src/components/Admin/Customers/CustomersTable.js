@@ -8,14 +8,11 @@ import InitiateTransactionModal from "./InitiateTransactionModal.js";
 
 class CustomersTable extends Component {
   state = {
-    recordsPerPage: 10,
-    recordStartIndex: 0,
-    activePage: 1,
     employee: {
       id: "",
       empId: "",
       empName: "",
-    },
+    }
   };
 
   renderItems = (customers) => {
@@ -81,10 +78,6 @@ class CustomersTable extends Component {
     });
   };
 
-  setPage = (recordStartIndex, activePage) => {
-    this.setState({ recordStartIndex, activePage });
-  };
-
   componentDidMount = () => {
     const { history } = this.props;
     const employee = { ...this.state.employee };
@@ -104,8 +97,11 @@ class CustomersTable extends Component {
       connectionFailed,
       onSubmitForm,
       history,
+      setPage,
+      recordsPerPage,
+      recordStartIndex,
+      activePage
     } = this.props;
-    const { recordsPerPage, recordStartIndex, activePage } = this.state;
     const {
       pets,
       retryPetsData,
@@ -164,7 +160,7 @@ class CustomersTable extends Component {
         </table>
         {customers.length > 0 && connected ? (
           <TablePagination
-            setPage={this.setPage}
+            setPage={setPage}
             recordsPerPage={recordsPerPage}
             recordStartIndex={recordStartIndex}
             activePage={activePage}

@@ -7,14 +7,11 @@ import ViewPetModal from "./ViewPetModal.js";
 
 class PetsTable extends Component {
   state = {
-    recordsPerPage: 10,
-    recordStartIndex: 0,
-    activePage: 1,
     customer: {
       id: "",
       customerId: "",
       fullName: "",
-    },
+    }
   };
 
   renderItems = (pets) => {
@@ -68,10 +65,6 @@ class PetsTable extends Component {
     });
   };
 
-  setPage = (recordStartIndex, activePage) => {
-    this.setState({ recordStartIndex, activePage });
-  };
-
   componentDidMount = () => {
     const { history } = this.props;
     const customer = { ...this.state.customer };
@@ -90,8 +83,11 @@ class PetsTable extends Component {
       onClear,
       connected,
       onSubmitForm,
+      setPage,
+      recordsPerPage,
+      recordStartIndex,
+      activePage
     } = this.props;
-    const { recordsPerPage, recordStartIndex, activePage } = this.state;
     return (
       <React.Fragment>
         <div className="d-flex mb-2">
@@ -136,7 +132,7 @@ class PetsTable extends Component {
         </table>
         {pets.length > 0 && connected ? (
           <TablePagination
-            setPage={this.setPage}
+            setPage={setPage}
             recordsPerPage={recordsPerPage}
             recordStartIndex={recordStartIndex}
             activePage={activePage}

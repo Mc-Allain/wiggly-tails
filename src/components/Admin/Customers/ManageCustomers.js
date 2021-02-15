@@ -18,6 +18,9 @@ class ManageCustomers extends Component {
     employees: [],
     employeeConnected: false,
     employeeConnectionFailed: false,
+    recordsPerPage: 10,
+    recordStartIndex: 0,
+    activePage: 1
   };
 
   componentDidMount() {
@@ -26,14 +29,20 @@ class ManageCustomers extends Component {
     this.getEmployeesData();
   }
 
+  setPage = (recordStartIndex, activePage) => {
+    this.setState({ recordStartIndex, activePage });
+  };
+
   onSubmitForm = () => {
     const connected = false;
     const connectionFailed = false;
-    this.setState({ connected, connectionFailed });
+    const activePage = 1;
+    this.setState({ connected, connectionFailed, activePage });
   };
 
   onRefresh = () => {
-    this.getData();
+    const searchValue = this.state;
+    searchValue.length > 0 ? this.searchData(searchValue) : this.getData();
     this.onSubmitForm();
   };
 
@@ -42,7 +51,8 @@ class ManageCustomers extends Component {
     searchValue.length > 0 ? this.searchData(searchValue) : this.getData();
     const connected = false;
     const connectionFailed = false;
-    this.setState({ connected, connectionFailed, searchValue });
+    const activePage = 1;
+    this.setState({ connected, connectionFailed, searchValue, activePage });
   };
 
   onClear = () => {
@@ -50,7 +60,8 @@ class ManageCustomers extends Component {
     this.getData();
     const connected = false;
     const connectionFailed = false;
-    this.setState({ connected, connectionFailed, searchValue });
+    const activePage = 1;
+    this.setState({ connected, connectionFailed, searchValue, activePage });
   };
 
   renderContent = () => {
@@ -80,6 +91,10 @@ class ManageCustomers extends Component {
                 retryEmployeesData={this.retryEmployeesData}
                 employeeConnected={this.state.employeeConnected}
                 employeeConnectionFailed={this.state.employeeConnectionFailed}
+                setPage = {this.setPage}
+                recordsPerPage={this.state.recordsPerPage}
+                recordStartIndex={this.state.recordStartIndex}
+                activePage={this.state.activePage}
               />
               <div className="text-center mt-5">
                 {this.state.connected ? (

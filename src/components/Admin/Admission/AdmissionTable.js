@@ -7,14 +7,11 @@ import ViewAdmissionModal from "./ViewAdmissionModal.js";
 
 class AdmissionTable extends Component {
   state = {
-    recordsPerPage: 10,
-    recordStartIndex: 0,
-    activePage: 1,
     employee: {
       id: "",
       empId: "",
       empName: "",
-    },
+    }
   };
 
   renderItems = (admission) => {
@@ -60,10 +57,6 @@ class AdmissionTable extends Component {
     });
   };
 
-  setPage = (recordStartIndex, activePage) => {
-    this.setState({ recordStartIndex, activePage });
-  };
-
   componentDidMount = () => {
     const { history } = this.props;
     const employee = { ...this.state.employee };
@@ -82,8 +75,11 @@ class AdmissionTable extends Component {
       history,
       connected,
       onSubmitForm,
+      setPage,
+      recordsPerPage,
+      recordStartIndex,
+      activePage
     } = this.props;
-    const { recordsPerPage, recordStartIndex, activePage } = this.state;
     const { state } = history.location;
     return (
       <React.Fragment>
@@ -150,7 +146,7 @@ class AdmissionTable extends Component {
         </table>
         {admission.length > 0 && connected ? (
           <TablePagination
-            setPage={this.setPage}
+            setPage={setPage}
             recordsPerPage={recordsPerPage}
             recordStartIndex={recordStartIndex}
             activePage={activePage}

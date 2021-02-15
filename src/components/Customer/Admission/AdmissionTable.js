@@ -6,14 +6,11 @@ import TablePagination from "../../TablePagination";
 
 class AdmissionTable extends Component {
   state = {
-    recordsPerPage: 10,
-    recordStartIndex: 0,
-    activePage: 1,
     customer: {
       id: "",
       customerId: "",
       fullName: "",
-    },
+    }
   };
 
   renderItems = (admission) => {
@@ -59,10 +56,6 @@ class AdmissionTable extends Component {
     });
   };
 
-  setPage = (recordStartIndex, activePage) => {
-    this.setState({ recordStartIndex, activePage });
-  };
-
   componentDidMount = () => {
     const { history } = this.props;
     const customer = { ...this.state.customer };
@@ -80,8 +73,11 @@ class AdmissionTable extends Component {
       onClear,
       history,
       connected,
+      setPage,
+      recordsPerPage,
+      recordStartIndex,
+      activePage
     } = this.props;
-    const { recordsPerPage, recordStartIndex, activePage } = this.state;
     const { state } = history.location;
     return (
       <React.Fragment>
@@ -134,7 +130,7 @@ class AdmissionTable extends Component {
         </table>
         {admission.length > 0 && connected ? (
           <TablePagination
-            setPage={this.setPage}
+            setPage={setPage}
             recordsPerPage={recordsPerPage}
             recordStartIndex={recordStartIndex}
             activePage={activePage}

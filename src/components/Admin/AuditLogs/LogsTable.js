@@ -6,14 +6,11 @@ import TablePagination from "../../TablePagination";
 
 class LogsTable extends Component {
   state = {
-    recordsPerPage: 10,
-    recordStartIndex: 0,
-    activePage: 1,
     employee: {
       id: "",
       empId: "",
       empName: "",
-    },
+    }
   };
 
   renderItems = (logs) => {
@@ -59,10 +56,6 @@ class LogsTable extends Component {
     });
   };
 
-  setPage = (recordStartIndex, activePage) => {
-    this.setState({ recordStartIndex, activePage });
-  };
-
   componentDidMount = () => {
     const { history } = this.props;
     const employee = { ...this.state.employee };
@@ -79,8 +72,11 @@ class LogsTable extends Component {
       searchValue,
       onClear,
       connected,
+      setPage,
+      recordsPerPage,
+      recordStartIndex,
+      activePage
     } = this.props;
-    const { recordsPerPage, recordStartIndex, activePage } = this.state;
     return (
       <React.Fragment>
         <div className="d-flex mb-2">
@@ -115,7 +111,7 @@ class LogsTable extends Component {
         </table>
         {logs.length > 0 && connected ? (
           <TablePagination
-            setPage={this.setPage}
+            setPage={setPage}
             recordsPerPage={recordsPerPage}
             recordStartIndex={recordStartIndex}
             activePage={activePage}

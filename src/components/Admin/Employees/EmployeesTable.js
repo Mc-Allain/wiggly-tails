@@ -7,14 +7,11 @@ import ViewEmployeeModal from "./ViewEmployeeModal";
 
 class EmployeesTable extends Component {
   state = {
-    recordsPerPage: 10,
-    recordStartIndex: 0,
-    activePage: 1,
     admin: {
       id: "",
       adminId: "",
       fullName: "",
-    },
+    }
   };
 
   renderItems = (employees) => {
@@ -103,8 +100,11 @@ class EmployeesTable extends Component {
       connected,
       onSubmitForm,
       history,
+      setPage,
+      recordsPerPage,
+      recordStartIndex,
+      activePage
     } = this.props;
-    const { recordsPerPage, recordStartIndex, activePage } = this.state;
     return (
       <React.Fragment>
         <div className="d-flex mb-2">
@@ -149,7 +149,7 @@ class EmployeesTable extends Component {
         </table>
         {employees.length > 0 && connected ? (
           <TablePagination
-            setPage={this.setPage}
+            setPage={setPage}
             recordsPerPage={recordsPerPage}
             recordStartIndex={recordStartIndex}
             activePage={activePage}

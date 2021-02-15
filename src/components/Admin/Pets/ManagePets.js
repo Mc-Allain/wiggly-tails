@@ -15,6 +15,9 @@ class ManagePets extends Component {
     customers: [],
     customerConnected: false,
     customerConnectionFailed: false,
+    recordsPerPage: 10,
+    recordStartIndex: 0,
+    activePage: 1
   };
 
   componentDidMount() {
@@ -22,14 +25,20 @@ class ManagePets extends Component {
     this.getCustomersData();
   }
 
+  setPage = (recordStartIndex, activePage) => {
+    this.setState({ recordStartIndex, activePage });
+  };
+
   onSubmitForm = () => {
     const connected = false;
     const connectionFailed = false;
-    this.setState({ connected, connectionFailed });
+    const activePage = 1;
+    this.setState({ connected, connectionFailed, activePage });
   };
 
   onRefresh = () => {
-    this.getData();
+    const searchValue = this.state;
+    searchValue.length > 0 ? this.searchData(searchValue) : this.getData();
     this.onSubmitForm();
   };
 
@@ -38,7 +47,8 @@ class ManagePets extends Component {
     searchValue.length > 0 ? this.searchData(searchValue) : this.getData();
     const connected = false;
     const connectionFailed = false;
-    this.setState({ connected, connectionFailed, searchValue });
+    const activePage = 1;
+    this.setState({ connected, connectionFailed, searchValue, activePage });
   };
 
   onClear = () => {
@@ -46,7 +56,8 @@ class ManagePets extends Component {
     this.getData();
     const connected = false;
     const connectionFailed = false;
-    this.setState({ connected, connectionFailed, searchValue });
+    const activePage = 1;
+    this.setState({ connected, connectionFailed, searchValue, activePage });
   };
 
   renderContent = () => {
@@ -71,6 +82,10 @@ class ManagePets extends Component {
                 retryCustomersData={this.retryCustomersData}
                 customerConnected={this.state.customerConnected}
                 customerConnectionFailed={this.state.customerConnectionFailed}
+                setPage = {this.setPage}
+                recordsPerPage={this.state.recordsPerPage}
+                recordStartIndex={this.state.recordStartIndex}
+                activePage={this.state.activePage}
               />
               <div className="text-center mt-5">
                 {this.state.connected ? (
