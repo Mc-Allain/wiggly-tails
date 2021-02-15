@@ -95,7 +95,7 @@ class EmployeeLoginForm extends Component {
       if (result.length > 0) {
         const { history } = this.props;
         axios.post(
-          "https://princemc.heliohost.us/veterinaryClinic/employeeLogin.php",
+          "http://princemc.heliohost.us/veterinaryClinic/employeeLogin.php",
           result[0]
         );
         history.replace("/wiggly-tails/admin", {

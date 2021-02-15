@@ -184,7 +184,7 @@ class ViewPetModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/updatePet.php",
+          "http://princemc.heliohost.us/veterinaryClinic/updatePet.php",
           record
         )
         .then(() => {
@@ -605,7 +605,7 @@ class ViewPetModal extends Component {
 
     axios
       .post(
-        "https://princemc.heliohost.us/veterinaryClinic/deletePet.php",
+        "http://princemc.heliohost.us/veterinaryClinic/deletePet.php",
         record
       )
       .then(this.postDelete)

@@ -66,7 +66,7 @@ class TransactionsTable extends Component {
     customer.id = id;
     this.setState({ customer }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logTransactionView.php",
+        "http://princemc.heliohost.us/veterinaryClinic/logTransactionView.php",
         customer
       );
     });

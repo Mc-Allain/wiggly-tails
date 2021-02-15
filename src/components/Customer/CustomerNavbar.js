@@ -61,7 +61,7 @@ class CustomerNavbar extends Component {
     const record = this.state;
     const link = nav.link;
     axios.post(
-      "https://princemc.heliohost.us/veterinaryClinic/customerLogout.php",
+      "http://princemc.heliohost.us/veterinaryClinic/customerLogout.php",
       record
     );
     history.replace(link);

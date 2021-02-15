@@ -75,7 +75,7 @@ class EmployeesTable extends Component {
     admin.id = id;
     this.setState({ admin }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logEmployeeView.php",
+        "http://princemc.heliohost.us/veterinaryClinic/logEmployeeView.php",
         admin
       );
     });

@@ -199,7 +199,7 @@ class AddPetModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/insertPetEmployee.php",
+          "http://princemc.heliohost.us/veterinaryClinic/insertPetEmployee.php",
           record
         )
         .then(() => {
@@ -745,7 +745,7 @@ class AddPetModal extends Component {
 
   getCustomersData = () => {
     axios
-      .get("https://princemc.heliohost.us/veterinaryClinic/viewCustomers.php")
+      .get("http://princemc.heliohost.us/veterinaryClinic/viewCustomers.php")
       .then((res) => {
         const records = res.data;
         const connected = true;

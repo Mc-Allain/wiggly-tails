@@ -75,7 +75,7 @@ class CustomersTable extends Component {
     employee.id = id;
     this.setState({ employee }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logCustomerView.php",
+        "http://princemc.heliohost.us/veterinaryClinic/logCustomerView.php",
         employee
       );
     });

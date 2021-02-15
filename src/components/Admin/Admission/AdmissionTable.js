@@ -54,7 +54,7 @@ class AdmissionTable extends Component {
     employee.id = id;
     this.setState({ employee }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logAdmissionViewEmployee.php",
+        "http://princemc.heliohost.us/veterinaryClinic/logAdmissionViewEmployee.php",
         employee
       );
     });

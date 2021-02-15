@@ -83,7 +83,7 @@ class AdminNavbar extends Component {
     const record = this.state;
     const link = nav.link;
     axios.post(
-      "https://princemc.heliohost.us/veterinaryClinic/employeeLogout.php",
+      "http://princemc.heliohost.us/veterinaryClinic/employeeLogout.php",
       record
     );
     history.replace(link);

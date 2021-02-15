@@ -504,7 +504,7 @@ class AddCustomerModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/insertCustomerPetEmployee.php",
+          "http://princemc.heliohost.us/veterinaryClinic/insertCustomerPetEmployee.php",
           record
         )
         .then(() => {

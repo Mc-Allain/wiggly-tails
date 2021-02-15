@@ -500,7 +500,7 @@ class RegistrationModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/insertCustomerPet.php",
+          "http://princemc.heliohost.us/veterinaryClinic/insertCustomerPet.php",
           record
         )
         .then(() => {

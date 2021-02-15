@@ -178,7 +178,7 @@ class AddPetModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/insertPet.php",
+          "http://princemc.heliohost.us/veterinaryClinic/insertPet.php",
           record
         )
         .then(() => {

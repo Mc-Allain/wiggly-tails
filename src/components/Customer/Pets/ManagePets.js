@@ -117,7 +117,7 @@ class ManagePets extends Component {
     const { history } = this.props;
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/viewAccountPets.php?id=" +
+        "http://princemc.heliohost.us/veterinaryClinic/viewAccountPets.php?id=" +
           history.location.state.id
       )
       .then((res) => {
@@ -136,7 +136,7 @@ class ManagePets extends Component {
     const { history } = this.props;
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/searchAccountPet.php?id=" +
+        "http://princemc.heliohost.us/veterinaryClinic/searchAccountPet.php?id=" +
           history.location.state.id +
           "&search=" +
           searchValue

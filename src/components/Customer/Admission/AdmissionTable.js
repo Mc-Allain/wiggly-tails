@@ -53,7 +53,7 @@ class AdmissionTable extends Component {
     customer.id = id;
     this.setState({ customer }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logAdmissionView.php",
+        "http://princemc.heliohost.us/veterinaryClinic/logAdmissionView.php",
         customer
       );
     });

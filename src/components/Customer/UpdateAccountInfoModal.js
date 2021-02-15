@@ -386,7 +386,7 @@ class UpdateAccountInfoModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/updateCustomer.php",
+          "http://princemc.heliohost.us/veterinaryClinic/updateCustomer.php",
           record
         )
         .then(() => {

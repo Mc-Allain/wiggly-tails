@@ -99,7 +99,7 @@ class ManageEmployeesModal extends Component {
 
         const { history } = this.props;
         axios.post(
-          "https://princemc.heliohost.us/veterinaryClinic/adminLogin.php",
+          "http://princemc.heliohost.us/veterinaryClinic/adminLogin.php",
           result[0]
         );
         history.replace("/wiggly-tails/admin/manage-employees", {
@@ -305,7 +305,7 @@ class ManageEmployeesModal extends Component {
 
   getData = () => {
     axios
-      .get("https://princemc.heliohost.us/veterinaryClinic/viewAdmins.php")
+      .get("http://princemc.heliohost.us/veterinaryClinic/viewAdmins.php")
       .then((res) => {
         const records = res.data;
         const connected = true;

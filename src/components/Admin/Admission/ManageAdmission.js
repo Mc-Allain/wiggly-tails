@@ -117,7 +117,7 @@ class ManageAdmission extends Component {
     const { history } = this.props;
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/viewTransactionAdmission.php?id=" +
+        "http://princemc.heliohost.us/veterinaryClinic/viewTransactionAdmission.php?id=" +
           history.location.state.transId
       )
       .then((res) => {
@@ -136,7 +136,7 @@ class ManageAdmission extends Component {
     const { history } = this.props;
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/searchTransactionAdmission.php?id=" +
+        "http://princemc.heliohost.us/veterinaryClinic/searchTransactionAdmission.php?id=" +
           history.location.state.transId +
           "&search=" +
           searchValue

@@ -113,7 +113,7 @@ class ViewLogs extends Component {
 
   getData = () => {
     axios
-      .get("https://princemc.heliohost.us/veterinaryClinic/viewAuditLogs.php")
+      .get("http://princemc.heliohost.us/veterinaryClinic/viewAuditLogs.php")
       .then((res) => {
         const logs = res.data;
         const connected = true;
@@ -129,7 +129,7 @@ class ViewLogs extends Component {
   searchData = (searchValue) => {
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/searchAuditLogs.php?search=" +
+        "http://princemc.heliohost.us/veterinaryClinic/searchAuditLogs.php?search=" +
           searchValue
       )
       .then((res) => {

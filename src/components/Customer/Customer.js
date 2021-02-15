@@ -205,7 +205,7 @@ class Customer extends Component {
   searchData = (searchValue) => {
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/viewAccountInfo.php?search=" +
+        "http://princemc.heliohost.us/veterinaryClinic/viewAccountInfo.php?search=" +
           searchValue
       )
       .then((res) => {
@@ -230,7 +230,7 @@ class Customer extends Component {
 
   getCustomersData = () => {
     axios
-      .get("https://princemc.heliohost.us/veterinaryClinic/viewCustomers.php")
+      .get("http://princemc.heliohost.us/veterinaryClinic/viewCustomers.php")
       .then((res) => {
         const records = res.data;
         const customerConnected = true;

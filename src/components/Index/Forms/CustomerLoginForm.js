@@ -79,7 +79,7 @@ class CustomerLoginForm extends Component {
       if (result.length > 0) {
         const { history } = this.props;
         axios.post(
-          "https://princemc.heliohost.us/veterinaryClinic/customerLogin.php",
+          "http://princemc.heliohost.us/veterinaryClinic/customerLogin.php",
           result[0]
         );
         history.replace("/wiggly-tails/customer", {

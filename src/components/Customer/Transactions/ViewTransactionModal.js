@@ -400,7 +400,7 @@ class ViewTransactionModal extends Component {
   getCheckUpData = (id) => {
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/viewTransactionCheckUp.php?id=" +
+        "http://princemc.heliohost.us/veterinaryClinic/viewTransactionCheckUp.php?id=" +
           id
       )
       .then((res) => {
@@ -436,7 +436,7 @@ class ViewTransactionModal extends Component {
   getGroomData = (id) => {
     axios
       .get(
-        "https://princemc.heliohost.us/veterinaryClinic/viewTransactionGroom.php?id=" +
+        "http://princemc.heliohost.us/veterinaryClinic/viewTransactionGroom.php?id=" +
           id
       )
       .then((res) => {

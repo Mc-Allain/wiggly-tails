@@ -53,7 +53,7 @@ class LogsTable extends Component {
     employee.id = id;
     this.setState({ employee }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logLogView.php",
+        "http://princemc.heliohost.us/veterinaryClinic/logLogView.php",
         employee
       );
     });
@@ -129,11 +129,23 @@ class LogsTable extends Component {
     );
   }
 
-  formatDate = dateValue => {
-    const MMM = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"];
-    
-    dateValue = new Date(dateValue+"+00:00");
+  formatDate = (dateValue) => {
+    const MMM = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    dateValue = new Date(dateValue + "+00:00");
     const day = dateValue.getDate();
     const month = MMM[dateValue.getMonth()];
     const year = dateValue.getFullYear();

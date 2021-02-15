@@ -112,7 +112,7 @@ class ViewAdmissionModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/updateAdmission.php",
+          "http://princemc.heliohost.us/veterinaryClinic/updateAdmission.php",
           record
         )
         .then(() => {

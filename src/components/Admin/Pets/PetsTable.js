@@ -69,7 +69,7 @@ class PetsTable extends Component {
     employee.id = id;
     this.setState({ employee }, () => {
       axios.post(
-        "https://princemc.heliohost.us/veterinaryClinic/logPetViewEmployee.php",
+        "http://princemc.heliohost.us/veterinaryClinic/logPetViewEmployee.php",
         employee
       );
     });

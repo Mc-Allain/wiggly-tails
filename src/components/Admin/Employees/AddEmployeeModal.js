@@ -163,7 +163,7 @@ class AddEmployeeModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/insertEmployee.php",
+          "http://princemc.heliohost.us/veterinaryClinic/insertEmployee.php",
           record
         )
         .then(() => {

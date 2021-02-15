@@ -396,7 +396,7 @@ class ViewCustomerModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/updateCustomerEmployee.php",
+          "http://princemc.heliohost.us/veterinaryClinic/updateCustomerEmployee.php",
           record
         )
         .then(() => {
@@ -1329,7 +1329,7 @@ class ViewCustomerModal extends Component {
 
     axios
       .post(
-        "https://princemc.heliohost.us/veterinaryClinic/deleteCustomer.php",
+        "http://princemc.heliohost.us/veterinaryClinic/deleteCustomer.php",
         record
       )
       .then(this.postDelete)

@@ -333,7 +333,7 @@ class InitiateTransactionModal extends Component {
 
       axios
         .post(
-          "https://princemc.heliohost.us/veterinaryClinic/insertTransaction.php",
+          "http://princemc.heliohost.us/veterinaryClinic/insertTransaction.php",
           record
         )
         .then(() => {
