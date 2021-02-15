@@ -1118,7 +1118,7 @@ class RegistrationModal extends Component {
                     <label className="m-0 ml-2">
                       Email Address<span className="text-danger ml-1">*</span>
                     </label>
-                    {this.props.connected ? (
+                    {this.props.connected || submitted ? (
                       <React.Fragment>
                         <div className="input-group d-block d-sm-flex px-0">
                           {submitted ? (
