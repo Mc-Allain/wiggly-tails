@@ -16,14 +16,14 @@ class CustomersTable extends Component {
   };
 
   renderItems = (customers) => {
-    const { recordsPerPage, recordStartIndex } = this.state;
+    const { recordsPerPage, recordStartIndex } = this.props;
     let items = [];
     const recordStopIndex =
       customers.length <= recordStartIndex + recordsPerPage
         ? customers.length
         : recordStartIndex + recordsPerPage;
 
-    for (var i = this.state.recordStartIndex; i < recordStopIndex; i++) {
+    for (var i = this.props.recordStartIndex; i < recordStopIndex; i++) {
       let index = i;
       items.push(
         <tr key={customers[i].id} className="table-row">

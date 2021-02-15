@@ -15,7 +15,7 @@ class EmployeesTable extends Component {
   };
 
   renderItems = (employees) => {
-    const { recordsPerPage, recordStartIndex } = this.state;
+    const { recordsPerPage, recordStartIndex } = this.props;
     const { history } = this.props;
     const { state } = history.location;
     let items = [];
@@ -24,7 +24,7 @@ class EmployeesTable extends Component {
         ? employees.length
         : recordStartIndex + recordsPerPage;
 
-    for (var i = this.state.recordStartIndex; i < recordStopIndex; i++) {
+    for (var i = this.props.recordStartIndex; i < recordStopIndex; i++) {
       let index = i;
       items.push(
         <tr key={employees[i].id} className="table-row">

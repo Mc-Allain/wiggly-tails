@@ -15,14 +15,14 @@ class TransactionsTable extends Component {
   };
 
   renderItems = (transactions) => {
-    const { recordsPerPage, recordStartIndex } = this.state;
+    const { recordsPerPage, recordStartIndex } = this.props;
     let items = [];
     const recordStopIndex =
       transactions.length <= recordStartIndex + recordsPerPage
         ? transactions.length
         : recordStartIndex + recordsPerPage;
 
-    for (var i = this.state.recordStartIndex; i < recordStopIndex; i++) {
+    for (var i = this.props.recordStartIndex; i < recordStopIndex; i++) {
       let index = i;
       items.push(
         <tr key={transactions[i].id} className="table-row">
