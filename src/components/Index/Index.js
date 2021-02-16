@@ -17,6 +17,7 @@ class EmployeeLogin extends Component {
     employees: [],
     employeeConnected: false,
     employeeConnectionFailed: false,
+    insecureContentPermission: false,
   };
 
   componentDidMount = () => {
@@ -33,13 +34,15 @@ class EmployeeLogin extends Component {
     this.getEmployeesData();
     const employeeConnected = false;
     const employeeConnectionFailed = false;
-    this.setState({ employeeConnected, employeeConnectionFailed });
+    const insecureContentPermission = false;
+    this.setState({ employeeConnected, employeeConnectionFailed, insecureContentPermission });
   };
 
   onRegister = () => {
     const customerConnected = false;
     const customerConnectionFailed = false;
-    this.setState({ customerConnected, customerConnectionFailed });
+    const insecureContentPermission = false;
+    this.setState({ customerConnected, customerConnectionFailed,insecureContentPermission });
   };
 
   switchActiveId = (id) => {
@@ -69,6 +72,7 @@ class EmployeeLogin extends Component {
                       records={this.state.customers}
                       connected={this.state.customerConnected}
                       connectionFailed={this.state.customerConnectionFailed}
+                      insecureContentPermission={this.state.insecureContentPermission}
                       getData={this.retryCustomersData}
                     />
                   ) : (
@@ -77,6 +81,7 @@ class EmployeeLogin extends Component {
                       records={this.state.employees}
                       connected={this.state.employeeConnected}
                       connectionFailed={this.state.employeeConnectionFailed}
+                      insecureContentPermission={this.state.insecureContentPermission}
                       getData={this.retryEmployeesData}
                     />
                   )}
@@ -91,6 +96,7 @@ class EmployeeLogin extends Component {
           getData={this.retryCustomersData}
           connected={this.state.customerConnected}
           connectionFailed={this.state.customerConnectionFailed}
+          insecureContentPermission={this.state.insecureContentPermission}
         />
         <Footer />
       </React.Fragment>
@@ -107,8 +113,12 @@ class EmployeeLogin extends Component {
       })
       .catch((error) => {
         console.log(error);
+        let insecureContentPermission = false;
+        if(error.match("an insecure XMLHttpRequest endpoint")) {
+          insecureContentPermission = true;
+        }
         const customerConnectionFailed = true;
-        this.setState({ customerConnectionFailed });
+        this.setState({ customerConnectionFailed, insecureContentPermission });
       });
   };
 
@@ -122,8 +132,12 @@ class EmployeeLogin extends Component {
       })
       .catch((error) => {
         console.log(error);
+        let insecureContentPermission = false;
+        if(error.match("an insecure XMLHttpRequest endpoint")) {
+          insecureContentPermission = true;
+        }
         const employeeConnectionFailed = true;
-        this.setState({ employeeConnectionFailed });
+        this.setState({ employeeConnectionFailed, insecureContentPermission });
       });
   };
 }

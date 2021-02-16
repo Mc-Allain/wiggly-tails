@@ -1187,12 +1187,21 @@ class RegistrationModal extends Component {
                       </React.Fragment>
                     ) : this.props.connectionFailed ? (
                       <div className="input-group d-block d-sm-flex px-0">
-                        <input
-                          className="form-control border border-danger zi-10"
-                          value="Database Connection Failed: Please try again later."
-                          noValidate
-                          disabled
-                        />
+                        {
+                          this.props.insecureContentPermission ?
+                          <input
+                            className="form-control border border-danger zi-10"
+                            value="Database Connection Failed: Please try again later."
+                            noValidate
+                            disabled
+                          /> :
+                          <input
+                            className="form-control border border-danger zi-10"
+                            value="Website Permission Needed: Please allow insecure content in site permissions."
+                            noValidate
+                            disabled
+                          />
+                        }
                         <div className="input-group-append justify-content-end">
                           <button
                             type="button"

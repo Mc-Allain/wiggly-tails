@@ -233,8 +233,17 @@ class EmployeeLoginForm extends Component {
       </form>
     ) : this.props.connectionFailed ? (
       <div className="text-center text-danger">
-        <h1 className="mb-1">Database Connection Failed</h1>
-        <h3 className="mb-3">Please try again later.</h3>
+        {
+          this.props.insecureContentPermission ?
+          <React.Fragment>
+            <h1 className="mb-1 text-danger">Database Connection Failed</h1>
+            <h3 className="mb-3 text-danger">Please try again later.</h3>
+          </React.Fragment> :
+           <React.Fragment>
+            <h1 className="mb-1 text-warning">Website Permission Needed</h1>
+            <h3 className="mb-3 text-warning">Please allow insecure content in site permissions.</h3>
+          </React.Fragment>
+        }
         <button
           type="button"
           className="btn btn-primary btn-lg"
