@@ -25,6 +25,7 @@ class LogsTable extends Component {
       let index = i;
       items.push(
         <tr key={logs[i].id} className="table-row">
+          <td>{logs[i].id}</td>
           <td>{this.formatDate(logs[i].timestamp)}</td>
           <td className="d-none d-sm-table-cell">{logs[i].activity}</td>
           <td className="d-table-cell">
@@ -100,6 +101,7 @@ class LogsTable extends Component {
         <table className="table table-bordered">
           <thead className="thead-dark text-light">
             <tr>
+              <th>ID</th>
               <th>Timestamp</th>
               <th className="d-none d-sm-table-cell">Activity</th>
               <th className="d-table-cell w-100px">Action</th>
