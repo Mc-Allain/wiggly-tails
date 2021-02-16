@@ -229,7 +229,7 @@ class CustomerLoginForm extends Component {
           </React.Fragment> :
            <React.Fragment>
             <h1 className="mb-1 text-warning">Website Permission Needed</h1>
-            <h3 className="mb-3 text-warning">Please allow insecure content in site permissions.</h3>
+            <h3 className="mb-3 text-warning">To use your personal information in this website, please allow insecure content in site permissions.</h3>
           </React.Fragment>
         }
         <button

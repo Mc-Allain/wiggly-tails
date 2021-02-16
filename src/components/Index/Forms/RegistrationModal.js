@@ -1197,7 +1197,7 @@ class RegistrationModal extends Component {
                           /> :
                           <input
                             className="form-control border border-danger zi-10"
-                            value="Website Permission Needed: Please allow insecure content in site permissions."
+                            value="Website Permission Needed: To use your personal information in this website, please allow insecure content in site permissions."
                             noValidate
                             disabled
                           />

@@ -114,7 +114,7 @@ class EmployeeLogin extends Component {
       .catch((error) => {
         console.log(error);
         let insecureContentPermission = false;
-        if(error.match("an insecure XMLHttpRequest endpoint")) {
+        if(error.toString().match("an insecure XMLHttpRequest endpoint")) {
           insecureContentPermission = true;
         }
         const customerConnectionFailed = true;
@@ -133,7 +133,7 @@ class EmployeeLogin extends Component {
       .catch((error) => {
         console.log(error);
         let insecureContentPermission = false;
-        if(error.match("an insecure XMLHttpRequest endpoint")) {
+        if(error.toString().match("an insecure XMLHttpRequest endpoint")) {
           insecureContentPermission = true;
         }
         const employeeConnectionFailed = true;
