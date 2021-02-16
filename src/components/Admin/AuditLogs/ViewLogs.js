@@ -158,30 +158,6 @@ class ViewLogs extends Component {
         this.setState({ connectionFailed });
       });
   };
-
-  formatDate = (dateValue) => {
-    const MMM = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    dateValue = new Date(dateValue);
-    const day = dateValue.getDate();
-    const month = MMM[dateValue.getMonth()];
-    const year = dateValue.getFullYear();
-
-    return year + "-" + month + "-" + day;
-  };
 }
 
 export default ViewLogs;
