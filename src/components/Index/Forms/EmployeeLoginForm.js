@@ -241,7 +241,7 @@ class EmployeeLoginForm extends Component {
           </React.Fragment> :
            <React.Fragment>
             <h1 className="mb-1 text-warning">Website Permission Needed</h1>
-            <h3 className="mb-3 text-warning">To use your personal information in this website, please allow insecure content in site permissions.</h3>
+            <h5 className="mb-3 text-warning">To use your personal information in this website, please allow the insecure content in site permissions.</h5>
           </React.Fragment>
         }
         <button
