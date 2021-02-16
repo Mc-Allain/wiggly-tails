@@ -243,8 +243,8 @@ class EmployeeLoginForm extends Component {
             <h2 className="mb-1 text-warning">Permission Needed</h2>
             <h5 className="mb-3 text-warning">
               The Veterinary Clinic wants you to provide your personal information in this website,
-              please allow the insecure content in site permissions.
-              If you are on mobile, the usage of UC Browser Application is highly recommended.
+              please allow the insecure content in site permissions.<br/>
+              If you are on mobile, the usage of UC Browser application is highly recommended.
             </h5>
           </React.Fragment>
         }

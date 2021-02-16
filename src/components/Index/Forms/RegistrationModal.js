@@ -1199,7 +1199,7 @@ class RegistrationModal extends Component {
                             className="form-control border border-warning zi-10"
                             value="Permission Needed: The Veterinary Clinic wants you to provide your personal information in this website,
                               please allow the insecure content in site permissions.
-                              If you are on mobile, the usage of UC Browser Application is highly recommended."
+                              If you are on mobile, the usage of UC Browser application is highly recommended."
                             noValidate
                             disabled
                           />
