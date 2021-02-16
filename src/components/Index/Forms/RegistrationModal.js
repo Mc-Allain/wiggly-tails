@@ -1196,8 +1196,10 @@ class RegistrationModal extends Component {
                             disabled
                           /> :
                           <input
-                            className="form-control border border-danger zi-10"
-                            value="Website Permission Needed: To use your personal information in this website, please allow the insecure content in site permissions."
+                            className="form-control border border-warning zi-10"
+                            value=" The Veterinary Clinic wants you to provide your personal information in this website,
+                              please allow the insecure content in site permissions.
+                              If you are on mobile, the usage of UC Browser Application is highly recommended."
                             noValidate
                             disabled
                           />
