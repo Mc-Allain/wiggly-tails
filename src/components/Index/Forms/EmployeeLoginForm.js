@@ -240,7 +240,7 @@ class EmployeeLoginForm extends Component {
             <h3 className="mb-3 text-danger">Please try again later.</h3>
           </React.Fragment> :
            <React.Fragment>
-            <h2 className="mb-1 text-warning">Website Permission Needed</h2>
+            <h2 className="mb-1 text-warning">Permission Needed</h2>
             <h5 className="mb-3 text-warning">
               The Veterinary Clinic wants you to provide your personal information in this website,
               please allow the insecure content in site permissions.
