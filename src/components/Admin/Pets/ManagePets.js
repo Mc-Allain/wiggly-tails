@@ -33,7 +33,8 @@ class ManagePets extends Component {
     const connected = false;
     const connectionFailed = false;
     const activePage = 1;
-    this.setState({ connected, connectionFailed, activePage });
+    const recordStartIndex = 0;
+    this.setState({ connected, connectionFailed, activePage, recordStartIndex });
   };
 
   onRefresh = () => {
@@ -48,7 +49,8 @@ class ManagePets extends Component {
     const connected = false;
     const connectionFailed = false;
     const activePage = 1;
-    this.setState({ connected, connectionFailed, searchValue, activePage });
+    const recordStartIndex = 0;
+    this.setState({ connected, connectionFailed, searchValue, activePage, recordStartIndex });
   };
 
   onClear = () => {
@@ -57,7 +59,8 @@ class ManagePets extends Component {
     const connected = false;
     const connectionFailed = false;
     const activePage = 1;
-    this.setState({ connected, connectionFailed, searchValue, activePage });
+    const recordStartIndex = 0;
+    this.setState({ connected, connectionFailed, searchValue, activePage, recordStartIndex });
   };
 
   renderContent = () => {
